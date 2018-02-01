@@ -46,6 +46,8 @@ class ProfileViewController: UIViewController {
     
     @objc private func logout() {
         //TODO: Logout
+        let loginVC = LoginViewController()
+        self.present(loginVC, animated: true, completion: nil)
     }
     
     @objc private func changeProfileImage() {
