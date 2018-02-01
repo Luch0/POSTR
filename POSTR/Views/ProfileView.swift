@@ -20,6 +20,7 @@ class ProfileView: UIView {
     lazy var usernameTF: UITextField = {
         let tf = UITextField()
         tf.placeholder = "edit username"
+        tf.borderStyle = .roundedRect
         return tf
     }()
     lazy var userBioTV: UITextView = {
