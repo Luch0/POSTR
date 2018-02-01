@@ -37,6 +37,7 @@ class LoginView: UIView {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Email Address Login"
+        textField.text = "eljefe@c4q.com" //FIX: remove, only for testing
 //        textField.layer.borderWidth = 1
 //        textField.layer.cornerRadius = 5
         return textField
@@ -46,6 +47,7 @@ class LoginView: UIView {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Password"
+        textField.text = "1234567"
         textField.isSecureTextEntry = true // this helps to obscure the user's password with *******
 //        textField.layer.borderWidth = 1
 //        textField.layer.cornerRadius = 5
