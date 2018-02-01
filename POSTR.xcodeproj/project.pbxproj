@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4001A5F725487D06D4B0AE9D /* Pods_POSTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB32735B4ACFD440671794DD /* Pods_POSTR.framework */; };
+		E20173E52023BAE200C712AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E20173E42023BAE200C712AC /* GoogleService-Info.plist */; };
 		E230E0272022507600D0CCF9 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E230E0262022507600D0CCF9 /* EditPostViewController.swift */; };
 		E230E029202250F800D0CCF9 /* EditPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E230E028202250F800D0CCF9 /* EditPostView.swift */; };
 		E25AEB8620215BD300864081 /* CategoriesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25AEB8520215BD300864081 /* CategoriesCell.swift */; };
@@ -36,6 +37,7 @@
 		1559E71FC78DDB560B6938E4 /* Pods-POSTR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-POSTR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-POSTR/Pods-POSTR.debug.xcconfig"; sourceTree = "<group>"; };
 		BB32735B4ACFD440671794DD /* Pods_POSTR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_POSTR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C43C6361B573A00770E86B2A /* Pods-POSTR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-POSTR.release.xcconfig"; path = "Pods/Target Support Files/Pods-POSTR/Pods-POSTR.release.xcconfig"; sourceTree = "<group>"; };
+		E20173E42023BAE200C712AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E230E0262022507600D0CCF9 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
 		E230E028202250F800D0CCF9 /* EditPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostView.swift; sourceTree = "<group>"; };
 		E25AEB8520215BD300864081 /* CategoriesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesCell.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				E2DE797E20212FF0004799F4 /* View Controllers */,
 				E2DE797D20212FBE004799F4 /* Supporting Files */,
 				E2DE797720212F95004799F4 /* Info.plist */,
+				E20173E42023BAE200C712AC /* GoogleService-Info.plist */,
 				E2DE796F20212F95004799F4 /* POSTR.xcdatamodeld */,
 			);
 			path = POSTR;
@@ -243,6 +246,7 @@
 			files = (
 				E2DE797620212F95004799F4 /* LaunchScreen.storyboard in Resources */,
 				E2DE797320212F95004799F4 /* Assets.xcassets in Resources */,
+				E20173E52023BAE200C712AC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
