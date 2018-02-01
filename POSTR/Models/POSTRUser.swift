@@ -1,14 +1,14 @@
 //
-//  User.swift
+//  POSTRUser.swift
 //  POSTR
 //
-//  Created by Luis Calle on 1/30/18.
+//  Created by Lisa J on 2/1/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
 //
 
 import Foundation
 
-struct User: Codable {
+struct POSTRUser: Codable {
     let username: String
     let userImage: String //matches filename
     let userBio: String
