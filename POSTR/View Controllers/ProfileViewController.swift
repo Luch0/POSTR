@@ -1,6 +1,6 @@
 //  ProfileViewController.swift
 //  TestingGroup2
-//  Created by C4Q on 1/30/18.
+//  Created by Winston Maragh on 1/30/18.
 //  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit
@@ -14,8 +14,7 @@ class ProfileViewController: UIViewController {
     var profileImage: UIImage!
     var gesture: UIGestureRecognizer!
     let imagePicker = UIImagePickerController()
-    
-    
+
     
     //MARK: View Lifecycle
     override func viewDidLoad() {
