@@ -9,12 +9,17 @@
 import Foundation
 
 struct POSTRUser: Codable {
+    let userID: String
     let username: String
-    let userImage: String //matches filename
     let userBio: String
-    init(username: String, userImage: String, userBio: String){
-        self.username = username
-        self.userImage = userImage
-        self.userBio = userBio
+    let userImageStr: String //matches filename
+    
+    init(dict: [String : Any]) {
+        userID = dict["userID"] as? String ?? ""
+        username = dict["username"] as? String ?? ""
+        userBio = dict["userBio"] as? String ?? ""
+        userImageStr = dict["userImageStr"] as? String ?? ""
     }
+    
+    
 }
