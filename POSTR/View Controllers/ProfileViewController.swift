@@ -15,6 +15,7 @@ class ProfileViewController: UIViewController {
     var gesture: UIGestureRecognizer!
     let imagePicker = UIImagePickerController()
     
+    var authService = AuthUserService()
     
     
     //MARK: View Lifecycle
@@ -25,6 +26,7 @@ class ProfileViewController: UIViewController {
         profileView.tableView.dataSource = self
         profileView.usernameTF.delegate = self
         imagePicker.delegate = self
+        authService.delegate = self
         
         //Setup
         self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
@@ -46,8 +48,7 @@ class ProfileViewController: UIViewController {
     
     @objc private func logout() {
         //TODO: Logout
-        let loginVC = LoginViewController()
-        self.present(loginVC, animated: true, completion: nil)
+        authService.signOut()
     }
     
     @objc private func changeProfileImage() {
@@ -172,5 +173,17 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ProfileViewController: AuthUserServiceDelegate {
+    
+    func didSignOut(_ userService: AuthUserService) {
+        let loginVC = LoginViewController()
+        self.present(loginVC, animated: true, completion: nil)
+    }
+    
+    func didFailSigningOut(_ userService: AuthUserService, error: Error) {
+        //TODO: alert view
     }
 }
