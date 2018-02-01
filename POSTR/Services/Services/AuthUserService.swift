@@ -56,6 +56,7 @@ class AuthUserService: NSObject {
     public func signOut() {
         do{
             try Auth.auth().signOut()
+            delegate?.didSignOut?(self)
         } catch {
             delegate?.didFailSigningOut!(self, error: error)
         }
