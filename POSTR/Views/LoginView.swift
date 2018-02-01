@@ -12,8 +12,8 @@ class LoginView: UIView {
     
     lazy var appNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 25, weight: UIFont.Weight.bold)
-        label.text = "APP NAME"
+        label.font = UIFont.systemFont(ofSize: 35, weight: UIFont.Weight.bold)
+        label.text = "POSTR"
         return label
     }()
     
@@ -37,7 +37,8 @@ class LoginView: UIView {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Email Address Login"
-        textField.backgroundColor = UIColor.cyan
+//        textField.layer.borderWidth = 1
+//        textField.layer.cornerRadius = 5
         return textField
     }()
     
@@ -46,7 +47,8 @@ class LoginView: UIView {
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Password"
         textField.isSecureTextEntry = true // this helps to obscure the user's password with *******
-        textField.backgroundColor = UIColor.cyan
+//        textField.layer.borderWidth = 1
+//        textField.layer.cornerRadius = 5
         return textField
     }()
     

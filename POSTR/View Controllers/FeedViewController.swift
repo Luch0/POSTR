@@ -12,12 +12,23 @@ class FeedViewController: UIViewController {
     let feeds = ["post 1", "post 2","post 3", "post 4","post 5", "post 6","post 7", "post 8"]
     let feedView = FeedView()
     
+    var isLoggedIn = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         feedView.tableView.delegate = self
         feedView.tableView.dataSource = self
         view.addSubview(feedView)
         configureNavBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isLoggedIn {
+            let loginVC = LoginViewController()
+            self.present(loginVC, animated: false, completion: nil)
+            isLoggedIn = false
+        }
     }
     
     private func configureNavBar() {
