@@ -16,6 +16,11 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(displayP3Red: 50/255, green: 25/255, blue: 170/255, alpha: 1)
         view.addSubview(loginView)
+        loginView.loginButton.addTarget(self, action: #selector(showFeedViewController), for: .touchUpInside)
+    }
+    
+    @objc func showFeedViewController() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     
