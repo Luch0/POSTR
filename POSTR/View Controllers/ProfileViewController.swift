@@ -47,7 +47,6 @@ class ProfileViewController: UIViewController {
     }
     
     @objc private func logout() {
-        //TODO: Logout
         authService.signOut()
     }
     
@@ -63,8 +62,6 @@ class ProfileViewController: UIViewController {
         alertController.addAction(existingPhotoAction)
         alertController.addAction(newPhotoAction)
         alertController.addAction(cancelAction)
-        
-        
         present(alertController, animated: true, completion: nil)
     }
     
@@ -76,13 +73,20 @@ class ProfileViewController: UIViewController {
         }
     }
     private func launchPhotoLibrary(){
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
             imagePicker.sourceType = .photoLibrary
             imagePicker.allowsEditing = true
             self.present(imagePicker, animated: true, completion: nil)
         }
     }
-    
+		private func launchSavedPhotosLibrary(){
+			if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
+				imagePicker.sourceType = .savedPhotosAlbum
+				imagePicker.allowsEditing = true
+				self.present(imagePicker, animated: true, completion: nil)
+			}
+		}
+
 }
 
 
