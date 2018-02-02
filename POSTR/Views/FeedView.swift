@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 
+
 class FeedView: UIView {
     
     lazy var tableView: UITableView = {
