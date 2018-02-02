@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -24,16 +24,17 @@ class LoginViewController: UIViewController {
         loginView.createNewAccountButton.addTarget(self, action: #selector(createNewAccount), for: .touchUpInside)
     }
     
-    
     @objc private func userLoginAccount() {
         print("user login button pressed")
-        guard let emailText = loginView.emailLoginTextField.text else {print("email is nil"); return}
-        guard !emailText.isEmpty else {print("email field is empty"); return}
         guard let passwordText = loginView.passwordTextField.text else {print("password is nil"); return}
         guard !passwordText.isEmpty else {print("password field is empty"); return}
-        authUserService.signIn(email: emailText, password: passwordText)
-        
-    }
+        if passwordText.contains(" ") {
+            showAlert(title: "Come on, really!? No spaces allowed!", message: nil)
+            return
+        }
+        authUserService.signIn(email: loginView.emailLoginTextField.text!, password: passwordText)}
+    
+    
     
     @objc private func createNewAccount() {
         print("create new account button pressed")
@@ -48,10 +49,15 @@ class LoginViewController: UIViewController {
         authUserService.createUser(email: emailText, password: passwordText)
     }
     
+    
     @objc private func forgotPassword(){
+        sendPasswordReset(withEmail: loginView.emailLoginTextField.text!)
         print("forgot password button pressed")
     }
     
+    func sendPasswordReset(withEmail email: String, completion: SendPasswordResetCallback? = nil) {
+        return
+    }
     
     func showAlert(title: String, message: String?) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -65,21 +71,37 @@ class LoginViewController: UIViewController {
 
 extension LoginViewController: AuthUserServiceDelegate {
     func didCreateUser(_ userService: AuthUserService, user: User) {
-        self.dismiss(animated: true, completion: nil)
+        //self.dismiss(animated: true, completion: nil)
         print("didCreateUser: \(user)")
-    
+        Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+            if let error = error {
+                print("error with sending email verification, \(error)")
+            } else {
+                print("email verification sent")
+            }
+        })
+        if (Auth.auth().currentUser?.isEmailVerified)! {
+            self.dismiss(animated: true, completion: nil)
+        }else{
+            showAlert(title: "Verification", message: "Please verify email"); authUserService.signOut(); return
+        }
+        
     }
     
     func didFailCreatingUser(_ userService: AuthUserService, error: Error) {
         showAlert(title: error.localizedDescription, message: nil)
     }
     func didSignIn(_ userService: AuthUserService, user: User) {
-        self.dismiss(animated: true, completion: nil)
+        if (Auth.auth().currentUser?.isEmailVerified)! {
+            self.dismiss(animated: true, completion: nil)
+        }else{
+            showAlert(title: "Email Verification Needed", message: "Please verify email"); authUserService.signOut(); return
+        }
     }
     func didFailSignIn(_ userService: AuthUserService, error: Error) {
-       showAlert(title: "Incorrect username and/or password", message: nil)
-//        showAlert(title: "", message: "Incorrent username and/or password")
-
+        showAlert(title: "Incorrect username and/or password", message: nil)
+        //        showAlert(title: "", message: "Incorrent username and/or password")
+        
     }
 }
 
