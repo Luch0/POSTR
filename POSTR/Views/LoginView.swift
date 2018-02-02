@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ChameleonFramework
 
 class LoginView: UIView {
     
@@ -58,7 +59,7 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Login", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = UIColor.black
+        button.backgroundColor = FlatPowderBlueDark()
         return button
     }()
     
@@ -66,7 +67,7 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Create New Account", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = UIColor.black
+        button.backgroundColor = FlatPowderBlueDark()
         return button
     }()
     
@@ -74,7 +75,7 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Forgot Password?", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = UIColor.black
+        button.backgroundColor = FlatPowderBlueDark()
         return button
     }()
     

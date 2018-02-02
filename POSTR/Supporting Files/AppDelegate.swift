@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Firebase
+import ChameleonFramework
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         window = UIWindow(frame: UIScreen.main.bounds)
         let tabBarController = UITabBarController()
-        
+        configureTheme()
         let feedViewController = FeedViewController()
         let feedViewNavCon = UINavigationController(rootViewController: feedViewController)
         feedViewController.tabBarItem = UITabBarItem(title: "Feed", image: #imageLiteral(resourceName: "feed"), tag: 0)
@@ -107,5 +108,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+}
+extension AppDelegate {
+    
+    func configureTheme() {
+        StyleManager.setUpTheme()
+    }
 }
 
