@@ -13,4 +13,6 @@ target 'POSTR' do
     pod 'Firebase/Database'
     pod 'Firebase/Auth'
     pod 'Firebase/Storage'
+    pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git', :branch => 'wip/swift4'
+
 end

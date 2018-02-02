@@ -55,6 +55,7 @@ class PostTableViewCell: UITableViewCell {
     lazy var upvoteButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "upvote"), for: .normal)
+        button.backgroundColor = UIColor.clear
         return button
     }()
     
@@ -68,12 +69,14 @@ class PostTableViewCell: UITableViewCell {
     lazy var downvoteButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "downvote"), for: .normal)
+        button.backgroundColor = UIColor.clear
         return button
     }()
     
     lazy var postActionsButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "options"), for: .normal)
+        button.backgroundColor = UIColor.clear
         return button
     }()
     
