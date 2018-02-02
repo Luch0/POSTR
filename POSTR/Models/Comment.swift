@@ -9,17 +9,19 @@
 import Foundation
 
 class Comment {
-    let postID: String
-    let userID: String
-    let commentID: String
-    let commentStr: String
-    let dateOfPost: String
+	let postID: String
+	let userID: String
+	let commentID: String
+	let commentStr: String
+	let dateOfPost: String
+	let commentFlagCount: Int
     
-    init(dict: [String : Any]) {
-        postID = dict["postID"] as? String ?? ""
-        userID = dict["userID"] as? String ?? ""
-        commentID = dict["commentID"] as? String ?? ""
-        commentStr = dict["commentStr"] as? String ?? ""
-        dateOfPost = dict["dateOfPost"] as? String ?? ""
-    }
+	init(dict: [String : Any]) {
+			postID = dict["postID"] as? String ?? ""
+			userID = dict["userID"] as? String ?? ""
+			commentID = dict["commentID"] as? String ?? ""
+			commentStr = dict["commentStr"] as? String ?? ""
+			dateOfPost = dict["dateOfPost"] as? String ?? ""
+			commentFlagCount = dict["commentFlagCount"] as? Int ?? 0
+	}
 }
