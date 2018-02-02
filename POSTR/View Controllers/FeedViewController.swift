@@ -32,7 +32,7 @@ class FeedViewController: UIViewController {
     }
     
     private func configureNavBar() {
-        self.navigationController?.navigationBar.barTintColor = .red
+//        self.navigationController?.navigationBar.barTintColor = .red
         self.navigationItem.title = "Feed"
         let addBarItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPostButton))
         navigationItem.rightBarButtonItem = addBarItem

@@ -38,7 +38,7 @@ class ProfileViewController: UIViewController {
     //MARK: Custom Methods
     private func setupNavigationBar() {
         navigationItem.title = "Profile"
-        self.navigationController?.navigationBar.barTintColor = .yellow
+        //self.navigationController?.navigationBar.barTintColor = .yellow
         navigationItem.largeTitleDisplayMode = .never
         
         //right bar button for toggling between map & list
