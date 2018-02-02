@@ -31,6 +31,7 @@ class ProfileView: UIView {
     lazy var editButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "edit"), for: .normal)
+        button.backgroundColor = UIColor.clear
         return button
     }()
     
