@@ -63,8 +63,6 @@ class ProfileViewController: UIViewController {
         alertController.addAction(existingPhotoAction)
         alertController.addAction(newPhotoAction)
         alertController.addAction(cancelAction)
-        
-        
         present(alertController, animated: true, completion: nil)
     }
     
