@@ -19,8 +19,9 @@ class Post {
     let upvoteCount: Int
     let downvoteCount: Int
     let currentVotes: Int
-    let postImageStr: String  //matches filename
-    let userImageStr: String //matches filename
+    let postImageStr: String
+    let userImageStr: String
+		let postFlagCount: Int
     
     init(dict: [String : Any]) {
         self.postID = dict["postID"] as? String ?? ""
@@ -35,5 +36,6 @@ class Post {
         self.currentVotes = dict["currentVotes"] as? Int ?? 0
         self.postImageStr = dict["postImageStr"] as? String ?? ""
         self.userImageStr = dict["userImageStr"] as? String ?? ""
+				self.postFlagCount = dict["postFlagCount"] as? Int ?? 0
     }
 }
