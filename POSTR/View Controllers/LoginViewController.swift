@@ -71,6 +71,7 @@ class LoginViewController: UIViewController {
 
 extension LoginViewController: AuthUserServiceDelegate {
     func didCreateUser(_ userService: AuthUserService, user: User) {
+//				DBService.manager.addUser() //ADD USER TO DATABASE
         //self.dismiss(animated: true, completion: nil)
         print("didCreateUser: \(user)")
         Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
@@ -82,10 +83,11 @@ extension LoginViewController: AuthUserServiceDelegate {
         })
         if (Auth.auth().currentUser?.isEmailVerified)! {
             self.dismiss(animated: true, completion: nil)
-        }else{
-            showAlert(title: "Verification", message: "Please verify email"); authUserService.signOut(); return
+        } else {
+            showAlert(title: "Verification", message: "Please verify email");
+						authUserService.signOut();
+						return
         }
-        
     }
     
     func didFailCreatingUser(_ userService: AuthUserService, error: Error) {

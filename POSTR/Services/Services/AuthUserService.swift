@@ -46,6 +46,7 @@ class AuthUserService: NSObject {
                         print("changeRequest error: \(error)")
                     } else {
                         print("changeRequest was successful for username: \(username)")
+												DBService.manager.addUser()  //ADD USER
                         self.delegate?.didCreateUser?(self, user: user)
                     }
                 })

@@ -7,19 +7,40 @@
 //
 
 import UIKit
+import Firebase
+
 
 class FeedViewController: UIViewController {
-    let feeds = ["post 1", "post 2","post 3", "post 4","post 5", "post 6","post 7", "post 8"]
-    let feedView = FeedView()
+
+	let feedView = FeedView()
+
+	private var posts = [Post](){
+		didSet {
+			DispatchQueue.main.async {
+				self.feedView.tableView.reloadData()
+			}
+		}
+	}
     
     var isLoggedIn = true
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        feedView.tableView.delegate = self
-        feedView.tableView.dataSource = self
-        view.addSubview(feedView)
-        configureNavBar()
+			super.viewDidLoad()
+			feedView.tableView.delegate = self
+			feedView.tableView.dataSource = self
+			view.addSubview(feedView)
+			configureNavBar()
+			DBService.manager.getPosts().observe(.value) { (snapshot) in
+				var posts = [Post]()
+				for child in snapshot.children {
+					let dataSnapshot = child as! DataSnapshot
+					if let dict = dataSnapshot.value as? [String: Any] {
+						let post = Post.init(dict: dict)
+						posts.append(post)
+					}
+				}
+				self.posts = posts
+			}
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,17 +72,18 @@ class FeedViewController: UIViewController {
 
 extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return feeds.count
+        return posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let feed = feeds[indexPath.row]
-        let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
-        //cell.textLabel?.text = feed
-        // TODO: configure cell
-        cell.postCaption.text = feed
-        cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-        return cell
+			let post = posts[indexPath.row]
+			let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
+			cell.postCaption.text = post.caption
+			cell.usernameLabel.text = post.username
+			cell.postCategory.text = post.category
+			cell.dateLabel.text = post.date
+			cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+			return cell
     }
     
     @objc private func showOptions() {
