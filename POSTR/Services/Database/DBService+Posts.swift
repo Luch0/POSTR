@@ -10,7 +10,7 @@ import Firebase
 
 extension DBService {
 	//	public func addPosts(caption: String, category: String, postImageStr: String, userImageStr: String, image: UIImage) {
-	public func addPosts(caption: String, category: String, postImageStr: String, userImageStr: String) {
+	public func addPost(caption: String, category: String, postImageStr: String, userImageStr: String) {
 		let childByAutoId = DBService.manager.getPosts().childByAutoId()
 		childByAutoId.setValue(["postID"  : DBService.manager.getPosts().childByAutoId().key,
 														"userID"  : AuthUserService.getCurrentUser()?.uid,
