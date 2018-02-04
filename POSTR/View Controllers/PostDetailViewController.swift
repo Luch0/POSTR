@@ -10,19 +10,23 @@ import UIKit
 
 class PostDetailViewController: UIViewController {
     
-    let postDetailView = PostDetailView()
+	let postDetailView = PostDetailView()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.addSubview(postDetailView)
-        postDetailView.postTableView.delegate = self
-        postDetailView.postTableView.dataSource = self
-        postDetailView.commentsTableView.delegate = self
-        postDetailView.commentsTableView.dataSource = self
-        
-        //testing segue back from left
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goBack))
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		view.addSubview(postDetailView)
+		postDetailView.postTableView.delegate = self
+		postDetailView.postTableView.dataSource = self
+		postDetailView.commentsTableView.delegate = self
+		postDetailView.commentsTableView.dataSource = self
+		postDetailView.addCommentButton.addTarget(self, action: #selector(addComment), for: .touchUpInside)
+		//testing segue back from left
+		//navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goBack))
+	}
+
+	@objc private func addComment() {
+//		DBService.manager.addComment(postID: <#T##String#>, commentStr: <#T##String#>)
+	}
     
     //testing segue back from left
     //    @objc func goBack() {
@@ -35,7 +39,8 @@ class PostDetailViewController: UIViewController {
     //        self.navigationController?.view.layer.add(transition, forKey: kCATransition)
     //        self.navigationController?.popToRootViewController(animated: true)
     //    }
-    
+
+
 }
 
 extension PostDetailViewController: UITableViewDataSource {

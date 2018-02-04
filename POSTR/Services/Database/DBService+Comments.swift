@@ -8,7 +8,7 @@ import UIKit
 import Firebase
 
 extension DBService {
-	public func addComments(postID: String, commentStr: String) {
+	public func addComment(postID: String, commentStr: String) {
 		let childByAutoId = DBService.manager.getComments().childByAutoId()
 		childByAutoId.setValue(["postID": postID ,
 														"userID": AuthUserService.getCurrentUser()?.uid,
