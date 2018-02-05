@@ -7,6 +7,14 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    private var userPosts = [Post](){
+        didSet {
+            DispatchQueue.main.async {
+                self.profileView.tableView.reloadData()
+            }
+        }
+    }
+    
     // MARK: import Views
     var profileView = ProfileView()
     
@@ -33,6 +41,23 @@ class ProfileViewController: UIViewController {
         setupNavigationBar()
         profileView.profileImageButton.addTarget(self, action: #selector(changeProfileImage), for: UIControlEvents.allTouchEvents)
         
+    }
+    
+    func loadUserPosts() {
+        DBService.manager.loadUserPosts(userID: AuthUserService.getCurrentUser()!.uid) { (userPosts) in
+            if let userPosts = userPosts {
+                self.userPosts = userPosts
+            } else {
+                print("Error loading user posts")
+            }
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if AuthUserService.getCurrentUser() != nil {
+            loadUserPosts()
+        }
     }
     
     //MARK: Custom Methods
@@ -79,14 +104,14 @@ class ProfileViewController: UIViewController {
             self.present(imagePicker, animated: true, completion: nil)
         }
     }
-		private func launchSavedPhotosLibrary(){
-			if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
-				imagePicker.sourceType = .savedPhotosAlbum
-				imagePicker.allowsEditing = true
-				self.present(imagePicker, animated: true, completion: nil)
-			}
-		}
-
+    private func launchSavedPhotosLibrary(){
+        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
+            imagePicker.sourceType = .savedPhotosAlbum
+            imagePicker.allowsEditing = true
+            self.present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
 }
 
 
@@ -118,7 +143,9 @@ extension ProfileViewController: UITextFieldDelegate {
 extension ProfileViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let postDetailViewController = PostDetailViewController()
+        // TODO: same as feedvc but only user posts
+        let selectedPost = userPosts.reversed()[indexPath.row]
+        let postDetailViewController = PostDetailViewController(post: selectedPost)
         self.navigationController?.pushViewController(postDetailViewController, animated: true)
     }
     
@@ -130,11 +157,17 @@ extension ProfileViewController: UITableViewDelegate {
 
 extension ProfileViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7 //posts.count
+        return userPosts.count //posts.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
         cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+        let post = userPosts.reversed()[indexPath.row]
+        cell.postCaption.text = post.caption
+        cell.usernameLabel.text = post.username
+        cell.postCategory.text = post.category
+        cell.dateLabel.text = post.date
+        cell.voteCountLabel.text = post.currentVotes.description
         return cell
     }
     
@@ -191,3 +224,4 @@ extension ProfileViewController: AuthUserServiceDelegate {
         //TODO: alert view
     }
 }
+
