@@ -13,15 +13,16 @@ struct POSTRUser: Codable {
     let username: String
     let userBio: String
     let userImageStr: String //matches filename
-		let userFlagCount: Int
+    let userFlagCount: Int
     
     init(dict: [String : Any]) {
         userID = dict["userID"] as? String ?? ""
         username = dict["username"] as? String ?? ""
         userBio = dict["userBio"] as? String ?? ""
         userImageStr = dict["userImageStr"] as? String ?? ""
-				userFlagCount = dict["userFlagCount"] as? Int ?? 0
+        userFlagCount = dict["userFlagCount"] as? Int ?? 0
     }
     
     
 }
+
