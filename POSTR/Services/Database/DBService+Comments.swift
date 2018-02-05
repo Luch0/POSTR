@@ -8,25 +8,42 @@ import UIKit
 import Firebase
 
 extension DBService {
-	public func addComment(postID: String, commentStr: String) {
-		let childByAutoId = DBService.manager.getComments().childByAutoId()
-		childByAutoId.setValue(["postID": postID ,
-														"userID": AuthUserService.getCurrentUser()?.uid,
-														"commentID": DBService.manager.getComments().childByAutoId().key,
-														"commentStr": commentStr,
-														"dateOfPost": Date().description,
-														"commentsFlagCount": 0]) { (error, dbRef) in
-															if let error = error {
-																print("addComments error: \(error)")
-															} else {
-																print("comments added @ database reference: \(dbRef)")
-
-																// add an image to storage
-																//																StorageService.manager.storeImage(image: image, commentId: childByAutoId.key)
-
-																// TODO: add image to database
-
-															}
-		}
-	}
+    public func addComment(postID: String, commentStr: String) {
+        let childByAutoId = DBService.manager.getComments().childByAutoId()
+        childByAutoId.setValue(["postID"           : postID ,
+                                "userID"           : AuthUserService.getCurrentUser()!.uid,
+                                "commentID"        : DBService.manager.getComments().childByAutoId().key,
+                                "commentStr"       : commentStr,
+                                "dateOfPost"       : Date().description,
+                                "commentsFlagCount": 0,
+                                "username"          : AuthUserService.getCurrentUser()!.displayName!]) { (error, dbRef) in
+                                    if let error = error {
+                                        print("addComments error: \(error)")
+                                    } else {
+                                        print("comments added @ database reference: \(dbRef)")
+                                        // add an image to storage
+                                        //StorageService.manager.storeImage(image: image, commentId: childByAutoId.key)
+                                        // TODO: add image to database
+                                    }
+        }
+    }
+    
+    
+    func loadPostComments(postID: String, completionHandler: @escaping ([Comment]?) -> Void) {
+        let ref = DBService.manager.getComments()
+        ref.observe(.value) { (snapshot) in
+            var allComments = [Comment]()
+            for child in snapshot.children {
+                let dataSnapshot = child as! DataSnapshot
+                if let dict = dataSnapshot.value as? [String: Any] {
+                    let comment = Comment.init(dict: dict)
+                    if comment.postID == postID {
+                        allComments.append(comment)
+                    }
+                }
+            }
+            completionHandler(allComments)
+        }
+    }
 }
+

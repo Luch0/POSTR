@@ -11,49 +11,48 @@ import Firebase
 
 
 class FeedViewController: UIViewController {
-
-	let feedView = FeedView()
-
-	private var posts = [Post](){
-		didSet {
-			DispatchQueue.main.async {
-				self.feedView.tableView.reloadData()
-			}
-		}
-	}
     
-    var isLoggedIn = true
+    let feedView = FeedView()
+    
+    private var posts = [Post](){
+        didSet {
+            DispatchQueue.main.async {
+                self.feedView.tableView.reloadData()
+            }
+        }
+    }
     
     override func viewDidLoad() {
-			super.viewDidLoad()
-			feedView.tableView.delegate = self
-			feedView.tableView.dataSource = self
-			view.addSubview(feedView)
-			configureNavBar()
-			DBService.manager.getPosts().observe(.value) { (snapshot) in
-				var posts = [Post]()
-				for child in snapshot.children {
-					let dataSnapshot = child as! DataSnapshot
-					if let dict = dataSnapshot.value as? [String: Any] {
-						let post = Post.init(dict: dict)
-						posts.append(post)
-					}
-				}
-				self.posts = posts
-			}
+        super.viewDidLoad()
+        feedView.tableView.delegate = self
+        feedView.tableView.dataSource = self
+        view.addSubview(feedView)
+        configureNavBar()
+    }
+    
+    func loadAllPosts() {
+        DBService.manager.loadAllPosts { (posts) in
+            if let posts = posts {
+                self.posts = posts
+            } else {
+                print("error loading posts")
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if isLoggedIn {
+        //MARK: checks if user is signed in or not
+        if AuthUserService.getCurrentUser() == nil {
             let loginVC = LoginViewController()
             self.present(loginVC, animated: false, completion: nil)
-            isLoggedIn = false
+        } else {
+            loadAllPosts()
         }
     }
     
     private func configureNavBar() {
-//        self.navigationController?.navigationBar.barTintColor = .red
+        //        self.navigationController?.navigationBar.barTintColor = .red
         self.navigationItem.title = "Feed"
         let addBarItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPostButton))
         navigationItem.rightBarButtonItem = addBarItem
@@ -76,14 +75,15 @@ extension FeedViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-			let post = posts[indexPath.row]
-			let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
-			cell.postCaption.text = post.caption
-			cell.usernameLabel.text = post.username
-			cell.postCategory.text = post.category
-			cell.dateLabel.text = post.date
-			cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-			return cell
+        let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
+        let post = posts.reversed()[indexPath.row]
+        cell.postCaption.text = post.caption
+        cell.usernameLabel.text = post.username
+        cell.postCategory.text = post.category
+        cell.dateLabel.text = post.date
+        cell.voteCountLabel.text = post.currentVotes.description
+        cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+        return cell
     }
     
     @objc private func showOptions() {
@@ -107,7 +107,8 @@ extension FeedViewController: UITableViewDataSource {
 extension FeedViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let postDetailViewController = PostDetailViewController()
+        let selectedPost = posts.reversed()[indexPath.row]
+        let postDetailViewController = PostDetailViewController(post: selectedPost)
         self.navigationController?.pushViewController(postDetailViewController, animated: true)
     }
     
@@ -116,3 +117,4 @@ extension FeedViewController: UITableViewDelegate {
     }
     
 }
+
