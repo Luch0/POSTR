@@ -52,12 +52,11 @@ class LoginViewController: UIViewController {
     
     
     @objc private func forgotPassword(){
-        sendPasswordReset(withEmail: loginView.emailLoginTextField.text!)
-        print("forgot password button pressed")
-    }
-    
-    func sendPasswordReset(withEmail email: String, completion: SendPasswordResetCallback? = nil) {
-        return
+        //TODO: Check if email is a verified user
+        Auth.auth().sendPasswordReset(withEmail:loginView.emailLoginTextField.text!){(error) in
+            print("sent")
+            self.showAlert(title: "Password Reset", message: "Password email sent, check spam inbox")
+        }
     }
     
     func showAlert(title: String, message: String?) {
@@ -65,8 +64,8 @@ class LoginViewController: UIViewController {
         let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
+        
     }
-    
 }
 
 extension LoginViewController: AuthUserServiceDelegate {
