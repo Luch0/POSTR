@@ -32,7 +32,8 @@ class LoginViewController: UIViewController {
             showAlert(title: "Come on, really!? No spaces allowed!", message: nil)
             return
         }
-        authUserService.signIn(email: loginView.emailLoginTextField.text!, password: passwordText)}
+        authUserService.signIn(email: loginView.emailLoginTextField.text!, password: passwordText)
+    }
     
     
     
@@ -51,12 +52,11 @@ class LoginViewController: UIViewController {
     
     
     @objc private func forgotPassword(){
-        sendPasswordReset(withEmail: loginView.emailLoginTextField.text!)
-        print("forgot password button pressed")
-    }
-    
-    func sendPasswordReset(withEmail email: String, completion: SendPasswordResetCallback? = nil) {
-        return
+        //TODO: Check if email is a verified user
+        Auth.auth().sendPasswordReset(withEmail:loginView.emailLoginTextField.text!){(error) in
+            print("sent")
+            self.showAlert(title: "Password Reset", message: "Password email sent, check spam inbox")
+        }
     }
     
     func showAlert(title: String, message: String?) {
@@ -66,44 +66,42 @@ class LoginViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
         
     }
-    
 }
 
 extension LoginViewController: AuthUserServiceDelegate {
     func didCreateUser(_ userService: AuthUserService, user: User) {
-//				DBService.manager.addUser() //ADD USER TO DATABASE
-        //self.dismiss(animated: true, completion: nil)
         print("didCreateUser: \(user)")
-        Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+        Auth.auth().currentUser!.sendEmailVerification(completion: { (error) in
             if let error = error {
                 print("error with sending email verification, \(error)")
+                self.showAlert(title: "Error", message: "error with sending email verification");
+                self.authUserService.signOut()
             } else {
                 print("email verification sent")
+                self.showAlert(title: "Verification Sent", message: "Please verify email");
+                self.authUserService.signOut()
             }
         })
-        if (Auth.auth().currentUser?.isEmailVerified)! {
-            self.dismiss(animated: true, completion: nil)
-        } else {
-            showAlert(title: "Verification", message: "Please verify email");
-						authUserService.signOut();
-						return
-        }
     }
     
     func didFailCreatingUser(_ userService: AuthUserService, error: Error) {
         showAlert(title: error.localizedDescription, message: nil)
     }
+    
     func didSignIn(_ userService: AuthUserService, user: User) {
-        if (Auth.auth().currentUser?.isEmailVerified)! {
+        if Auth.auth().currentUser!.isEmailVerified {
             self.dismiss(animated: true, completion: nil)
-        }else{
-            showAlert(title: "Email Verification Needed", message: "Please verify email"); authUserService.signOut(); return
+        } else {
+            showAlert(title: "Email Verification Needed", message: "Please verify email")
+            authUserService.signOut()
+            return
         }
     }
+    
     func didFailSignIn(_ userService: AuthUserService, error: Error) {
-        showAlert(title: "Incorrect username and/or password", message: nil)
-        //        showAlert(title: "", message: "Incorrent username and/or password")
-        
+        showAlert(title: error.localizedDescription, message: nil)
+        // showAlert(title: "", message: "Incorrent username and/or password")
     }
+    
 }
 
