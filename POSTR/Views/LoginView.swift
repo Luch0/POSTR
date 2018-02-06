@@ -77,7 +77,7 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Login", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = FlatPurpleDark()
+        button.backgroundColor = FlatTeal()
         button.layer.cornerRadius = 4
         return button
     }()
