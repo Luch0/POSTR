@@ -23,15 +23,15 @@ final class StyleManager {
     // MARK: - Theme
     
     static func primaryTheme() -> UIColor {
-        return FlatBlue()
+        return FlatPurpleDark()
     }
     
     static func theme() -> UIColor {
-        return FlatBlue()
+        return FlatPurpleDark()
     }
     
     static func toolBarTheme() -> UIColor {
-        return FlatBlue()
+        return FlatPurpleDark()
     }
     
     static func tintTheme() -> UIColor {
@@ -39,23 +39,23 @@ final class StyleManager {
     }
     
     static func titleTextTheme() -> UIColor {
-        return FlatWhite()
+        return FlatPurpleDark()
     }
     
     static func titleTheme() -> UIColor {
-        return FlatCoffeeDark()
+        return FlatPurpleDark()
     }
     
     static func textTheme() -> UIColor {
-        return FlatBlue()
+        return FlatPurpleDark()
     }
     
     static func backgroudTheme() -> UIColor {
-        return FlatBlue()
+        return FlatPurpleDark()
     }
     
     static func positiveTheme() -> UIColor {
-        return FlatBlue()
+        return FlatPurpleDark()
     }
     
     static func negativeTheme() -> UIColor {
