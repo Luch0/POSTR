@@ -29,6 +29,11 @@ class DBService {
 	}
 	static let manager = DBService()
 
+    func formatDate(with date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, YYYY h:mm a"
+        return dateFormatter.string(from: date)
+    }
 
 	public func getDB()-> DatabaseReference { return dbRef }
 	public func getUsers()-> DatabaseReference { return usersRef }

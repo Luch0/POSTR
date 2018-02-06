@@ -29,6 +29,7 @@ class LoginView: UIView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
         label.text = "Email: "
+        label.textAlignment = .right
         label.textColor = FlatPurpleDark()
         return label
     }()
@@ -36,6 +37,7 @@ class LoginView: UIView {
     lazy var passwordAddressLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
+        label.textAlignment = .right
         label.text = "Password: "
         label.textColor = FlatPurpleDark()
         return label
@@ -147,7 +149,7 @@ class LoginView: UIView {
         createNewAccountButton.translatesAutoresizingMaskIntoConstraints = false
         createNewAccountButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
         createNewAccountButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 20).isActive = true
-        createNewAccountButton.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.5).isActive = true
+        createNewAccountButton.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.60).isActive = true
     }
     
     func setupForgotPassword() {
@@ -179,18 +181,18 @@ class LoginView: UIView {
         addSubview(emailAddressLabel)
         emailAddressLabel.translatesAutoresizingMaskIntoConstraints = false
         emailAddressLabel.topAnchor.constraint(equalTo: emailLoginTextField.topAnchor).isActive = true
-        emailAddressLabel.trailingAnchor.constraint(equalTo: emailLoginTextField.leadingAnchor).isActive = true
-       // emailAddressLabel.centerYAnchor.constraint(equalTo: emailAddressLabel.centerYAnchor).isActive = true
-        emailAddressLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 25).isActive = true
+        emailAddressLabel.trailingAnchor.constraint(equalTo: emailLoginTextField.leadingAnchor, constant: -3).isActive = true
+        emailAddressLabel.centerYAnchor.constraint(equalTo: emailLoginTextField.centerYAnchor).isActive = true
+        emailAddressLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
     }
     
     func setupPasswordLabel() {
         addSubview(passwordAddressLabel)
         passwordAddressLabel.translatesAutoresizingMaskIntoConstraints = false
         passwordAddressLabel.topAnchor.constraint(equalTo: passwordTextField.topAnchor).isActive = true
-        passwordAddressLabel.trailingAnchor.constraint(equalTo: passwordTextField.leadingAnchor).isActive = true
-        passwordAddressLabel.centerYAnchor.constraint(equalTo: passwordAddressLabel.centerYAnchor).isActive = true
-        passwordAddressLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 25).isActive = true
+        passwordAddressLabel.trailingAnchor.constraint(equalTo: passwordTextField.leadingAnchor, constant: -3).isActive = true
+        passwordAddressLabel.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor).isActive = true
+        passwordAddressLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
     }
     
 }
