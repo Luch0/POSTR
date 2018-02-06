@@ -14,7 +14,7 @@ extension DBService {
                                 "userID"           : AuthUserService.getCurrentUser()!.uid,
                                 "commentID"        : DBService.manager.getComments().childByAutoId().key,
                                 "commentStr"       : commentStr,
-                                "dateOfPost"       : Date().description,
+                                "dateOfPost"       : formatDate(with: Date()),
                                 "commentsFlagCount": 0,
                                 "username"          : AuthUserService.getCurrentUser()!.displayName!]) { (error, dbRef) in
                                     if let error = error {
