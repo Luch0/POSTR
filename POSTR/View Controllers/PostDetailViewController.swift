@@ -137,7 +137,7 @@ extension PostDetailViewController: UITableViewDelegate {
     // fix correct sizes for rows
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView == postDetailView.postTableView {
-            return 200
+            return 350
         } else {
             return 80
         }

@@ -12,8 +12,10 @@ class EditPostViewController: UIViewController {
     
     let editPost = EditPostView()
     
+    var post: Post!
+    
     // MARK: Properties
-    var categories = ["Cats", "Places", "People", "Dogs"]
+    var categories = ["Cats", "Food", "Travel", "People", "Memes"]
     
     // MARK: View Lifecycle
     override func viewDidLoad() {
@@ -21,8 +23,18 @@ class EditPostViewController: UIViewController {
         view.addSubview(editPost)
         editPost.categoriesTableView.delegate = self
         editPost.categoriesTableView.dataSource = self
+        //editPost.configurePostToEdit(post: post)
         editPost.cancelButton.addTarget(self, action: #selector(cancelPost), for: .touchUpInside)
     }
+    
+//    init(post: Post) {
+//        super.init(nibName: nil, bundle: nil)
+//        self.post = post
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     @objc func cancelPost() {
         self.dismiss(animated: true, completion: nil)
@@ -50,8 +62,6 @@ extension EditPostViewController: UITableViewDataSource {
         cell.categoryLabel.text = category
         return cell
     }
-    
-    
     
 }
 
