@@ -56,6 +56,7 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if AuthUserService.getCurrentUser() != nil {
+            profileView.usernameTF.text = AuthUserService.getCurrentUser()!.displayName!
             loadUserPosts()
         }
     }
@@ -118,7 +119,8 @@ class ProfileViewController: UIViewController {
 //
 extension ProfileViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        var savedUsername = "Winston" //Dummy variable - standin for database storage
+        //var savedUsername = "Winston" //Dummy variable - standin for database storage
+        var savedUsername = AuthUserService.getCurrentUser()!.displayName!
         guard let newUsername = textField.text else {return false}
         
         if newUsername == savedUsername {
@@ -150,7 +152,7 @@ extension ProfileViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return 350
     }
 }
 
@@ -161,8 +163,8 @@ extension ProfileViewController: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
-        cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
         let post = userPosts.reversed()[indexPath.row]
+        cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
         cell.postCaption.text = post.caption
         cell.usernameLabel.text = post.username
         cell.postCategory.text = post.category
@@ -217,7 +219,11 @@ extension ProfileViewController: AuthUserServiceDelegate {
     
     func didSignOut(_ userService: AuthUserService) {
         let loginVC = LoginViewController()
-        self.present(loginVC, animated: true, completion: nil)
+        // MARK: returns to feedviewcontroller after logged out
+        self.present(loginVC, animated: true) {
+            let tabBarController: UITabBarController = self.tabBarController! as UITabBarController
+            tabBarController.selectedIndex = 0
+        }
     }
     
     func didFailSigningOut(_ userService: AuthUserService, error: Error) {
