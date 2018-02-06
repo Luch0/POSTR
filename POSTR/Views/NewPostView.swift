@@ -18,6 +18,7 @@ class NewPostView: UIView {
     lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "cancel"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     
@@ -31,6 +32,7 @@ class NewPostView: UIView {
     lazy var submitButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "checkmark"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     

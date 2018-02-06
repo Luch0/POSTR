@@ -11,26 +11,33 @@ import ChameleonFramework
 
 class LoginView: UIView {
     
-    lazy var appNameLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 35, weight: UIFont.Weight.bold)
-        label.text = "POSTR"
-        return label
+    /* lazy var appNameLabel: UILabel = {
+     let label = UILabel()
+     label.font = UIFont.systemFont(ofSize: 35, weight: UIFont.Weight.bold)
+     label.text = "POSTR"
+     return label
+     }() */
+    
+    lazy var titleView: UIImageView = {
+        let tv = UIImageView()
+        tv.image = #imageLiteral(resourceName: "smallPostrTitle")
+        tv.contentMode = .scaleAspectFit
+        return tv
     }()
     
     lazy var emailAddressLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+        label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
         label.text = "Email: "
-        label.textColor = UIColor.blue
+        label.textColor = FlatPurpleDark()
         return label
     }()
     
     lazy var passwordAddressLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+        label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
         label.text = "Password: "
-        label.textColor = UIColor.blue
+        label.textColor = FlatPurpleDark()
         return label
     }()
     
@@ -39,8 +46,15 @@ class LoginView: UIView {
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Email Address Login"
         textField.text = "luiscalle@ac.c4q.nyc" //FIX: remove, only for testing
-//        textField.layer.borderWidth = 1
-//        textField.layer.cornerRadius = 5
+        //        textField.layer.borderWidth = 1
+        textField.layer.cornerRadius = 5
+        textField.borderStyle = .roundedRect
+        let myColor : UIColor = UIColor( red: 0.5, green: 0.5, blue:0, alpha: 1.0 )
+        textField.layer.borderColor = myColor.cgColor
+        textField.textColor = FlatPurpleDark()
+        //textField.layer.borderColor = .purple
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
         return textField
     }()
     
@@ -49,9 +63,13 @@ class LoginView: UIView {
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Password"
         textField.text = "123456"
+        textField.borderStyle = .roundedRect
+        let flatPurpleDark = FlatPurpleDark()
+        textField.layer.borderColor = flatPurpleDark.cgColor
         textField.isSecureTextEntry = true // this helps to obscure the user's password with *******
-//        textField.layer.borderWidth = 1
-//        textField.layer.cornerRadius = 5
+        //        textField.layer.borderWidth = 1
+        //        textField.layer.cornerRadius = 5
+        textField.textColor = FlatPurpleDark()
         return textField
     }()
     
@@ -59,7 +77,8 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Login", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = FlatPowderBlueDark()
+        button.backgroundColor = FlatTeal()
+        button.layer.cornerRadius = 4
         return button
     }()
     
@@ -67,7 +86,8 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Create New Account", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = FlatPowderBlueDark()
+        button.backgroundColor = FlatPurpleDark()
+        button.layer.cornerRadius = 4
         return button
     }()
     
@@ -75,7 +95,8 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Forgot Password?", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = FlatPowderBlueDark()
+        button.backgroundColor = FlatPurpleDark()
+        button.layer.cornerRadius = 4
         return button
     }()
     
@@ -95,7 +116,8 @@ class LoginView: UIView {
     }
     
     private func setupViews() {
-        setupAppNameLabel()
+        //setupAppNameLabel()
+        setupTitleView()
         setupLoginButton()
         setupNewAccountButton()
         setupForgotPassword()
@@ -105,18 +127,18 @@ class LoginView: UIView {
         setupPasswordLabel()
     }
     
-    func setupAppNameLabel() {
-        addSubview(appNameLabel)
-        appNameLabel.translatesAutoresizingMaskIntoConstraints = false // this line is always necessary
-        appNameLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        appNameLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+    func setupTitleView() {
+        addSubview(titleView)
+        titleView.translatesAutoresizingMaskIntoConstraints = false // this line is always necessary
+        titleView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 70).isActive = true
+        titleView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
     }
     
     func setupLoginButton() {
         addSubview(loginButton)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
-        loginButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
+        loginButton.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant:140).isActive = true
         loginButton.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.3).isActive = true
     }
     
@@ -139,9 +161,10 @@ class LoginView: UIView {
     func setupEmailTextField() {
         addSubview(emailLoginTextField)
         emailLoginTextField.translatesAutoresizingMaskIntoConstraints = false
-        emailLoginTextField.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -25).isActive = true
-        emailLoginTextField.topAnchor.constraint(equalTo: appNameLabel.bottomAnchor, constant: 35).isActive = true
-        emailLoginTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.7).isActive = true
+       // emailLoginTextField.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -25).isActive = true
+         emailLoginTextField.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        emailLoginTextField.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 30).isActive = true
+        emailLoginTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.5).isActive = true
     }
     
     func setupPasswordTextField() {
@@ -157,7 +180,7 @@ class LoginView: UIView {
         emailAddressLabel.translatesAutoresizingMaskIntoConstraints = false
         emailAddressLabel.topAnchor.constraint(equalTo: emailLoginTextField.topAnchor).isActive = true
         emailAddressLabel.trailingAnchor.constraint(equalTo: emailLoginTextField.leadingAnchor).isActive = true
-        emailAddressLabel.centerYAnchor.constraint(equalTo: emailAddressLabel.centerYAnchor).isActive = true
+       // emailAddressLabel.centerYAnchor.constraint(equalTo: emailAddressLabel.centerYAnchor).isActive = true
         emailAddressLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 25).isActive = true
     }
     
