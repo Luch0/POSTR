@@ -35,8 +35,6 @@ class LoginViewController: UIViewController {
         authUserService.signIn(email: loginView.emailLoginTextField.text!, password: passwordText)
     }
     
-    
-    
     @objc private func createNewAccount() {
         print("create new account button pressed")
         guard let emailText = loginView.emailLoginTextField.text else {print("email is nil"); return}
@@ -50,13 +48,17 @@ class LoginViewController: UIViewController {
         authUserService.createUser(email: emailText, password: passwordText)
     }
     
-    
     @objc private func forgotPassword(){
         //TODO: Check if email is a verified user
         Auth.auth().sendPasswordReset(withEmail:loginView.emailLoginTextField.text!){(error) in
             print("sent")
             self.showAlert(title: "Password Reset", message: "Password email sent, check spam inbox")
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        loginView.emailLoginTextField.resignFirstResponder()
+        loginView.passwordTextField.resignFirstResponder()
     }
     
     func showAlert(title: String, message: String?) {

@@ -9,7 +9,13 @@
 import UIKit
 import SnapKit
 
+protocol PostTableViewCellDelegate : class {
+    func didPressOptionButton(_ tag: Int)
+}
+
 class PostTableViewCell: UITableViewCell {
+    
+    weak var delegate: PostTableViewCellDelegate?
     
     lazy var postCaption: UILabel = {
         let label = UILabel()
@@ -35,7 +41,7 @@ class PostTableViewCell: UITableViewCell {
     lazy var dateLabel: UILabel = {
         let label = UILabel()
         label.text = "Date"
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
     }()
     
@@ -48,7 +54,7 @@ class PostTableViewCell: UITableViewCell {
     lazy var usernameLabel: UILabel = {
         let label = UILabel()
         label.text = "Username"
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         return label
     }()
     
@@ -77,8 +83,14 @@ class PostTableViewCell: UITableViewCell {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "options"), for: .normal)
         button.backgroundColor = UIColor.clear
+                button.addTarget(self, action: #selector(optionsClicked), for: .touchUpInside)
         return button
     }()
+    
+    @objc func optionsClicked() {
+        delegate?.didPressOptionButton(self.tag)
+    }
+    
     
     lazy var numberOfCommentsLabel: UILabel = {
         let label = UILabel()
@@ -108,7 +120,7 @@ class PostTableViewCell: UITableViewCell {
     }
     
     private func commonInit() {
-        backgroundColor = UIColor.groupTableViewBackground
+        backgroundColor = UIColor.white
         setupViews()
     }
     
@@ -143,7 +155,7 @@ class PostTableViewCell: UITableViewCell {
         postActionsButton.snp.makeConstraints { (make) in
             make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing).offset(-8)
             make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(8)
-            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.1)
+            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.08)
             make.width.equalTo(postActionsButton.snp.height)
         }
     }
@@ -153,7 +165,7 @@ class PostTableViewCell: UITableViewCell {
         userImageView.snp.makeConstraints { (make) in
             make.leading.equalTo(safeAreaLayoutGuide.snp.leading).offset(8)
             make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).offset(-8)
-            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.1)
+            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.08)
             make.width.equalTo(userImageView.snp.height)
         }
     }
@@ -203,7 +215,7 @@ class PostTableViewCell: UITableViewCell {
         upvoteButton.snp.makeConstraints { (make) in
             make.centerX.equalTo(voteCountLabel.snp.centerX)
             make.bottom.equalTo(voteCountLabel.snp.top).offset(-2)
-            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.1)
+            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.08)
             make.width.equalTo(upvoteButton.snp.height)
         }
     }
@@ -213,7 +225,7 @@ class PostTableViewCell: UITableViewCell {
         downvoteButton.snp.makeConstraints { (make) in
             make.centerX.equalTo(voteCountLabel.snp.centerX)
             make.top.equalTo(voteCountLabel.snp.bottom).offset(2)
-            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.1)
+            make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.08)
             make.width.equalTo(downvoteButton.snp.height)
         }
     }
