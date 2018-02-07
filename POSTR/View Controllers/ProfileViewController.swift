@@ -54,7 +54,11 @@ class ProfileViewController: UIViewController {
 		//Setup
 		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
 		setupNavigationBar()
-		profileView.configureProfileView(user: currentUser!)
+        
+        if currentUser != nil {
+            profileView.configureProfileView(user: currentUser!)
+        }
+        
 		profileView.profileImageButton.addTarget(self, action: #selector(changeProfileImage), for: UIControlEvents.allTouchEvents)
 
 		//getting a reference to the node artists
@@ -291,7 +295,10 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 extension ProfileViewController: AuthUserServiceDelegate {
 	func didSignOut(_ userService: AuthUserService) {
 		let loginVC = LoginViewController()
-		self.present(loginVC, animated: true, completion: nil)
+        self.present(loginVC, animated: true) {
+            let tabBarController: UITabBarController = self.tabBarController! as UITabBarController
+            tabBarController.selectedIndex = 0
+        }
 	}
 	func didFailSigningOut(_ userService: AuthUserService, error: Error) {
 		//TODO: alert view
