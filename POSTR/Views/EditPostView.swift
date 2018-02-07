@@ -157,13 +157,13 @@ class EditPostView: UIView {
     }
     
     private func setupCategoryLabel() {
-        addSubview(selectCategoryLabel)
-        selectCategoryLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            selectCategoryLabel.topAnchor.constraint(equalTo: selectImageButton.bottomAnchor, constant: 5),
-            selectCategoryLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.6),
-            selectCategoryLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.05),
-            selectCategoryLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor)
+			addSubview(selectCategoryLabel)
+			selectCategoryLabel.translatesAutoresizingMaskIntoConstraints = false
+			NSLayoutConstraint.activate([
+				selectCategoryLabel.topAnchor.constraint(equalTo: selectImageButton.bottomAnchor, constant: 5),
+				selectCategoryLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.6),
+				selectCategoryLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.05),
+				selectCategoryLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor)
             ])
     }
     

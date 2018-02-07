@@ -6,7 +6,8 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-    
+
+		private var currentUser = AuthUserService.getCurrentUser()
     private var userPosts = [Post](){
         didSet {
             DispatchQueue.main.async {
@@ -19,7 +20,7 @@ class ProfileViewController: UIViewController {
     var profileView = ProfileView()
     
     // MARK: Properties
-    var profileImage: UIImage!
+    private var profileImage: UIImage!
     var gesture: UIGestureRecognizer!
     let imagePicker = UIImagePickerController()
     
@@ -27,6 +28,15 @@ class ProfileViewController: UIViewController {
     
     
     //MARK: View Lifecycle
+		override func viewWillAppear(_ animated: Bool) {
+			super.viewWillAppear(animated)
+			if AuthUserService.getCurrentUser() != nil {
+				loadUserPosts()
+				currentUser = AuthUserService.getCurrentUser()
+				profileView.usernameTF.text = currentUser?.displayName
+
+			}
+		}
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(profileView)
@@ -40,7 +50,6 @@ class ProfileViewController: UIViewController {
         self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         setupNavigationBar()
         profileView.profileImageButton.addTarget(self, action: #selector(changeProfileImage), for: UIControlEvents.allTouchEvents)
-        
     }
     
     func loadUserPosts() {
@@ -53,14 +62,16 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if AuthUserService.getCurrentUser() != nil {
-            loadUserPosts()
-        }
-    }
+
     
     //MARK: Custom Methods
+		func showAlert(title: String, message: String) {
+			let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+			let okAction = UIAlertAction(title: "Ok", style: .default) { alert in }
+			alertController.addAction(okAction)
+			present(alertController, animated: true, completion: nil)
+		}
+
     private func setupNavigationBar() {
         navigationItem.title = "Profile"
         //self.navigationController?.navigationBar.barTintColor = .yellow
@@ -72,7 +83,14 @@ class ProfileViewController: UIViewController {
     }
     
     @objc private func logout() {
-        authService.signOut()
+			let alertView = UIAlertController(title: "Are you sure you want to Logout?", message: nil, preferredStyle: .alert)
+			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
+				self.authService.signOut()
+			}
+			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
+			alertView.addAction(yesOption)
+			alertView.addAction(noOption)
+			present(alertView, animated: true, completion: nil)
     }
     
     @objc private func changeProfileImage() {
@@ -115,7 +133,7 @@ class ProfileViewController: UIViewController {
 }
 
 
-//
+// MARK: TextField Delegate
 extension ProfileViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         var savedUsername = "Winston" //Dummy variable - standin for database storage
@@ -140,24 +158,23 @@ extension ProfileViewController: UITextFieldDelegate {
 }
 
 
+// MARK: TableView Delegate
 extension ProfileViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // TODO: same as feedvc but only user posts
         let selectedPost = userPosts.reversed()[indexPath.row]
         let postDetailViewController = PostDetailViewController(post: selectedPost)
         self.navigationController?.pushViewController(postDetailViewController, animated: true)
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 200
     }
 }
 
-
+// MARK: TableView Datasource
 extension ProfileViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userPosts.count //posts.count
+        return userPosts.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
@@ -203,23 +220,29 @@ extension ProfileViewController: UITableViewDataSource {
 //MARK: UIImagePickerController Delegate & NavigationController Delegate
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let editedImage: UIImage? = info[UIImagePickerControllerEditedImage] as? UIImage
+			guard let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage else { print("image is nil"); return }
         self.profileImage = editedImage
+
         self.profileView.profileImageButton.setImage(profileImage, for: .normal)
+			//Store image on Firebase Storage
+			StorageService.manager.storeUserImage(image: profileImage, userId: (currentUser?.uid)!)
+
         self.dismiss(animated: true, completion: nil)
     }
+
+
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismiss(animated: true, completion: nil)
     }
 }
 
+
+// MARK: Sign Out
 extension ProfileViewController: AuthUserServiceDelegate {
-    
     func didSignOut(_ userService: AuthUserService) {
-        let loginVC = LoginViewController()
-        self.present(loginVC, animated: true, completion: nil)
+			let loginVC = LoginViewController()
+			self.present(loginVC, animated: true, completion: nil)
     }
-    
     func didFailSigningOut(_ userService: AuthUserService, error: Error) {
         //TODO: alert view
     }
