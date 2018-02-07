@@ -9,7 +9,13 @@
 import UIKit
 import SnapKit
 
+protocol PostTableViewCellDelegate : class {
+    func didPressOptionButton(_ tag: Int)
+}
+
 class PostTableViewCell: UITableViewCell {
+    
+    weak var delegate: PostTableViewCellDelegate?
     
     lazy var postCaption: UILabel = {
         let label = UILabel()
@@ -77,8 +83,14 @@ class PostTableViewCell: UITableViewCell {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "options"), for: .normal)
         button.backgroundColor = UIColor.clear
+                button.addTarget(self, action: #selector(optionsClicked), for: .touchUpInside)
         return button
     }()
+    
+    @objc func optionsClicked() {
+        delegate?.didPressOptionButton(self.tag)
+    }
+    
     
     lazy var numberOfCommentsLabel: UILabel = {
         let label = UILabel()

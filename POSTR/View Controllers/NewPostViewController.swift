@@ -13,7 +13,7 @@ class NewPostViewController: UIViewController {
     let newpost = NewPostView()
     
     // MARK: Properties
-    var categories = ["Cats", "Places", "People", "Dogs"]
+    var categories = ["Cats", "Food", "Travel", "People", "Memes"]
     var selectedCategory: String! // cats as default
     
     // MARK: View Lifecycle
