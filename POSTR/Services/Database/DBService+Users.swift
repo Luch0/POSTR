@@ -8,9 +8,7 @@ import UIKit
 import Firebase
 
 extension DBService {
-    //    public func addUsers(userID: String, username: String, userBio: String, image: UIImage) {
-    
-    public func addUser() {
+		public func addUser(userBio: String?, image: UIImage) {
         let childByAutoId = DBService.manager.getUsers().childByAutoId()
         childByAutoId.setValue(["userID"       : AuthUserService.getCurrentUser()!.uid,
                                 "username"     : AuthUserService.getCurrentUser()!.displayName!,
@@ -21,9 +19,10 @@ extension DBService {
                                         print("addUser error: \(error.localizedDescription)")
                                     } else {
                                         print("user added @ database reference: \(dbRef)")
-                                        // add an image to storage
-                                        // StorageService.manager.storeImage(image: image, userId: childByAutoId.key)
-                                        // TODO: add image to database
+
+																			// add an image to FireBase Storage & CoreData
+																			StorageService.manager.storeUserImage(image: image, userId: childByAutoId.key)
+																			// TODO: add image to CoreData
                                     }
         }
     }

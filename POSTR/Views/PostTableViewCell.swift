@@ -8,6 +8,8 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
+
 
 protocol PostTableViewCellDelegate : class {
     func didPressOptionButton(_ tag: Int)
@@ -83,7 +85,7 @@ class PostTableViewCell: UITableViewCell {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "options"), for: .normal)
         button.backgroundColor = UIColor.clear
-                button.addTarget(self, action: #selector(optionsClicked), for: .touchUpInside)
+				button.addTarget(self, action: #selector(optionsClicked), for: .touchUpInside)
         return button
     }()
     
@@ -239,6 +241,19 @@ class PostTableViewCell: UITableViewCell {
             make.width.equalTo(postImageView.snp.height)
         }
     }
+
+	public func configurePostCell(post: Post) {
+		postCaption.text = post.caption
+		usernameLabel.text = post.username
+		postCategory.text = post.category
+		dateLabel.text = post.date
+		voteCountLabel.text = post.currentVotes.description
+		if let imageURL = post.postImageStr {
+			postImageView.kf.indicatorType = .activity
+			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			}
+		}
+	}
     
 }
 

@@ -51,7 +51,7 @@ class NewPostView: UIView {
     
     lazy var selectImageButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "kitten"), for: .normal)
+				button.setImage(#imageLiteral(resourceName: "placeholderImage"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         return button
     }()
