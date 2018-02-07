@@ -163,8 +163,13 @@ extension ProfileViewController: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
+        
+        cell.delegate = self
+        // have to check if good
+        cell.tag = indexPath.row
+        
         let post = userPosts.reversed()[indexPath.row]
-        cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+        //cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
         cell.postCaption.text = post.caption
         cell.usernameLabel.text = post.username
         cell.postCategory.text = post.category
@@ -173,10 +178,10 @@ extension ProfileViewController: UITableViewDataSource {
         return cell
     }
     
-    @objc private func showOptions() {
+    func showOptions(tag: Int) {
         let alertView = UIAlertController(title: "Options", message: nil, preferredStyle: .alert)
         let editPostOption = UIAlertAction(title: "Edit Post", style: .default) { (alertAction) in
-            let editPostVC = EditPostViewController()
+            let editPostVC = EditPostViewController(post: self.userPosts.reversed()[tag])
             self.present(editPostVC, animated: true, completion: nil)
         }
         let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
@@ -230,4 +235,12 @@ extension ProfileViewController: AuthUserServiceDelegate {
         //TODO: alert view
     }
 }
+
+extension ProfileViewController: PostTableViewCellDelegate {
+    
+    func didPressOptionButton(_ tag: Int) {
+        showOptions(tag: tag)
+    }
+}
+
 
