@@ -16,7 +16,7 @@ extension DBService {
                                 "userID"        : AuthUserService.getCurrentUser()!.uid,
                                 "caption"       : caption,
                                 "category"      : category,
-                                "date"          : Date().description,
+                                "date"          : formatDate(with: Date()),
                                 "username"      : AuthUserService.getCurrentUser()!.displayName!,
                                 "numOfComments" : 0,
                                 "upvoteCount"   : 0,
