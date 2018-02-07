@@ -64,7 +64,7 @@ class LoginView: UIView {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Password"
-        textField.text = "123456"
+        textField.text = "testtest"
         textField.borderStyle = .roundedRect
         let flatPurpleDark = FlatPurpleDark()
         textField.layer.borderColor = flatPurpleDark.cgColor
