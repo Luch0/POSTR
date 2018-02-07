@@ -12,6 +12,8 @@ class EditPostViewController: UIViewController {
     
     let editPost = EditPostView()
     
+    var newCategory: String!
+    
     var post: Post!
     
     // MARK: Properties
@@ -23,9 +25,10 @@ class EditPostViewController: UIViewController {
         view.addSubview(editPost)
         editPost.categoriesTableView.delegate = self
         editPost.categoriesTableView.dataSource = self
+        newCategory = post.category
         editPost.configureEditPost(post: post)
         editPost.cancelButton.addTarget(self, action: #selector(cancelEdit), for: .touchUpInside)
-        editPost.cancelButton.addTarget(self, action: #selector(savePost), for: .touchUpInside)
+        editPost.submitButton.addTarget(self, action: #selector(saveEditedPost), for: .touchUpInside)
     }
     
     init(post: Post) {
@@ -41,8 +44,10 @@ class EditPostViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @objc func savePost() {
-        
+    @objc func saveEditedPost() {
+        let newCaption = editPost.captionTextView.text
+        DBService.manager.saveEditedPost(postID: post.postID, caption: newCaption!, newCategory: newCategory)
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -52,7 +57,9 @@ class EditPostViewController: UIViewController {
 }
 
 extension EditPostViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        newCategory = categories[indexPath.row]
+    }
 }
 
 extension EditPostViewController: UITableViewDataSource {
