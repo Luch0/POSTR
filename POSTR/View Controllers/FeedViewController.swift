@@ -8,7 +8,8 @@
 
 import UIKit
 import Firebase
-
+import AVFoundation
+import Toucan
 
 class FeedViewController: UIViewController {
     
@@ -77,11 +78,7 @@ extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
         let post = posts.reversed()[indexPath.row]
-        cell.postCaption.text = post.caption
-        cell.usernameLabel.text = post.username
-        cell.postCategory.text = post.category
-        cell.dateLabel.text = post.date
-        cell.voteCountLabel.text = post.currentVotes.description
+				cell.configurePostCell(post: post)
         cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
         return cell
     }
@@ -105,7 +102,6 @@ extension FeedViewController: UITableViewDataSource {
 }
 
 extension FeedViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPost = posts.reversed()[indexPath.row]
         let postDetailViewController = PostDetailViewController(post: selectedPost)
