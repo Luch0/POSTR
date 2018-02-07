@@ -1,9 +1,12 @@
 //  ProfileView.swift
-//  TestingGroup2
-//  Created by C4Q on 1/30/18.
-//  Copyright © 2018 Winston Maragh. All rights reserved.
+//  POSTR
+//  Created by Winston Maragh on 1/30/18.
+//  Copyright © 2018 On-The-Line. All rights reserved.
 
 import UIKit
+import Firebase
+import Kingfisher
+import SnapKit
 
 class ProfileView: UIView {
     
@@ -15,6 +18,7 @@ class ProfileView: UIView {
     lazy var profileImageButton: UIButton = {
         let button = UIButton() //default image
         button.setImage(#imageLiteral(resourceName: "placeholderImage"), for: .normal)
+				button.backgroundColor = UIColor.clear
         return button
     }()
     lazy var usernameTF: UITextField = {
@@ -116,7 +120,20 @@ class ProfileView: UIView {
         tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
-    
-    
+
+	public func configureProfileView(user: User) {
+		usernameTF.text = user.displayName
+//		if let profileImageURL = user.photoURL {
+//			//		userBioTV.text = user.
+//			print(profileImageURL)
+//			profileImageButton.kf.setImage(with: user.photoURL, for: .normal, placeholder: #imageLiteral(resourceName: "placeholderImage"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+//			}
+//		}
+		if let imageURL = user.photoURL {
+//			profileImageButton.kf.indicatorType = .activity
+			profileImageButton.kf.setImage(with: imageURL, for: .normal, placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			}
+		}
+	}
     
 }
