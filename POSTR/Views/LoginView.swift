@@ -76,12 +76,12 @@ class LoginView: UIView {
     }()
     
     lazy var loginButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Login", for: UIControlState.normal)
-        button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = FlatTeal()
-        button.layer.cornerRadius = 4
-        return button
+			let button = UIButton()
+			button.setTitle("Login", for: UIControlState.normal)
+			button.setTitleColor(UIColor.white, for: UIControlState.normal)
+			button.backgroundColor = UIColor(red: 54/255, green: 135/255, blue: 164/255, alpha: 1)
+			button.layer.cornerRadius = 4
+			return button
     }()
     
     lazy var createNewAccountButton: UIButton = {
