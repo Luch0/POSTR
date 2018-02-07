@@ -30,7 +30,7 @@ class NewPostViewController: UIViewController {
 		selectedCategory = categories[0]
 		newpost.categoriesTableView.delegate = self
 		newpost.categoriesTableView.dataSource = self
-		newpost.captionTextView.delegate = self
+		newpost.captionTextField.delegate = self
 		newpost.cancelButton.addTarget(self, action: #selector(cancelPost), for: .touchUpInside)
 		newpost.submitButton.addTarget(self, action: #selector(addPost), for: .touchUpInside)
 		imagePicker.delegate = self
@@ -43,7 +43,7 @@ class NewPostViewController: UIViewController {
 	}
 
 	@objc func addPost() {
-		DBService.manager.addPosts(caption: newpost.captionTextView.text ?? "", category: selectedCategory, postImageStr: "no image", userImageStr: "AuthUserService.getCurrentUser()?.photoURL", image: postImage)
+		DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "", category: selectedCategory, postImageStr: "no image", userImageStr: "AuthUserService.getCurrentUser()?.photoURL", image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
 		self.dismiss(animated: true, completion: nil)
 	}
 
@@ -63,7 +63,7 @@ class NewPostViewController: UIViewController {
 	}
 
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		newpost.captionTextView.resignFirstResponder()
+		newpost.captionTextField.resignFirstResponder()
 	}
 
 	// CAMERA
@@ -134,10 +134,10 @@ extension NewPostViewController: UITableViewDataSource {
 
 
 // MARK: TextField Delegate
-extension NewPostViewController: UITextViewDelegate {
-	func textViewDidBeginEditing(_ textView: UITextView) {
-		textView.text = ""
-	}
+extension NewPostViewController: UITextFieldDelegate {
+//    func textViewDidBeginEditing(_ textView: UITextView) {
+//        //textView.text = ""
+//    }
 }
 
 
