@@ -1,6 +1,6 @@
 //  StorageService+Images.swift
 //  POSTR
-//  Created by Maryann Yin on 2/2/18.
+//  Created by Winston Maragh on 2/2/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
 
 import Foundation
@@ -46,9 +46,9 @@ extension StorageService {
 
 			// set post's imageURL
 			let imageURL = String(describing: snapshot.metadata!.downloadURL()!)
-			DBService.manager.getPosts().child("\(postId)/imageURL").setValue(imageURL)
-
-			//DBService.manager.getPosts().child("\(postId)").updateChildValues(["imageURL" :  imageURL])
+			//			DBService.manager.getPosts().child("\(postId)/imageURL").setValue(imageURL)
+			DBService.manager.getPosts().child("\(postId)/postImageStr").setValue(imageURL)
+			//			DBService.manager.getPosts().child("\(postId)").updateChildValues(["imageURL" :  imageURL])
 		}
 
 		uploadTask.observe(.failure) { snapshot in

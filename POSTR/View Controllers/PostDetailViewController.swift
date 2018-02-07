@@ -95,15 +95,10 @@ extension PostDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == postDetailView.postTableView {
-            let postCell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
-            // TODO: configure cell with data
-            postCell.postCaption.text = post.caption
-            postCell.usernameLabel.text = post.username
-            postCell.postCategory.text = post.category
-            postCell.dateLabel.text = post.date
-            postCell.voteCountLabel.text = post.currentVotes.description
-            postCell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-            return postCell
+					let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
+					cell.configurePostCell(post: self.post)
+					cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+					return cell
         } else {
             // TODO: make a custom comment cell with date and better layout
             let commentCell = tableView.dequeueReusableCell(withIdentifier: "Comment Cell", for: indexPath) as! CommentTableViewCell

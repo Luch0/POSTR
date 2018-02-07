@@ -20,9 +20,9 @@ extension DBService {
                                     } else {
                                         print("user added @ database reference: \(dbRef)")
 
-                                        // add an image to storage
+																			// add an image to FireBase Storage & CoreData
 																			StorageService.manager.storeUserImage(image: image, userId: childByAutoId.key)
-                                        // TODO: add image to database
+																			// TODO: add image to CoreData
                                     }
         }
     }
