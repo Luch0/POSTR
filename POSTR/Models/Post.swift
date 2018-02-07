@@ -19,8 +19,8 @@ class Post {
     let upvoteCount: Int
     let downvoteCount: Int
     let currentVotes: Int
-    let postImageStr: String
-    let userImageStr: String
+    let postImageStr: String?
+    let userImageStr: String?
     let postFlagCount: Int
     
     init(dict: [String : Any]) {
