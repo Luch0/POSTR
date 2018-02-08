@@ -13,11 +13,15 @@ import Kingfisher
 
 protocol PostTableViewCellDelegate : class {
     func didPressOptionButton(_ tag: Int)
+    func updateUpvote(tableViewCell: PostTableViewCell )
+    func updateDownVote(tableViewCell: PostTableViewCell)
 }
 
 class PostTableViewCell: UITableViewCell {
     
     weak var delegate: PostTableViewCellDelegate?
+    
+    var currentIndexPath: IndexPath?
     
     lazy var postCaption: UILabel = {
         let label = UILabel()
@@ -64,8 +68,14 @@ class PostTableViewCell: UITableViewCell {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "upvote"), for: .normal)
         button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(upvote), for: .touchUpInside)
         return button
     }()
+    
+    @objc private func upvote(){
+        delegate?.updateUpvote(tableViewCell: self)
+        
+    }
     
     lazy var voteCountLabel: UILabel = {
         let label = UILabel()
@@ -78,8 +88,13 @@ class PostTableViewCell: UITableViewCell {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "downvote"), for: .normal)
         button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(downVote), for: .touchUpInside)
         return button
     }()
+    
+    @objc private func downVote(){
+        delegate?.updateDownVote(tableViewCell:self)
+    }
     
     lazy var postActionsButton: UIButton = {
         let button = UIButton()
@@ -247,7 +262,7 @@ class PostTableViewCell: UITableViewCell {
 		usernameLabel.text = post.username
 		postCategory.text = post.category
 		dateLabel.text = post.date
-		voteCountLabel.text = post.currentVotes.description
+		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
 		if let imageURL = post.postImageStr {
 			postImageView.kf.indicatorType = .activity
 			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
