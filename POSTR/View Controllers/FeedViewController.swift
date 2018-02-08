@@ -53,10 +53,15 @@ class FeedViewController: UIViewController {
     }
     
     private func configureNavBar() {
-        //        self.navigationController?.navigationBar.barTintColor = .red
         self.navigationItem.title = "Feed"
         let addBarItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPostButton))
         navigationItem.rightBarButtonItem = addBarItem
+        var titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+        var titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
+        titleImageView.frame = CGRect(x: 5, y: 0, width: titleView.frame.width, height: titleView.frame.height)
+        titleView.addSubview(titleImageView)
+        navigationItem.titleView = titleView
+        
         
     }
     
@@ -78,15 +83,18 @@ extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
         let post = posts.reversed()[indexPath.row]
-				cell.configurePostCell(post: post)
+        cell.delegate = self
+        cell.currentIndexPath = indexPath
+        cell.tag = indexPath.row
+        cell.configurePostCell(post: post)
         cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
         return cell
     }
     
-    @objc private func showOptions() {
+    @objc private func showOptions(tag: Int) {
         let alertView = UIAlertController(title: "Flag", message: "Flag user or post", preferredStyle: .alert)
         let flagPost = UIAlertAction(title: "Flag Post", style: .destructive) { (alertAction) in
-            // TODO: flag post
+            DBService.manager.flagPost(post: self.posts.reversed()[tag])
         }
         let flaUser = UIAlertAction(title: "Flag User", style: .destructive) { (alertAction) in
             // TODO: flag user
@@ -112,5 +120,30 @@ extension FeedViewController: UITableViewDelegate {
         return 350
     }
     
+}
+
+// MARK: Delegate for PostTableViewCell
+extension FeedViewController: PostTableViewCellDelegate {
+    func didPressOptionButton(_ tag: Int) {
+        showOptions(tag: tag)
+    }
+    
+    func updateUpvote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = posts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateUpvote(postToUpdate: postToUpdate)
+            
+        }
+    }
+    
+    func updateDownVote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = posts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateDownvote(postToUpdate: postToUpdate)
+            
+        }
+    }
 }
 

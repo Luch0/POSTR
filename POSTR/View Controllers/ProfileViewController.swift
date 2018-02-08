@@ -69,12 +69,15 @@ class ProfileViewController: UIViewController {
 	//MARK: Custom Methods
 	private func setupNavigationBar() {
 		navigationItem.title = "Profile"
-		//self.navigationController?.navigationBar.barTintColor = .yellow
 		navigationItem.largeTitleDisplayMode = .never
-
 		//right bar button for toggling between map & list
 		let logoutBarItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.plain, target: self, action: #selector(logout))
 		navigationItem.rightBarButtonItem = logoutBarItem
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+        let titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
+        titleImageView.frame = CGRect(x: 5, y: 0, width: titleView.frame.width, height: titleView.frame.height)
+        titleView.addSubview(titleImageView)
+        navigationItem.titleView = titleView
 	}
 
 	func loadUserPosts() {
@@ -226,7 +229,6 @@ extension ProfileViewController: UITableViewDataSource {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
 
 		cell.delegate = self
-		// have to check if good
 		cell.tag = indexPath.row
 
 		let post = userPosts.reversed()[indexPath.row]
@@ -251,6 +253,7 @@ extension ProfileViewController: UITableViewDataSource {
 			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
 				// TODO: delete user Post - NEED postID
 				//					self.deletePost(id: post.id!)
+                DBService.manager.removePost(postID: self.userPosts.reversed()[tag].postID)
 			}
 			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
 			alertView.addAction(yesOption)
@@ -307,6 +310,22 @@ extension ProfileViewController: AuthUserServiceDelegate {
 
 // MARK: Delegate for PostTableViewCell
 extension ProfileViewController: PostTableViewCellDelegate {
+    func updateUpvote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = userPosts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateUpvote(postToUpdate: postToUpdate)
+        }
+    }
+    
+    func updateDownVote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = userPosts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateDownvote(postToUpdate: postToUpdate)
+        }
+    }
+    
     func didPressOptionButton(_ tag: Int) {
         showOptions(tag: tag)
     }
