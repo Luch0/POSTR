@@ -115,7 +115,7 @@ extension StorageService {
 
 			// set job's imageURL
 			let imageURL = String(describing: snapshot.metadata!.downloadURL()!)
-			DBService.manager.getUsers().child("\(userId)/imageURL").setValue(imageURL)
+			DBService.manager.getUsers().child("\(userId)/userImageStr").setValue(imageURL)
 
 			//DBService.manager.getJobs().child("\(jobId)").updateChildValues(["imageURL" :  imageURL])
 		}

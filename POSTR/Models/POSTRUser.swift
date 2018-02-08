@@ -9,6 +9,7 @@ import Foundation
 
 struct POSTRUser: Codable {
     let userID: String
+    let userDBid: String
     let username: String
     let userBio: String
     let userImageStr: String?
@@ -16,6 +17,7 @@ struct POSTRUser: Codable {
     
     init(dict: [String : Any]) {
         userID = dict["userID"] as? String ?? ""
+        userDBid = dict["userDBid"] as? String ?? ""
         username = dict["username"] as? String ?? ""
         userBio = dict["userBio"] as? String ?? ""
         userImageStr = dict["userImageStr"] as? String ?? ""

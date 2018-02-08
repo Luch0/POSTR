@@ -23,6 +23,8 @@ class FeedViewController: UIViewController {
         }
     }
     
+    private var users = [POSTRUser]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         feedView.tableView.delegate = self
@@ -41,6 +43,16 @@ class FeedViewController: UIViewController {
         }
     }
     
+    func loadAllUsers() {
+        DBService.manager.loadAllUsers { (users) in
+            if let users = users {
+                self.users = users
+            } else {
+                print("error loading users")
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //MARK: checks if user is signed in or not
@@ -49,6 +61,7 @@ class FeedViewController: UIViewController {
             self.present(loginVC, animated: false, completion: nil)
         } else {
             loadAllPosts()
+            loadAllUsers() // HEREEEEE
         }
     }
     
@@ -56,8 +69,8 @@ class FeedViewController: UIViewController {
         self.navigationItem.title = "Feed"
         let addBarItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPostButton))
         navigationItem.rightBarButtonItem = addBarItem
-        var titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
-        var titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+        let titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
         titleImageView.frame = CGRect(x: 5, y: 0, width: titleView.frame.width, height: titleView.frame.height)
         titleView.addSubview(titleImageView)
         navigationItem.titleView = titleView
@@ -66,12 +79,9 @@ class FeedViewController: UIViewController {
     }
     
     @objc private func addPostButton() {
-        //TODO: segue to NewPostViewController
-        
         let createPostViewController = NewPostViewController()
         self.present(createPostViewController, animated: true, completion: nil)
     }
-    
     
 }
 
@@ -96,12 +106,17 @@ extension FeedViewController: UITableViewDataSource {
         let flagPost = UIAlertAction(title: "Flag Post", style: .destructive) { (alertAction) in
             DBService.manager.flagPost(post: self.posts.reversed()[tag])
         }
-        let flaUser = UIAlertAction(title: "Flag User", style: .destructive) { (alertAction) in
-            // TODO: flag user
+        let flagUser = UIAlertAction(title: "Flag User", style: .destructive) { (alertAction) in
+            for user in self.users {
+                if user.userID == self.posts.reversed()[tag].userID {
+                  DBService.manager.flagUser(user: user)
+                    break
+                }
+            }
         }
         let cancelOption = UIAlertAction(title: "Cancel", style: .cancel) { (alertAction) in }
         alertView.addAction(flagPost)
-        alertView.addAction(flaUser)
+        alertView.addAction(flagUser)
         alertView.addAction(cancelOption)
         self.present(alertView, animated: true, completion: nil)
     }
