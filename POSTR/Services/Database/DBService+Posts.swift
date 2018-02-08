@@ -7,8 +7,8 @@ import Foundation
 import UIKit
 import Firebase
 
-
 extension DBService {
+    
 	public func addPosts(caption: String, category: String, postImageStr: String, userImageStr: String, image: UIImage) {
 		let childByAutoId = DBService.manager.getPosts().childByAutoId()
 		childByAutoId.setValue(["postID"        : childByAutoId.key,
@@ -67,11 +67,16 @@ extension DBService {
 		}
 	}
     
-    // DBService.manager.getJobs().child("\(jobId)").updateChildValues(["imageURL" :  imageURL])
-    
     func saveEditedPost(postID: String, caption: String, newCategory: String) {
-        //DBService.manager.getPosts().child(postID).childByAutoId().updateChildValues(["caption":caption,"category": caption])
         DBService.manager.getPosts().child(postID).updateChildValues(["caption":caption,"category": newCategory])
+    }
+    
+    func removePost(postID: String) {
+        DBService.manager.getPosts().child(postID).removeValue()
+    }
+    
+    func flagPost(post: Post) {
+        DBService.manager.getPosts().child(post.postID).updateChildValues(["postFlagCount":post.postFlagCount + 1])
     }
 
 }
