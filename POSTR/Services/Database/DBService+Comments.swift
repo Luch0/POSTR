@@ -12,7 +12,7 @@ extension DBService {
         let childByAutoId = DBService.manager.getComments().childByAutoId()
         childByAutoId.setValue(["postID"           : postID ,
                                 "userID"           : AuthUserService.getCurrentUser()!.uid,
-                                "commentID"        : DBService.manager.getComments().childByAutoId().key,
+                                "commentID"        : childByAutoId.key,
                                 "commentStr"       : commentStr,
                                 "dateOfPost"       : formatDate(with: Date()),
                                 "commentsFlagCount": 0,

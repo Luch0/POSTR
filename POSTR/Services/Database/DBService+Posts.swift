@@ -11,7 +11,7 @@ import Firebase
 extension DBService {
 	public func addPosts(caption: String, category: String, postImageStr: String, userImageStr: String, image: UIImage) {
 		let childByAutoId = DBService.manager.getPosts().childByAutoId()
-		childByAutoId.setValue(["postID"        : DBService.manager.getPosts().childByAutoId().key,
+		childByAutoId.setValue(["postID"        : childByAutoId.key,
 														"userID"        : AuthUserService.getCurrentUser()!.uid,
 														"caption"       : caption,
 														"category"      : category,
@@ -66,6 +66,13 @@ extension DBService {
 			completionHandler(userPosts)
 		}
 	}
+    
+    // DBService.manager.getJobs().child("\(jobId)").updateChildValues(["imageURL" :  imageURL])
+    
+    func saveEditedPost(postID: String, caption: String, newCategory: String) {
+        //DBService.manager.getPosts().child(postID).childByAutoId().updateChildValues(["caption":caption,"category": caption])
+        DBService.manager.getPosts().child(postID).updateChildValues(["caption":caption,"category": newCategory])
+    }
 
 }
 
