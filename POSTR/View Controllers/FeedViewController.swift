@@ -53,10 +53,15 @@ class FeedViewController: UIViewController {
     }
     
     private func configureNavBar() {
-        //        self.navigationController?.navigationBar.barTintColor = .red
         self.navigationItem.title = "Feed"
         let addBarItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPostButton))
         navigationItem.rightBarButtonItem = addBarItem
+        var titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+        var titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
+        titleImageView.frame = CGRect(x: 5, y: 0, width: titleView.frame.width, height: titleView.frame.height)
+        titleView.addSubview(titleImageView)
+        navigationItem.titleView = titleView
+        
         
     }
     
@@ -79,6 +84,7 @@ extension FeedViewController: UITableViewDataSource {
         let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
         let post = posts.reversed()[indexPath.row]
         cell.delegate = self
+        cell.currentIndexPath = indexPath
         cell.tag = indexPath.row
         cell.configurePostCell(post: post)
         cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
@@ -120,6 +126,24 @@ extension FeedViewController: UITableViewDelegate {
 extension FeedViewController: PostTableViewCellDelegate {
     func didPressOptionButton(_ tag: Int) {
         showOptions(tag: tag)
+    }
+    
+    func updateUpvote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = posts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateUpvote(postToUpdate: postToUpdate)
+            
+        }
+    }
+    
+    func updateDownVote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = posts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateDownvote(postToUpdate: postToUpdate)
+            
+        }
     }
 }
 
