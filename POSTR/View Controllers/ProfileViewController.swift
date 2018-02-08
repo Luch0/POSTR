@@ -69,12 +69,15 @@ class ProfileViewController: UIViewController {
 	//MARK: Custom Methods
 	private func setupNavigationBar() {
 		navigationItem.title = "Profile"
-		//self.navigationController?.navigationBar.barTintColor = .yellow
 		navigationItem.largeTitleDisplayMode = .never
-
 		//right bar button for toggling between map & list
 		let logoutBarItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.plain, target: self, action: #selector(logout))
 		navigationItem.rightBarButtonItem = logoutBarItem
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+        let titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
+        titleImageView.frame = CGRect(x: 5, y: 0, width: titleView.frame.width, height: titleView.frame.height)
+        titleView.addSubview(titleImageView)
+        navigationItem.titleView = titleView
 	}
 
 	func loadUserPosts() {
@@ -307,6 +310,22 @@ extension ProfileViewController: AuthUserServiceDelegate {
 
 // MARK: Delegate for PostTableViewCell
 extension ProfileViewController: PostTableViewCellDelegate {
+    func updateUpvote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = userPosts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateUpvote(postToUpdate: postToUpdate)
+        }
+    }
+    
+    func updateDownVote(tableViewCell: PostTableViewCell) {
+        if let currentIndexPath = tableViewCell.currentIndexPath {
+            let postToUpdate = userPosts.reversed()[currentIndexPath.row]
+            print(postToUpdate.postID)
+            DBService.manager.updateDownvote(postToUpdate: postToUpdate)
+        }
+    }
+    
     func didPressOptionButton(_ tag: Int) {
         showOptions(tag: tag)
     }
