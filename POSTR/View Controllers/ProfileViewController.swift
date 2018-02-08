@@ -226,7 +226,6 @@ extension ProfileViewController: UITableViewDataSource {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
 
 		cell.delegate = self
-		// have to check if good
 		cell.tag = indexPath.row
 
 		let post = userPosts.reversed()[indexPath.row]
@@ -251,6 +250,7 @@ extension ProfileViewController: UITableViewDataSource {
 			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
 				// TODO: delete user Post - NEED postID
 				//					self.deletePost(id: post.id!)
+                DBService.manager.removePost(postID: self.userPosts.reversed()[tag].postID)
 			}
 			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
 			alertView.addAction(yesOption)
