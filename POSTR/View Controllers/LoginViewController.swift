@@ -102,7 +102,6 @@ extension LoginViewController: AuthUserServiceDelegate {
     
     func didFailSignIn(_ userService: AuthUserService, error: Error) {
         showAlert(title: error.localizedDescription, message: nil)
-        // showAlert(title: "", message: "Incorrent username and/or password")
     }
     
 }

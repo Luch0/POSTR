@@ -14,7 +14,7 @@ class NewPostViewController: UIViewController {
 	let newpost = NewPostView()
 
 	// MARK: Properties
-	var categories = ["Cats", "Places", "People", "Dogs"]
+    var categories = ["Cats", "Food", "Travel", "People", "Memes"]
 	private var currentUser = AuthUserService.getCurrentUser()
 	private var postImage: UIImage!
 	var selectedCategory: String! // cats as default
