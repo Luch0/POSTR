@@ -35,7 +35,7 @@ extension DBService {
 		}
 	}
 
-	func loadAllPosts(completionHandler: @escaping ([Post]?) -> Void) {
+	public func loadAllPosts(completionHandler: @escaping ([Post]?) -> Void) {
 		let ref = DBService.manager.getPosts()
 		ref.observe(.value) { (snapshot) in
 			var allPosts = [Post]()
@@ -50,7 +50,7 @@ extension DBService {
 		}
 	}
 
-	func loadUserPosts(userID: String, completionHandler: @escaping ([Post]?) -> Void) {
+	public func loadUserPosts(userID: String, completionHandler: @escaping ([Post]?) -> Void) {
 		let ref = DBService.manager.getPosts()
 		ref.observe(.value) { (snapshot) in
 			var userPosts = [Post]()
@@ -67,15 +67,15 @@ extension DBService {
 		}
 	}
     
-    func saveEditedPost(postID: String, caption: String, newCategory: String) {
+    public func saveEditedPost(postID: String, caption: String, newCategory: String) {
         DBService.manager.getPosts().child(postID).updateChildValues(["caption":caption,"category": newCategory])
     }
     
-    func removePost(postID: String) {
+    public func removePost(postID: String) {
         DBService.manager.getPosts().child(postID).removeValue()
     }
     
-    func flagPost(post: Post) {
+    public func flagPost(post: Post) {
         DBService.manager.getPosts().child(post.postID).updateChildValues(["postFlagCount":post.postFlagCount + 1])
     }
     public func updateUpvote(postToUpdate: Post) {
@@ -83,14 +83,14 @@ extension DBService {
         guard let userId = AuthUserService.getCurrentUser()?.uid else { fatalError("userId is nil") }
         let postRef = DBService.manager.getPosts().child((postToUpdate.postID))
         postRef.updateChildValues(["upvoteCount": postToUpdate.upvoteCount + 1])
-        
+        postRef.updateChildValues(["currentVotes": (postToUpdate.upvoteCount + 1) + postToUpdate.downvoteCount])
     }
     
     public func updateDownvote(postToUpdate: Post) {
         print(postToUpdate.postID)
         let postRef = DBService.manager.getPosts().child((postToUpdate.postID))
         postRef.updateChildValues(["downvoteCount": postToUpdate.downvoteCount - 1])
-        
+        postRef.updateChildValues(["currentVotes": (postToUpdate.downvoteCount - 1) + postToUpdate.upvoteCount])
     }
 
 }
