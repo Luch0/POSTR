@@ -13,6 +13,18 @@ class ProfileViewController: UIViewController {
 
 	// MARK: import Views
 	var profileView = ProfileView()
+    
+    private var users = [POSTRUser]()
+    
+    func loadAllUsers() {
+        DBService.manager.loadAllUsers { (users) in
+            if let users = users {
+                self.users = users
+            } else {
+                print("error loading users")
+            }
+        }
+    }
 
 	// MARK: Properties
 	private var authService = AuthUserService()
@@ -36,6 +48,7 @@ class ProfileViewController: UIViewController {
 		super.viewWillAppear(animated)
 		if AuthUserService.getCurrentUser() != nil {
 			loadUserPosts()
+            loadAllUsers()
 			currentUser = AuthUserService.getCurrentUser()
 			profileView.configureProfileView(user: currentUser!)
 		}
@@ -282,8 +295,16 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 		self.profileView.profileImageButton.setImage(profileImage, for: .normal)
 
 		//Store image on Firebase Storage & Core Data
-		StorageService.manager.storeUserImage(image: profileImage, userId: (currentUser?.uid)!)
+		//StorageService.manager.storeUserImage(image: profileImage, userId: (currentUser?.uid)!)
 		//TO DO: Store image in CoreData
+        
+        for user in users {
+            if user.userID == currentUser!.uid {
+                StorageService.manager.storeUserImage(image: profileImage, userId: user.userDBid)
+                break
+            }
+        }
+        
 
 		self.dismiss(animated: true, completion: nil)
 	}
@@ -297,6 +318,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 // MARK: Sign Out
 extension ProfileViewController: AuthUserServiceDelegate {
 	func didSignOut(_ userService: AuthUserService) {
+        profileView.profileImageButton.setImage(#imageLiteral(resourceName: "placeholderImage"), for: .normal)
 		let loginVC = LoginViewController()
         self.present(loginVC, animated: true) {
             let tabBarController: UITabBarController = self.tabBarController! as UITabBarController
