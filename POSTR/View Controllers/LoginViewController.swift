@@ -11,17 +11,27 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
-    let loginView = LoginView()
+    private let splashPage = SplashView()
+    
+    private let loginView = LoginView()
+    
     private var authUserService = AuthUserService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         authUserService.delegate = self
         self.view.backgroundColor = UIColor(displayP3Red: 50/255, green: 25/255, blue: 170/255, alpha: 1)
+        splashPage.delegate = self
         view.addSubview(loginView)
+        view.addSubview(splashPage)
         loginView.loginButton.addTarget(self, action: #selector(userLoginAccount), for: .touchUpInside)
         loginView.forgotPasswordButton.addTarget(self, action: #selector(forgotPassword), for: .touchUpInside)
         loginView.createNewAccountButton.addTarget(self, action: #selector(createNewAccount), for: .touchUpInside)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        splashPage.animateView()
     }
     
     @objc private func userLoginAccount() {
@@ -61,7 +71,7 @@ class LoginViewController: UIViewController {
         loginView.passwordTextField.resignFirstResponder()
     }
     
-    func showAlert(title: String, message: String?) {
+    private func showAlert(title: String, message: String?) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
         alertController.addAction(okAction)
@@ -102,6 +112,12 @@ extension LoginViewController: AuthUserServiceDelegate {
     
     func didFailSignIn(_ userService: AuthUserService, error: Error) {
         showAlert(title: error.localizedDescription, message: nil)
+    }
+}
+
+extension LoginViewController: SplashViewDelegate {
+    func animationEnded() {
+        splashPage.removeFromSuperview()
     }
 }
 

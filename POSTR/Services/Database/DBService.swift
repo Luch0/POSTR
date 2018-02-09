@@ -29,7 +29,7 @@ class DBService {
 	}
 	static let manager = DBService()
 
-    func formatDate(with date: Date) -> String {
+    public func formatDate(with date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d, YYYY h:mm a"
         return dateFormatter.string(from: date)
