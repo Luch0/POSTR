@@ -84,7 +84,7 @@ class EditPostView: UIView {
         setupViews()
     }
     
-    func configureEditPost(post: Post) {
+    public func configureEditPost(post: Post) {
         captionTextView.text = post.caption
     }
     
