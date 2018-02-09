@@ -142,6 +142,11 @@ class PostTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        userImageView.layer.cornerRadius = userImageView.bounds.width/2.0
+        userImageView.layer.borderColor = UIColor.black.cgColor
+        userImageView.layer.borderWidth = 1
+        userImageView.layer.masksToBounds = true
+        
     }
     
     private func setupViews() {
@@ -271,7 +276,7 @@ class PostTableViewCell: UITableViewCell {
         voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
         if let imageURL = post.postImageStr {
             postImageView.kf.indicatorType = .activity
-            postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+            postImageView.kf.setImage(with: URL(string:imageURL), placeholder: #imageLiteral(resourceName: "placeholderImage"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
             }
         }
 			if let imageURL = post.userImageStr {
