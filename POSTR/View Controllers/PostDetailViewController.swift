@@ -85,15 +85,16 @@ class PostDetailViewController: UIViewController {
     }
     
     @objc private func addComment() {
+        if !NetworkReachabilityManager()!.isReachable {
+            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
+            return
+        }
         if postDetailView.commentTextView.text == "" {
             showAlert(title: "Alert", message: "Can't post empty comment")
             return
         } else {
             DBService.manager.addComment(postID: post.postID, commentStr: postDetailView.commentTextView.text!)
             postDetailView.commentTextView.text = ""
-        }
-        if !NetworkReachabilityManager()!.isReachable {
-            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
         }
     }
     

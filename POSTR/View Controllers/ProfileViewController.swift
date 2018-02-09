@@ -8,6 +8,7 @@ import AVFoundation
 import Toucan
 import Firebase
 import Kingfisher
+import Alamofire
 
 class ProfileViewController: UIViewController {
 
@@ -197,30 +198,42 @@ extension ProfileViewController: UITableViewDataSource {
 		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
 		return cell
 	}
+    
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
 
 	@objc func showOptions(tag: Int, image: UIImage?) {
-		let alertView = UIAlertController(title: "Options", message: nil, preferredStyle: .alert)
-		let editPostOption = UIAlertAction(title: "Edit Post", style: .default) { (alertAction) in
-			let editPostVC = EditPostViewController(post: self.currentUserPosts.reversed()[tag], image: image!)
-			self.present(editPostVC, animated: true, completion: nil)
-		}
-		let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
-			let alertView = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
-			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
-				// TODO: delete user Post - NEED postID
-				DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID)
-			}
-			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
-			alertView.addAction(yesOption)
-			alertView.addAction(noOption)
-			self.present(alertView, animated: true, completion: nil)
-		}
-		let cancelOption = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-		alertView.addAction(editPostOption)
-		alertView.addAction(deleteOption)
-		alertView.addAction(cancelOption)
-		self.present(alertView, animated: true, completion: nil)
-	}
+        let alertView = UIAlertController(title: "Options", message: nil, preferredStyle: .alert)
+        let editPostOption = UIAlertAction(title: "Edit Post", style: .default) { (alertAction) in
+            if !NetworkReachabilityManager()!.isReachable {
+                self.showAlert(title: "No Network", message: "No Network detected. Please connect to internet to edit post.")
+                return
+            }
+            let editPostVC = EditPostViewController(post: self.currentUserPosts.reversed()[tag], image: image!)
+            self.present(editPostVC, animated: true, completion: nil)
+        }
+        let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
+            let alertView = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+            let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
+                // TODO: delete user Post - NEED postID
+                //                    self.deletePost(id: post.id!)
+                DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID)
+            }
+            let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
+            alertView.addAction(yesOption)
+            alertView.addAction(noOption)
+            self.present(alertView, animated: true, completion: nil)
+        }
+        let cancelOption = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertView.addAction(editPostOption)
+        alertView.addAction(deleteOption)
+        alertView.addAction(cancelOption)
+        self.present(alertView, animated: true, completion: nil)
+    }
 }
 
 
