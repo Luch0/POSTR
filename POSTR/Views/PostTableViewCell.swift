@@ -104,7 +104,7 @@ class PostTableViewCell: UITableViewCell {
     }()
     
     @objc func optionsClicked() {
-        delegate?.didPressOptionButton(self.tag, image: self.userImageView.image)
+        delegate?.didPressOptionButton(self.tag, image: self.postImageView.image)
     }
     
     
