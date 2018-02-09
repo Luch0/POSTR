@@ -103,6 +103,5 @@ extension LoginViewController: AuthUserServiceDelegate {
     func didFailSignIn(_ userService: AuthUserService, error: Error) {
         showAlert(title: error.localizedDescription, message: nil)
     }
-    
 }
 

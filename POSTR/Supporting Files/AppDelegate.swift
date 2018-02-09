@@ -17,22 +17,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        FirebaseApp.configure()
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let tabBarController = UITabBarController()
-        configureTheme()
-        let feedViewController = FeedViewController()
-        let feedViewNavCon = UINavigationController(rootViewController: feedViewController)
-        feedViewController.tabBarItem = UITabBarItem(title: "Feed", image: #imageLiteral(resourceName: "feed"), tag: 0)
-        
-        let profileViewController = ProfileViewController()
-        let profileViewNavCon = UINavigationController(rootViewController: profileViewController)
-        profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: #imageLiteral(resourceName: "profile"), tag: 1)
-        
-        tabBarController.viewControllers = [feedViewNavCon, profileViewNavCon]
-        window?.rootViewController = tabBarController
-        
-        window?.makeKeyAndVisible()
+
+			//Setup firebase
+			FirebaseApp.configure()
+
+			//setup Theme from Chameleon
+			configureTheme()
+
+			//Feed View Controller
+			let feedViewController = FeedViewController()
+			let feedViewNavCon = UINavigationController(rootViewController: feedViewController)
+			feedViewController.tabBarItem = UITabBarItem(title: "Feed", image: #imageLiteral(resourceName: "feed"), tag: 0)
+
+			//Profile View Controller
+			let profileViewController = ProfileViewController()
+			let profileViewNavCon = UINavigationController(rootViewController: profileViewController)
+			profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: #imageLiteral(resourceName: "profile"), tag: 1)
+
+			//Tab Bar Controller
+			let tabBarController = UITabBarController()
+			tabBarController.viewControllers = [feedViewNavCon, profileViewNavCon]
+
+			//Window setup
+			window = UIWindow(frame: UIScreen.main.bounds)
+			window?.rootViewController = tabBarController
+			window?.makeKeyAndVisible()
         
         return true
     }
@@ -63,7 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
-    
     func configureTheme() {
         StyleManager.setUpTheme()
     }
