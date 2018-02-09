@@ -12,16 +12,16 @@ import Alamofire
 class NewPostViewController: UIViewController {
 
 	// MARK: import Views
-	let newpost = NewPostView()
+	private let newpost = NewPostView()
 
 	// MARK: Properties
-    var categories = ["Cats", "Food", "Travel", "People", "Memes"]
+    private var categories = ["Cats", "Food", "Travel", "People", "Memes"]
 	private var currentUser = AuthUserService.getCurrentUser()
 	private var postImage: UIImage!
-	var selectedCategory: String! // cats as default
-	var gesture: UIGestureRecognizer!
-	let imagePicker = UIImagePickerController()
-	var authService = AuthUserService()
+	private var selectedCategory: String! // cats as default
+	private var gesture: UIGestureRecognizer!
+	private let imagePicker = UIImagePickerController()
+	private var authService = AuthUserService()
 
 
 	// MARK: View Lifecycle
@@ -31,7 +31,7 @@ class NewPostViewController: UIViewController {
 		selectedCategory = categories[0]
 		newpost.categoriesTableView.delegate = self
 		newpost.categoriesTableView.dataSource = self
-		newpost.captionTextField.delegate = self
+//		newpost.captionTextField.delegate = self
 		newpost.cancelButton.addTarget(self, action: #selector(cancelPost), for: .touchUpInside)
 		newpost.submitButton.addTarget(self, action: #selector(addPost), for: .touchUpInside)
 		imagePicker.delegate = self
@@ -39,18 +39,18 @@ class NewPostViewController: UIViewController {
 		newpost.selectImageButton.addTarget(self, action: #selector(changePostImage), for: UIControlEvents.allTouchEvents)
 	}
     
-    func showAlert(title: String, message: String) {
+    private func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
     }
 
-	@objc func cancelPost() {
+	@objc private func cancelPost() {
 		self.dismiss(animated: true, completion: nil)
 	}
 
-	@objc func addPost() {
+	@objc private func addPost() {
         if !NetworkReachabilityManager()!.isReachable {
             self.showAlert(title: "No Network", message: "No Network detected. Please check connection.")
             return
@@ -134,14 +134,3 @@ extension NewPostViewController: UITableViewDataSource {
 		return cell
 	}
 }
-
-
-// MARK: TextField Delegate
-extension NewPostViewController: UITextFieldDelegate {
-//    func textViewDidBeginEditing(_ textView: UITextView) {
-//        //textView.text = ""
-//    }
-}
-
-
-
