@@ -86,6 +86,24 @@ class FeedViewController: UIViewController {
 }
 
 extension FeedViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        var numOfSections: Int = 0
+        if posts.count > 0 {
+            feedView.tableView.backgroundView = nil
+            feedView.tableView.separatorStyle = .singleLine
+            numOfSections = 1
+        } else {
+            let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: feedView.tableView.bounds.size.width, height: feedView.tableView.bounds.size.height))
+            noDataLabel.text = "No Posts Yet"
+            noDataLabel.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
+            noDataLabel.textAlignment = .center
+            feedView.tableView.backgroundView = noDataLabel
+            feedView.tableView.separatorStyle = .none
+        }
+        return numOfSections
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
@@ -132,7 +150,7 @@ extension FeedViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 350
+        return UIScreen.main.bounds.height * 4/5
     }
     
 }
