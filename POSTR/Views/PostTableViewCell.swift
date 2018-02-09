@@ -274,6 +274,11 @@ class PostTableViewCell: UITableViewCell {
             postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
             }
         }
+			if let imageURL = post.userImageStr {
+				userImageView.kf.indicatorType = .activity
+				userImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "userImagePlaceholder"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+				}
+			}
     }
     
 }

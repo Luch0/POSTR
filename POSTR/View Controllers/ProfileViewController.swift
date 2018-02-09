@@ -141,6 +141,9 @@ extension ProfileViewController: UITextFieldDelegate {
 		if text == "" {return false}
 		if textField == profileView.usernameTF {
 			DBService.manager.updateUserName(userID: currentTFUserID, username: text)
+			for eachPost in currentUserPosts {
+				DBService.manager.updatePostUserName(postID: eachPost.postID, username: text)
+			}
 		}
 		return true
 	}
@@ -231,7 +234,9 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 		let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
 		self.profileImage = toucanImage
 		self.profileView.profileImageView.image = profileImage
-		StorageService.manager.storeUserImage(image: profileImage, userId: currentUser.userDBid)
+
+		StorageService.manager.storeUserImage(image: profileImage, userId: currentUser.userDBid, posts: currentUserPosts)
+
 		self.dismiss(animated: true, completion: nil)
 	}
 	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

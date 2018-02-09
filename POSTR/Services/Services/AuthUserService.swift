@@ -51,7 +51,7 @@ class AuthUserService: NSObject {
             }
         }
     }
-    
+
     public func signOut() {
         do{
             try Auth.auth().signOut()
