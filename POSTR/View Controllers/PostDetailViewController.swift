@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class PostDetailViewController: UIViewController {
     
@@ -89,6 +90,9 @@ class PostDetailViewController: UIViewController {
         } else {
             DBService.manager.addComment(postID: post.postID, commentStr: postDetailView.commentTextView.text!)
             postDetailView.commentTextView.text = ""
+        }
+        if !NetworkReachabilityManager()!.isReachable {
+            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
         }
     }
     
