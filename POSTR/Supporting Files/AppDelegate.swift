@@ -21,9 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			//Setup firebase
 			FirebaseApp.configure()
 
-			//setup Theme from Chameleon
-			configureTheme()
-
 			//Feed View Controller
 			let feedViewController = FeedViewController()
 			let feedViewNavCon = UINavigationController(rootViewController: feedViewController)
@@ -68,12 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
 			  CoreDataService.saveContext()
-    }
-}
-
-extension AppDelegate {
-    func configureTheme() {
-        StyleManager.setUpTheme()
     }
 }
 
