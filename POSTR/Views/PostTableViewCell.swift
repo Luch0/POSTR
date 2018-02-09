@@ -21,7 +21,7 @@ class PostTableViewCell: UITableViewCell {
     
     weak var delegate: PostTableViewCellDelegate?
     
-    var currentIndexPath: IndexPath?
+    public var currentIndexPath: IndexPath?
     
     lazy var postCaption: UILabel = {
         let label = UILabel()
@@ -103,7 +103,7 @@ class PostTableViewCell: UITableViewCell {
         return button
     }()
     
-    @objc func optionsClicked() {
+    @objc public func optionsClicked() {
         delegate?.didPressOptionButton(self.tag, image: self.postImageView.image)
     }
     
