@@ -12,7 +12,7 @@ import Kingfisher
 import ChameleonFramework
 
 protocol PostTableViewCellDelegate : class {
-    func didPressOptionButton(_ tag: Int)
+    func didPressOptionButton(_ tag: Int, image: UIImage?)
     func updateUpvote(tableViewCell: PostTableViewCell )
     func updateDownVote(tableViewCell: PostTableViewCell)
 }
@@ -74,7 +74,6 @@ class PostTableViewCell: UITableViewCell {
     
     @objc private func upvote(){
         delegate?.updateUpvote(tableViewCell: self)
-        
     }
     
     lazy var voteCountLabel: UILabel = {
@@ -105,7 +104,7 @@ class PostTableViewCell: UITableViewCell {
     }()
     
     @objc func optionsClicked() {
-        delegate?.didPressOptionButton(self.tag)
+        delegate?.didPressOptionButton(self.tag, image: self.userImageView.image)
     }
     
     

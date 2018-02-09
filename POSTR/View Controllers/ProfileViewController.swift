@@ -274,10 +274,10 @@ extension ProfileViewController: UITableViewDataSource {
 		return cell
 	}
 
-	@objc func showOptions(tag: Int) {
+    @objc func showOptions(tag: Int, image: UIImage?) {
 		let alertView = UIAlertController(title: "Options", message: nil, preferredStyle: .alert)
 		let editPostOption = UIAlertAction(title: "Edit Post", style: .default) { (alertAction) in
-			let editPostVC = EditPostViewController(post: self.userPosts.reversed()[tag])
+            let editPostVC = EditPostViewController(post: self.userPosts.reversed()[tag], image: image!)
 			self.present(editPostVC, animated: true, completion: nil)
 		}
 		let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
@@ -367,8 +367,8 @@ extension ProfileViewController: PostTableViewCellDelegate {
         }
     }
     
-    func didPressOptionButton(_ tag: Int) {
-        showOptions(tag: tag)
+    func didPressOptionButton(_ tag: Int, image: UIImage?) {
+        showOptions(tag: tag, image: image)
     }
 }
 
