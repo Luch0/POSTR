@@ -18,6 +18,7 @@ class NewPostView: UIView {
     lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "cancel"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     
@@ -31,25 +32,24 @@ class NewPostView: UIView {
     lazy var submitButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "checkmark"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     
-    lazy var captionTextView: UITextView = {
-        let textView = UITextView()
-        textView.isEditable = true
-        textView.text = "Insert caption here"
-        textView.textAlignment = .left
-        textView.autocapitalizationType = .sentences
-        textView.autocorrectionType = .yes
-        textView.font = UIFont.systemFont(ofSize: 20, weight: .medium
-        )
+    lazy var captionTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Insert caption here"
+        textField.textAlignment = .left
+        textField.autocapitalizationType = .sentences
+        textField.autocorrectionType = .yes
+        textField.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         //textView.backgroundColor = .orange
-        return textView
+        return textField
     }()
     
     lazy var selectImageButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "kitten"), for: .normal)
+				button.setImage(#imageLiteral(resourceName: "placeholderImage"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         return button
     }()
@@ -87,7 +87,7 @@ class NewPostView: UIView {
         setupCancelButton()
         setupSubmitButton()
         setupHeaderLabel()
-        setupCaptionTextView()
+        setupCaptionTextField()
         setupImageButton()
         setupCategoryLabel()
         setupCategoryTableView()
@@ -132,15 +132,15 @@ class NewPostView: UIView {
         
     }
     
-    private func setupCaptionTextView() {
-        addSubview(captionTextView)
-        captionTextView.translatesAutoresizingMaskIntoConstraints = false
+    private func setupCaptionTextField() {
+        addSubview(captionTextField)
+        captionTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            captionTextView.topAnchor.constraint(equalTo: topContainer.bottomAnchor, constant: 10),
-            captionTextView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
-            captionTextView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
-            captionTextView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            captionTextView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.08)
+            captionTextField.topAnchor.constraint(equalTo: topContainer.bottomAnchor, constant: 10),
+            captionTextField.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
+            captionTextField.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
+            captionTextField.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            captionTextField.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.08)
             ])
     }
     
@@ -148,7 +148,7 @@ class NewPostView: UIView {
         addSubview(selectImageButton)
         selectImageButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            selectImageButton.topAnchor.constraint(equalTo: captionTextView.bottomAnchor, constant: 5),
+            selectImageButton.topAnchor.constraint(equalTo: captionTextField.bottomAnchor, constant: 5),
             selectImageButton.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
             selectImageButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             selectImageButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
