@@ -28,7 +28,7 @@ class ProfileView: UIView {
 	}()
 	lazy var profileImageView: UIImageView = {
 		let iv = UIImageView()
-		iv.image = UIImage(named: "placeholderCamera")
+		iv.image = #imageLiteral(resourceName: "userImagePlaceholder")
 		return iv
 	}()
 	lazy var profileEditButton: UIButton = {
@@ -175,7 +175,7 @@ class ProfileView: UIView {
 		//		userHeadlineTF.text = "Checking if configure cell works"
 		if let imageStr = user.userImageStr {
 			profileImageView.kf.indicatorType = .activity
-			profileImageView.kf.setImage(with: URL(string: imageStr), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			profileImageView.kf.setImage(with: URL(string: imageStr), placeholder: #imageLiteral(resourceName: "placeholderImage"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
 			}
 		}
 	}
