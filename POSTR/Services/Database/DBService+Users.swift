@@ -26,6 +26,19 @@ extension DBService {
                                     }
         }
     }
+
+	public func updateUserName(userID: String, username: String) {
+		DBService.manager.getUsers().child(userID).updateChildValues(["username": username])
+	}
+
+	public func updateUserHeadline(userID: String, userBio: String) {
+		DBService.manager.getUsers().child(userID).updateChildValues(["userBio": userBio])
+	}
+
+	public func updateUserImage(userID: String, userImageStr: String) {
+		DBService.manager.getUsers().child(userID).updateChildValues(["userImageStr": userImageStr])
+	}
+
     
     public func loadAllUsers(completionHandler: @escaping ([POSTRUser]?) -> Void) {
         let ref = DBService.manager.getUsers()
