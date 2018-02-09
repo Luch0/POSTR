@@ -87,7 +87,7 @@ extension DBService {
     }
     public func updateUpvote(postToUpdate: Post) {
         print(postToUpdate.postID)
-        guard let userId = AuthUserService.getCurrentUser()?.uid else { fatalError("userId is nil") }
+        guard ((AuthUserService.getCurrentUser()?.uid) != nil) else { fatalError("userId is nil") }
         let postRef = DBService.manager.getPosts().child((postToUpdate.postID))
         postRef.updateChildValues(["upvoteCount": postToUpdate.upvoteCount + 1])
         postRef.updateChildValues(["currentVotes": (postToUpdate.upvoteCount + 1) + postToUpdate.downvoteCount])
