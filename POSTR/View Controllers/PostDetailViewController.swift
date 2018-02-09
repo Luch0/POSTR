@@ -35,6 +35,7 @@ class PostDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(postDetailView)
+        navigationItem.title = "Comments"
         postDetailView.postTableView.delegate = self
         postDetailView.postTableView.dataSource = self
         postDetailView.commentsTableView.delegate = self
