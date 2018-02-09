@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 import Kingfisher
-
+import ChameleonFramework
 
 protocol PostTableViewCellDelegate : class {
     func didPressOptionButton(_ tag: Int, image: UIImage?)
