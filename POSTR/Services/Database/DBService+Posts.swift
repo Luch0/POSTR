@@ -66,7 +66,15 @@ extension DBService {
 			completionHandler(userPosts)
 		}
 	}
-    
+
+	public func updatePostUserName(postID: String, username: String) {
+		DBService.manager.getPosts().child(postID).updateChildValues(["username": username])
+	}
+
+	public func updateUserImage(postID: String, userImageStr: String) {
+		DBService.manager.getPosts().child(postID).updateChildValues(["userImageStr": userImageStr])
+	}
+
     public func saveEditedPost(postID: String, caption: String, newCategory: String) {
         DBService.manager.getPosts().child(postID).updateChildValues(["caption":caption,"category": newCategory])
     }
@@ -75,8 +83,7 @@ extension DBService {
         DBService.manager.getPosts().child(postID).removeValue()
     }
     
-    public func flagPost(post: Post) {
-        DBService.manager.getPosts().child(post.postID).updateChildValues(["postFlagCount":post.postFlagCount + 1])
+    public func flagPost(post: Post) {	DBService.manager.getPosts().child(post.postID).updateChildValues(["postFlagCount":post.postFlagCount + 1])
     }
     public func updateUpvote(postToUpdate: Post) {
         print(postToUpdate.postID)

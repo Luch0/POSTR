@@ -48,7 +48,7 @@ extension StorageService {
 			let imageURL = String(describing: snapshot.metadata!.downloadURL()!)
 			//			DBService.manager.getPosts().child("\(postId)/imageURL").setValue(imageURL)
 			DBService.manager.getPosts().child("\(postId)/postImageStr").setValue(imageURL)
-			//			DBService.manager.getPosts().child("\(postId)").updateChildValues(["imageURL" :  imageURL])
+
 		}
 
 		uploadTask.observe(.failure) { snapshot in
@@ -82,7 +82,7 @@ extension StorageService {
 
 //Store User Image
 extension StorageService {
-	public func storeUserImage(image: UIImage, userId: String) {
+	public func storeUserImage(image: UIImage, userId: String, posts: [Post]) {
 		guard let data = UIImageJPEGRepresentation(image, 1.0) else { print("image is nil"); return }
 		let metadata = StorageMetadata()
 		metadata.contentType = "image/jpeg"
@@ -113,11 +113,12 @@ extension StorageService {
 		uploadTask.observe(.success) { snapshot in
 			// Upload completed successfully
 
-			// set job's imageURL
+			// set imageURL
 			let imageURL = String(describing: snapshot.metadata!.downloadURL()!)
 			DBService.manager.getUsers().child("\(userId)/userImageStr").setValue(imageURL)
-
-			//DBService.manager.getJobs().child("\(jobId)").updateChildValues(["imageURL" :  imageURL])
+			for post in posts {
+				DBService.manager.updateUserImage(postID: post.postID, userImageStr: imageURL)
+			}
 		}
 
 		uploadTask.observe(.failure) { snapshot in
