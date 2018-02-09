@@ -29,6 +29,7 @@ class ProfileView: UIView {
 	lazy var profileImageView: UIImageView = {
 		let iv = UIImageView()
 		iv.image = UIImage(named: "placeholderCamera")
+        iv.contentMode = .scaleAspectFit
 		return iv
 	}()
 	lazy var profileEditButton: UIButton = {
@@ -123,9 +124,12 @@ class ProfileView: UIView {
 		addSubview(profileImageView)
 		profileImageView.translatesAutoresizingMaskIntoConstraints = false
 		profileImageView.topAnchor.constraint(equalTo: backgroundImageView.topAnchor, constant: 5).isActive = true
-		profileImageView.centerXAnchor.constraint(equalTo: backgroundImageView.centerXAnchor).isActive = true
+		//profileImageView.centerXAnchor.constraint(equalTo: backgroundImageView.centerXAnchor).isActive = true
 		profileImageView.widthAnchor.constraint(equalTo: backgroundImageView.widthAnchor, multiplier: 0.45).isActive = true
-		profileImageView.heightAnchor.constraint(equalTo: backgroundImageView.heightAnchor, multiplier: 0.6).isActive = true
+		//profileImageView.heightAnchor.constraint(equalTo: backgroundImageView.heightAnchor, multiplier: 0.6).isActive = true
+        profileImageView.topAnchor.constraint(equalTo: profileContainer.topAnchor).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
+        profileImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
 	}
 	private func addProfileEditButton(){
 		addSubview(profileEditButton)
@@ -138,8 +142,9 @@ class ProfileView: UIView {
 	private func addUsernameTF() {
 		addSubview(usernameTF)
 		usernameTF.translatesAutoresizingMaskIntoConstraints = false
-		usernameTF.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 5).isActive = true
-		usernameTF.centerXAnchor.constraint(equalTo: backgroundImageView.centerXAnchor).isActive = true
+        usernameTF.centerYAnchor.constraint(equalTo: profileContainer.centerYAnchor).isActive = true
+        usernameTF.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 5).isActive = true
+		//usernameTF.centerXAnchor.constraint(equalTo: backgroundImageView.centerXAnchor).isActive = true
 		usernameTF.widthAnchor.constraint(equalTo: profileImageView.widthAnchor).isActive = true
 		usernameTF.heightAnchor.constraint(equalToConstant: 15).isActive = true
 	}
