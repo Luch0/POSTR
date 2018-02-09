@@ -68,7 +68,7 @@ class PostDetailView: UIView {
 			make.top.equalTo(safeAreaLayoutGuide.snp.top)
 			make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
 			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
-			make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.35)
+			make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0)
 		}
 	}
 
@@ -78,7 +78,7 @@ class PostDetailView: UIView {
 			make.top.equalTo(postTableView.snp.bottom)
 			make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
 			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
-			make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.5)
+			make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.85)
 		}
 	}
 
