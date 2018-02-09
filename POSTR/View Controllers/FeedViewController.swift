@@ -63,6 +63,8 @@ class FeedViewController: UIViewController {
             loadAllPosts()
             loadAllUsers() // HEREEEEE
         }
+//			self.feedView.tableView.reloadData()
+
     }
     
     private func configureNavBar() {
@@ -116,8 +118,11 @@ extension FeedViewController: UITableViewDataSource {
         cell.tag = indexPath.row
         cell.configurePostCell(post: post)
         cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+//			 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
         return cell
     }
+
+
     
    private func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
