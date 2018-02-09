@@ -33,7 +33,7 @@ class FeedViewController: UIViewController {
         configureNavBar()
     }
     
-    func loadAllPosts() {
+    private func loadAllPosts() {
         DBService.manager.loadAllPosts { (posts) in
             if let posts = posts {
                 self.posts = posts
@@ -43,7 +43,7 @@ class FeedViewController: UIViewController {
         }
     }
     
-    func loadAllUsers() {
+    private func loadAllUsers() {
         DBService.manager.loadAllUsers { (users) in
             if let users = users {
                 self.users = users
@@ -119,15 +119,24 @@ extension FeedViewController: UITableViewDataSource {
         return cell
     }
     
+   private func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
     @objc private func showOptions(tag: Int, image: UIImage?) {
         let alertView = UIAlertController(title: "Flag", message: "Flag user or post", preferredStyle: .alert)
         let flagPost = UIAlertAction(title: "Flag Post", style: .destructive) { (alertAction) in
             DBService.manager.flagPost(post: self.posts.reversed()[tag])
+            self.showAlert(title: "Flag Post", message: "Post has been flagged")
         }
         let flagUser = UIAlertAction(title: "Flag User", style: .destructive) { (alertAction) in
             for user in self.users {
                 if user.userID == self.posts.reversed()[tag].userID {
                   DBService.manager.flagUser(user: user)
+                    self.showAlert(title: "Flag User", message: "User has been flagged")
                     break
                 }
             }
@@ -157,11 +166,11 @@ extension FeedViewController: UITableViewDelegate {
 
 // MARK: Delegate for PostTableViewCell
 extension FeedViewController: PostTableViewCellDelegate {
-    func didPressOptionButton(_ tag: Int, image: UIImage?) {
+    internal func didPressOptionButton(_ tag: Int, image: UIImage?) {
         showOptions(tag: tag, image: image)
     }
     
-    func updateUpvote(tableViewCell: PostTableViewCell) {
+    internal func updateUpvote(tableViewCell: PostTableViewCell) {
         if let currentIndexPath = tableViewCell.currentIndexPath {
             let postToUpdate = posts.reversed()[currentIndexPath.row]
             print(postToUpdate.postID)
@@ -170,7 +179,7 @@ extension FeedViewController: PostTableViewCellDelegate {
         }
     }
     
-    func updateDownVote(tableViewCell: PostTableViewCell) {
+    internal func updateDownVote(tableViewCell: PostTableViewCell) {
         if let currentIndexPath = tableViewCell.currentIndexPath {
             let postToUpdate = posts.reversed()[currentIndexPath.row]
             print(postToUpdate.postID)
