@@ -62,10 +62,10 @@ class NewPostViewController: UIViewController {
 		let alertController = UIAlertController(title: "Add Image image", message: nil , preferredStyle: UIAlertControllerStyle.alert)
 		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
 		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
-			self.launchPhotoLibrary()
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.photoLibrary)
 		}
 		let newPhotoAction = UIAlertAction(title: "Take New Photo", style: .default) { (alertAction) in
-			self.launchCamera()
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.camera)
 		}
 		alertController.addAction(existingPhotoAction)
 		alertController.addAction(newPhotoAction)
@@ -77,24 +77,10 @@ class NewPostViewController: UIViewController {
 		newpost.captionTextField.resignFirstResponder()
 	}
 
-	// CAMERA
-	private func launchCamera(){
-		if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
-			imagePicker.sourceType = .camera
-			imagePicker.allowsEditing = true
-			self.present(imagePicker, animated: true, completion: nil)
-		}
-	}
-	private func launchPhotoLibrary(){
-		if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
-			imagePicker.sourceType = .photoLibrary
-			imagePicker.allowsEditing = true
-			self.present(imagePicker, animated: true, completion: nil)
-		}
-	}
-	private func launchSavedPhotosLibrary(){
-		if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
-			imagePicker.sourceType = .savedPhotosAlbum
+	//Camera Functions
+	private func launchCameraFunctions(type: UIImagePickerControllerSourceType){
+		if UIImagePickerController.isSourceTypeAvailable(type){
+			imagePicker.sourceType = type
 			imagePicker.allowsEditing = true
 			self.present(imagePicker, animated: true, completion: nil)
 		}
