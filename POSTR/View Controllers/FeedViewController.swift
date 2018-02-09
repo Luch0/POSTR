@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import AVFoundation
 import Toucan
+import Alamofire
 
 class FeedViewController: UIViewController {
     
@@ -63,6 +64,8 @@ class FeedViewController: UIViewController {
             loadAllPosts()
             loadAllUsers() // HEREEEEE
         }
+//			self.feedView.tableView.reloadData()
+
     }
     
     private func configureNavBar() {
@@ -79,6 +82,10 @@ class FeedViewController: UIViewController {
     }
     
     @objc private func addPostButton() {
+        if !NetworkReachabilityManager()!.isReachable {
+            self.showAlert(title: "No Network", message: "No Network detected. Please connect to internet to post.")
+            return
+        }
         let createPostViewController = NewPostViewController()
         self.present(createPostViewController, animated: true, completion: nil)
     }
@@ -116,8 +123,11 @@ extension FeedViewController: UITableViewDataSource {
         cell.tag = indexPath.row
         cell.configurePostCell(post: post)
         cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+//			 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
         return cell
     }
+
+
     
    private func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

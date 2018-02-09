@@ -51,11 +51,17 @@ class NewPostViewController: UIViewController {
 	}
 
 	@objc func addPost() {
-		DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "", category: selectedCategory, postImageStr: "no image", userImageStr: "AuthUserService.getCurrentUser()?.photoURL", image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
-//        if !NetworkReachabilityManager()!.isReachable {
-//            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
-//        }
-		self.dismiss(animated: true, completion: nil)
+        if !NetworkReachabilityManager()!.isReachable {
+            self.showAlert(title: "No Network", message: "No Network detected. Please check connection.")
+            return
+        }
+        let newCaption = newpost.captionTextField.text!
+        if newCaption.isEmpty == false {
+        DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "", category: selectedCategory, postImageStr: "no image", userImageStr: "AuthUserService.getCurrentUser()?.photoURL", image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
+        self.dismiss(animated: true, completion: nil)
+        } else {
+            showAlert(title: "Caption needed", message: "Please add caption")
+        }
 	}
 
 	@objc private func changePostImage() {
