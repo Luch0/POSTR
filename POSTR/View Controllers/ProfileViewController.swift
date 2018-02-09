@@ -228,13 +228,32 @@ extension ProfileViewController: UITableViewDelegate {
 		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 350
+		return UIScreen.main.bounds.height * 4/5
 	}
 }
 
 
 // MARK: TableView Datasource
 extension ProfileViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        var numOfSections: Int = 0
+        if userPosts.count > 0 {
+            profileView.tableView.backgroundView = nil
+            profileView.tableView.separatorStyle = .singleLine
+            numOfSections = 1
+        } else {
+            let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: profileView.tableView.bounds.size.width, height: profileView.tableView.bounds.size.height))
+            noDataLabel.text = "You Haven't Posted Yet"
+            noDataLabel.font = UIFont.systemFont(ofSize: 25, weight: .semibold)
+            noDataLabel.textAlignment = .center
+            profileView.tableView.backgroundView = noDataLabel
+            profileView.tableView.separatorStyle = .none
+        }
+        return numOfSections
+    }
+    
+    
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return userPosts.count
 	}
