@@ -6,6 +6,7 @@
 import UIKit
 import AVFoundation
 import Toucan
+import Alamofire
 
 
 class NewPostViewController: UIViewController {
@@ -37,6 +38,13 @@ class NewPostViewController: UIViewController {
 		//		authService.delegate = self
 		newpost.selectImageButton.addTarget(self, action: #selector(changePostImage), for: UIControlEvents.allTouchEvents)
 	}
+    
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
 
 	@objc func cancelPost() {
 		self.dismiss(animated: true, completion: nil)
@@ -44,6 +52,9 @@ class NewPostViewController: UIViewController {
 
 	@objc func addPost() {
 		DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "", category: selectedCategory, postImageStr: "no image", userImageStr: "AuthUserService.getCurrentUser()?.photoURL", image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
+//        if !NetworkReachabilityManager()!.isReachable {
+//            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
+//        }
 		self.dismiss(animated: true, completion: nil)
 	}
 
@@ -51,10 +62,10 @@ class NewPostViewController: UIViewController {
 		let alertController = UIAlertController(title: "Add Image image", message: nil , preferredStyle: UIAlertControllerStyle.alert)
 		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
 		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
-			self.launchPhotoLibrary()
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.photoLibrary)
 		}
 		let newPhotoAction = UIAlertAction(title: "Take New Photo", style: .default) { (alertAction) in
-			self.launchCamera()
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.camera)
 		}
 		alertController.addAction(existingPhotoAction)
 		alertController.addAction(newPhotoAction)
@@ -66,24 +77,10 @@ class NewPostViewController: UIViewController {
 		newpost.captionTextField.resignFirstResponder()
 	}
 
-	// CAMERA
-	private func launchCamera(){
-		if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
-			imagePicker.sourceType = .camera
-			imagePicker.allowsEditing = true
-			self.present(imagePicker, animated: true, completion: nil)
-		}
-	}
-	private func launchPhotoLibrary(){
-		if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
-			imagePicker.sourceType = .photoLibrary
-			imagePicker.allowsEditing = true
-			self.present(imagePicker, animated: true, completion: nil)
-		}
-	}
-	private func launchSavedPhotosLibrary(){
-		if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
-			imagePicker.sourceType = .savedPhotosAlbum
+	//Camera Functions
+	private func launchCameraFunctions(type: UIImagePickerControllerSourceType){
+		if UIImagePickerController.isSourceTypeAvailable(type){
+			imagePicker.sourceType = type
 			imagePicker.allowsEditing = true
 			self.present(imagePicker, animated: true, completion: nil)
 		}

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class PostDetailViewController: UIViewController {
     
@@ -34,6 +35,7 @@ class PostDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(postDetailView)
+        navigationItem.title = "Comments"
         postDetailView.postTableView.delegate = self
         postDetailView.postTableView.dataSource = self
         postDetailView.commentsTableView.delegate = self
@@ -89,6 +91,9 @@ class PostDetailViewController: UIViewController {
         } else {
             DBService.manager.addComment(postID: post.postID, commentStr: postDetailView.commentTextView.text!)
             postDetailView.commentTextView.text = ""
+        }
+        if !NetworkReachabilityManager()!.isReachable {
+            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
         }
     }
     
