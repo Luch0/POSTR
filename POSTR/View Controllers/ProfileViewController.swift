@@ -228,7 +228,7 @@ extension ProfileViewController: UITableViewDelegate {
 		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 350
+		return UIScreen.main.bounds.height * 4/5
 	}
 }
 
