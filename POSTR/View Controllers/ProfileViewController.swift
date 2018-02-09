@@ -8,13 +8,13 @@ import AVFoundation
 import Toucan
 import Firebase
 import Kingfisher
-import Alamofire
+
 
 class ProfileViewController: UIViewController {
 
 	// MARK: import Views
 	var profileView = ProfileView()
-	
+
 	//MARK: Instances
 	private var authService = AuthUserService()
 	private let imagePicker = UIImagePickerController()
@@ -24,10 +24,14 @@ class ProfileViewController: UIViewController {
 	private var currentUser: POSTRUser! {
 		didSet { profileView.configureProfileView(user: currentUser) }
 	}
+	private var allUsers: [POSTRUser] = []
 	private var currentUserPosts = [Post](){
 		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
 	}
 	private var profileImage: UIImage!
+	let cellSpacing: CGFloat = 5.0
+	var postUser: POSTRUser!
+
 
 
 	//MARK: View Lifecycle
@@ -43,30 +47,89 @@ class ProfileViewController: UIViewController {
 		view.addSubview(profileView)
 		profileView.tableView.delegate = self
 		profileView.tableView.dataSource = self
+		profileView.collectionView.delegate = self
+		profileView.collectionView.dataSource = self
+		profileView.commentView.delegate = self
+		profileView.commentView.dataSource = self
+		profileView.bookmarkView.delegate = self
+		profileView.bookmarkView.dataSource = self
 		profileView.usernameTF.delegate = self
 		imagePicker.delegate = self
 		authService.delegate = self
 		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
-		setupNavigationBar()
-		profileView.profileEditButton.addTarget(self, action: #selector(changeProfileImage), for: UIControlEvents.allTouchEvents)
+		configureNavBar()
+		setupButtonTargets()
+
 	}
 
 
 	//MARK: Helper Methods
-	private func setupNavigationBar() {
-		navigationItem.title = "Profile"
+	private func configureNavBar() {
+		self.navigationItem.title = "Profile"
+		//TitleView (Center)
 		let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
 		let titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
-		titleImageView.frame = CGRect(x: 5, y: 0, width: titleView.frame.width, height: titleView.frame.height)
+		titleImageView.frame = CGRect(x: 0, y: 0, width: titleView.frame.width, height: titleView.frame.height)
 		titleView.addSubview(titleImageView)
 		navigationItem.titleView = titleView
-		let logoutBarItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.plain, target: self, action: #selector(logout))
-		navigationItem.rightBarButtonItem = logoutBarItem
+
+		//Left BarButton
+		let profileBarItem = UIBarButtonItem(image: #imageLiteral(resourceName: "editUser"), style: .plain, target: self, action: #selector(editProfile))
+		navigationItem.leftBarButtonItem = profileBarItem
+
+		//Right BarButton
+		let cameraBarItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera_empty"), style: .plain, target: self, action: #selector(addPostButton))
+		navigationItem.rightBarButtonItem = cameraBarItem
 	}
+
+	private func setupButtonTargets(){
+		profileView.logoutButton.addTarget(self, action: #selector(logout), for: UIControlEvents.touchUpInside)
+		profileView.editUserButton.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
+		profileView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
+		profileView.optionListButton.addTarget(self, action: #selector(switchToList), for: .touchUpInside)
+		profileView.optionCommentButton.addTarget(self, action: #selector(switchToComment), for: .touchUpInside)
+		profileView.optionBookmarkButton.addTarget(self, action: #selector(switchToBookmark), for: .touchUpInside)
+	}
+
+
+	@objc private func editProfile() {
+		let editProfileVC = EditProfileViewController()
+		self.present(editProfileVC, animated: true, completion: nil)
+	}
+	@objc private func addPostButton() {
+		let createPostViewController = NewPostViewController()
+		self.present(createPostViewController, animated: true, completion: nil)
+	}
+	@objc private func switchToCollection() {
+		profileView.collectionView.isHidden = false
+		profileView.commentView.isHidden = true
+		profileView.bookmarkView.isHidden = true
+		profileView.tableView.isHidden = true
+	}
+	@objc private func switchToList() {
+		profileView.collectionView.isHidden = true
+		profileView.tableView.isHidden = false
+		profileView.commentView.isHidden = true
+		profileView.bookmarkView.isHidden = true
+	}
+	@objc private func switchToComment() {
+		profileView.collectionView.isHidden = true
+		profileView.tableView.isHidden = true
+		profileView.commentView.isHidden = false
+		profileView.bookmarkView.isHidden = true
+	}
+	@objc private func switchToBookmark() {
+		profileView.collectionView.isHidden = true
+		profileView.tableView.isHidden = true
+		profileView.commentView.isHidden = true
+		profileView.bookmarkView.isHidden = false
+	}
+
 
 	private func loadCurrentUser() {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
+				self.allUsers = users
 				for user in users {
 					if self.currentAuthUser.uid == user.userID { self.currentUser = user }
 				}
@@ -140,11 +203,16 @@ extension ProfileViewController: UITextFieldDelegate {
 		let currentTFUserID = currentUser.userDBid
 		guard let text = textField.text else {return false}
 		if text == "" {return false}
+
 		if textField == profileView.usernameTF {
 			DBService.manager.updateUserName(userID: currentTFUserID, username: text)
 			for eachPost in currentUserPosts {
-				DBService.manager.updatePostUserName(postID: eachPost.postID, username: text)
+				DBService.manager.updateUserName(userID: eachPost.postID, username: text)
 			}
+		}
+
+		if textField == profileView.taglineTF {
+			DBService.manager.updateUserHeadline(userID: currentTFUserID, userBio: text)
 		}
 		return true
 	}
@@ -160,29 +228,29 @@ extension ProfileViewController: UITableViewDelegate {
 		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return UIScreen.main.bounds.height * 4/5
+		return UIScreen.main.bounds.height * 0.40
 	}
 }
 
 
 // MARK: TableView Datasource
 extension ProfileViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        var numOfSections: Int = 0
-        if currentUserPosts.count > 0 {
-            profileView.tableView.backgroundView = nil
-            profileView.tableView.separatorStyle = .singleLine
-            numOfSections = 1
-        } else {
-            let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: profileView.tableView.bounds.size.width, height: profileView.tableView.bounds.size.height))
-            noDataLabel.text = "You Haven't Posted Yet"
-            noDataLabel.font = UIFont.systemFont(ofSize: 25, weight: .semibold)
-            noDataLabel.textAlignment = .center
-            profileView.tableView.backgroundView = noDataLabel
-            profileView.tableView.separatorStyle = .none
-        }
-        return numOfSections
-    }
+	func numberOfSections(in tableView: UITableView) -> Int {
+		var numOfSections: Int = 0
+		if currentUserPosts.count > 0 {
+			profileView.tableView.backgroundView = nil
+			profileView.tableView.separatorStyle = .singleLine
+			numOfSections = 1
+		} else {
+			let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: profileView.tableView.bounds.size.width, height: profileView.tableView.bounds.size.height))
+			noDataLabel.text = "You Haven't Posted Yet"
+			noDataLabel.font = UIFont.systemFont(ofSize: 25, weight: .semibold)
+			noDataLabel.textAlignment = .center
+			profileView.tableView.backgroundView = noDataLabel
+			profileView.tableView.separatorStyle = .none
+		}
+		return numOfSections
+	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return currentUserPosts.count
@@ -194,67 +262,96 @@ extension ProfileViewController: UITableViewDataSource {
 		cell.delegate = self
 		cell.tag = indexPath.row
 		let post = currentUserPosts.reversed()[indexPath.row]
-		cell.configurePostCell(post: post)
-        styleCell(cell: cell)
+		for eachUser in allUsers {
+			if post.userID == eachUser.userID {
+				postUser = eachUser
+			}
+		}
+		cell.configurePostCell(post: post, user: postUser)
 		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
 		return cell
 	}
-    
-    private func styleCell(cell: PostTableViewCell) {
-        cell.layer.cornerRadius = 4
-        cell.layer.masksToBounds = true
-        
-        //        cell.layer.borderWidth = 1
-        
-        cell.layer.masksToBounds = false
-        cell.layer.shadowColor = UIColor.black.cgColor
-        cell.layer.shadowOpacity = 0.8
-        cell.layer.shadowOffset = CGSize(width: -1, height: 1)
-        cell.layer.shadowRadius = 1
-    }
-    
-    func showAlert(title: String, message: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
-        alertController.addAction(okAction)
-        present(alertController, animated: true, completion: nil)
-    }
 
 	@objc func showOptions(tag: Int, image: UIImage?) {
-        let alertView = UIAlertController(title: "Options", message: nil, preferredStyle: .alert)
-        let editPostOption = UIAlertAction(title: "Edit Post", style: .default) { (alertAction) in
-            if !NetworkReachabilityManager()!.isReachable {
-                self.showAlert(title: "No Network", message: "No Network detected. Please connect to internet to edit post.")
-                return
-            }
-            let editPostVC = EditPostViewController(post: self.currentUserPosts.reversed()[tag], image: image!)
-            self.present(editPostVC, animated: true, completion: nil)
-        }
-        let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
-            let alertView = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
-            let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
-                // TODO: delete user Post - NEED postID
-                //                    self.deletePost(id: post.id!)
-                DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID)
-            }
-            let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
-            alertView.addAction(yesOption)
-            alertView.addAction(noOption)
-            self.present(alertView, animated: true, completion: nil)
-        }
-        let cancelOption = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alertView.addAction(editPostOption)
-        alertView.addAction(deleteOption)
-        alertView.addAction(cancelOption)
-        self.present(alertView, animated: true, completion: nil)
-    }
+		let alertView = UIAlertController(title: "Options", message: nil, preferredStyle: .alert)
+		let editPostOption = UIAlertAction(title: "Edit Post", style: .default) { (alertAction) in
+			let editPostVC = EditPostViewController(post: self.currentUserPosts.reversed()[tag], image: image!)
+			self.present(editPostVC, animated: true, completion: nil)
+		}
+		let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
+			let alertView = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
+				// TODO: delete user Post - NEED postID
+				DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID)
+			}
+			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
+			alertView.addAction(yesOption)
+			alertView.addAction(noOption)
+			self.present(alertView, animated: true, completion: nil)
+		}
+		let cancelOption = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		alertView.addAction(editPostOption)
+		alertView.addAction(deleteOption)
+		alertView.addAction(cancelOption)
+		self.present(alertView, animated: true, completion: nil)
+	}
 }
 
+
+
+//MARK: CollectionView - Datasource
+extension ProfileViewController: UICollectionViewDataSource {
+	//Number of items in Section
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return 21  //currentUserPosts.count
+	}
+	//setup for each cell
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionCell", for: indexPath) as! CustomCollectionViewCell
+		let post = currentUserPosts.reversed()[indexPath.row]
+		cell.postTitleLabel.text = post.caption
+		if let imageURL = post.userImageStr {
+			cell.postImageView.kf.indicatorType = .activity
+			cell.postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			}
+		}
+		return cell
+	}
+}
+
+// MARK: CollectionView Delegate
+extension ProfileViewController: UICollectionViewDelegate { }
+
+
+//MARK: CollectionView - Delegate Flow Layout
+extension ProfileViewController: UICollectionViewDelegateFlowLayout {
+	//Layout - Size for item
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		let numCells: CGFloat = 3
+		let numSpaces: CGFloat = numCells + 1
+		let screenWidth = UIScreen.main.bounds.width
+		let screenHeight = UIScreen.main.bounds.height
+		return CGSize(width: (screenWidth - (cellSpacing * numSpaces)) / numCells, height: screenHeight * 0.25)
+	}
+	//Layout - Inset for section
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+		return UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: 0, right: cellSpacing)
+	}
+	//Layout - line spacing
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+		return cellSpacing
+	}
+	//Layout - inter item spacing
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+		return cellSpacing
+	}
+}
 
 
 //MARK: UIImagePickerController Delegate & NavigationController Delegate
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+
 		guard let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage else { print("image is nil"); return }
 		// resize the profile image
 		let sizeOfImage: CGSize = CGSize(width: 100, height: 100)
@@ -262,7 +359,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 		self.profileImage = toucanImage
 		self.profileView.profileImageView.image = profileImage
 
-		StorageService.manager.storeUserImage(image: profileImage, userId: currentUser.userDBid, posts: currentUserPosts)
+		StorageService.manager.storeUserProfileImage(image: profileImage, userId: currentUser.userID, posts: currentUserPosts)
 
 		self.dismiss(animated: true, completion: nil)
 	}

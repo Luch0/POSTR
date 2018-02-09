@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 
+
 class LoginViewController: UIViewController {
     
     private let splashPage = SplashView()
