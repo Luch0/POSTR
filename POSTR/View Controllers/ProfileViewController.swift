@@ -124,15 +124,29 @@ class ProfileViewController: UIViewController {
 		present(alertView, animated: true, completion: nil)
 	}
 
-	//Change Profile Image
 	@objc private func changeProfileImage() {
 		let alertController = UIAlertController(title: "Change profile image", message: "Are you sure you want to change profile image?", preferredStyle: UIAlertControllerStyle.alert)
 		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
 		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
-			self.launchPhotoLibrary()
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.photoLibrary)
 		}
 		let newPhotoAction = UIAlertAction(title: "Take New Photo", style: .default) { (alertAction) in
-			self.launchCamera()
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.camera)
+		}
+		alertController.addAction(existingPhotoAction)
+		alertController.addAction(newPhotoAction)
+		alertController.addAction(cancelAction)
+		present(alertController, animated: true, completion: nil)
+	}
+
+	@objc private func changeBackgroundImage() {
+		let alertController = UIAlertController(title: "Change Landscape image", message: "Are you sure you want to change landscape image?", preferredStyle: UIAlertControllerStyle.alert)
+		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.photoLibrary)
+		}
+		let newPhotoAction = UIAlertAction(title: "Take New Photo", style: .default) { (alertAction) in
+			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.camera)
 		}
 		alertController.addAction(existingPhotoAction)
 		alertController.addAction(newPhotoAction)
@@ -141,54 +155,14 @@ class ProfileViewController: UIViewController {
 	}
 
 	//Camera Functions
-	private func launchCamera(){
-		if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
-			imagePicker.sourceType = .camera
-			imagePicker.allowsEditing = true
-			self.present(imagePicker, animated: true, completion: nil)
-		}
-	}
-	private func launchPhotoLibrary(){
-		if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
-			imagePicker.sourceType = .photoLibrary
-			imagePicker.allowsEditing = true
-			self.present(imagePicker, animated: true, completion: nil)
-		}
-	}
-	private func launchSavedPhotosLibrary(){
-		if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
-			imagePicker.sourceType = .savedPhotosAlbum
+	private func launchCameraFunctions(type: UIImagePickerControllerSourceType){
+		if UIImagePickerController.isSourceTypeAvailable(type){
+			imagePicker.sourceType = type
 			imagePicker.allowsEditing = true
 			self.present(imagePicker, animated: true, completion: nil)
 		}
 	}
 
-	//Post Functions
-	//	private func updatePost(postID: String, caption: String, bio: String){
-	//		var post = {
-	//			postID: postID, //keep the same
-	//			userID: userID, //keep the same
-	//			caption: caption,
-	//			category: category, //keep the same
-	//			date: date, //keep the same
-	//			username: username, //keep the same
-	//			numOfComments: numOfComments, //keep the same
-	//			upvoteCount: upvoteCount, //keep the same
-	//			downvoteCount: downvoteCount, //keep the same
-	//			currentVotes: currentVotes, //keep the same
-	//			postImageStr: postImageStr, //keep the same
-	//			userImageStr: userImageStr, //keep the same
-	//			postFlagCount: postFlagCount //keep the same
-	//		}
-	//
-	//		//updating the post using the postID
-	//		refPosts.child(postID).setValue(post)
-	//	}
-
-	//	private func deletePost(id: String){
-	//		//delete the post using the postID - set it to nil
-	//		refPosts.child(id).setValue(nil)
-	//	}
 }
 
 
