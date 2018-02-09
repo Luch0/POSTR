@@ -51,7 +51,7 @@ class CommentTableViewCell: UITableViewCell {
     }
     
     private func commonInit() {
-        backgroundColor = UIColor.groupTableViewBackground
+        backgroundColor = .white
         setupViews()
     }
     

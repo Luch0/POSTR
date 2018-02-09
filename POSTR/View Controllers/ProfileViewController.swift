@@ -195,9 +195,23 @@ extension ProfileViewController: UITableViewDataSource {
 		cell.tag = indexPath.row
 		let post = currentUserPosts.reversed()[indexPath.row]
 		cell.configurePostCell(post: post)
+        styleCell(cell: cell)
 		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
 		return cell
 	}
+    
+    private func styleCell(cell: PostTableViewCell) {
+        cell.layer.cornerRadius = 4
+        cell.layer.masksToBounds = true
+        
+        //        cell.layer.borderWidth = 1
+        
+        cell.layer.masksToBounds = false
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOpacity = 0.8
+        cell.layer.shadowOffset = CGSize(width: -1, height: 1)
+        cell.layer.shadowRadius = 1
+    }
     
     func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
