@@ -119,7 +119,7 @@ extension FeedViewController: UITableViewDataSource {
         return cell
     }
     
-    @objc private func showOptions(tag: Int) {
+    @objc private func showOptions(tag: Int, image: UIImage?) {
         let alertView = UIAlertController(title: "Flag", message: "Flag user or post", preferredStyle: .alert)
         let flagPost = UIAlertAction(title: "Flag Post", style: .destructive) { (alertAction) in
             DBService.manager.flagPost(post: self.posts.reversed()[tag])
@@ -157,8 +157,8 @@ extension FeedViewController: UITableViewDelegate {
 
 // MARK: Delegate for PostTableViewCell
 extension FeedViewController: PostTableViewCellDelegate {
-    func didPressOptionButton(_ tag: Int) {
-        showOptions(tag: tag)
+    func didPressOptionButton(_ tag: Int, image: UIImage?) {
+        showOptions(tag: tag, image: image)
     }
     
     func updateUpvote(tableViewCell: PostTableViewCell) {
