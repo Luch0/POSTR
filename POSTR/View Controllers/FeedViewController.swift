@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import AVFoundation
 import Toucan
+import Alamofire
 
 class FeedViewController: UIViewController {
     
@@ -81,6 +82,10 @@ class FeedViewController: UIViewController {
     }
     
     @objc private func addPostButton() {
+        if !NetworkReachabilityManager()!.isReachable {
+            self.showAlert(title: "No Network", message: "No Network detected. Please connect to internet to post.")
+            return
+        }
         let createPostViewController = NewPostViewController()
         self.present(createPostViewController, animated: true, completion: nil)
     }
@@ -117,9 +122,24 @@ extension FeedViewController: UITableViewDataSource {
         cell.currentIndexPath = indexPath
         cell.tag = indexPath.row
         cell.configurePostCell(post: post)
+        cell.numberOfCommentsLabel.isHidden = true
         cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
 //			 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+        styleCell(cell: cell)
         return cell
+    }
+    
+    private func styleCell(cell: PostTableViewCell) {
+        cell.layer.cornerRadius = 4
+        cell.layer.masksToBounds = true
+        
+//        cell.layer.borderWidth = 1
+        
+        cell.layer.masksToBounds = false
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOpacity = 0.8
+        cell.layer.shadowOffset = CGSize(width: -1, height: 1)
+        cell.layer.shadowRadius = 1
     }
 
 

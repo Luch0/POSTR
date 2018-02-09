@@ -29,7 +29,7 @@ extension DBService {
     }
     
     
-    func loadPostComments(postID: String, completionHandler: @escaping ([Comment]?) -> Void) {
+    public func loadPostComments(postID: String, completionHandler: @escaping ([Comment]?) -> Void) {
         let ref = DBService.manager.getComments()
         ref.observe(.value) { (snapshot) in
             var allComments = [Comment]()
