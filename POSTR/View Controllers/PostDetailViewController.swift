@@ -39,6 +39,7 @@ class PostDetailViewController: UIViewController {
         postDetailView.commentsTableView.delegate = self
         postDetailView.commentsTableView.dataSource = self
         postDetailView.commentTextView.delegate = self
+        addObservers()
         DBService.manager.loadPostComments(postID: post.postID.description) { (comments) in
             if let comments = comments {
                 self.comments = comments
@@ -50,6 +51,29 @@ class PostDetailViewController: UIViewController {
         //testing segue back from left
         //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goBack))
     }
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+        @objc func keyboardWillShow(notification: NSNotification) {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                if self.view.frame.origin.y == 0 {
+                    self.view.frame.origin.y -= keyboardSize.height
+                    //print("keyboard shown: \(self.view.frame.origin.y) ,keyboard height: \(keyboardSize.height)")
+                }
+            }
+        }
+    
+        @objc func keyboardWillHide(notification: NSNotification) {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y += keyboardSize.height - 45
+                    //print("keyboard hidden: \(self.view.frame.origin.y), keyboard height: \(keyboardSize.height)")
+                }
+            }
+        }
     
     func showAlert(title: String, message: String?) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -84,6 +108,31 @@ class PostDetailViewController: UIViewController {
 }
 
 extension PostDetailViewController: UITableViewDataSource {
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if tableView == postDetailView.commentsTableView {
+            var numOfSections: Int = 0
+            if comments.count > 0 {
+                postDetailView.commentsTableView.backgroundView = nil
+                postDetailView.commentsTableView.separatorStyle = .singleLine
+                numOfSections = 1
+            } else {
+                let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: postDetailView.commentsTableView.bounds.size.width, height: postDetailView.commentsTableView.bounds.size.height))
+                noDataLabel.text = "Be the first one to comment!"
+                noDataLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+                noDataLabel.textAlignment = .center
+                postDetailView.commentsTableView.backgroundView = noDataLabel
+                postDetailView.commentsTableView.separatorStyle = .none
+            }
+            return numOfSections
+        } else {
+            return 1
+        }
+    }
+    
+    
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == postDetailView.postTableView {

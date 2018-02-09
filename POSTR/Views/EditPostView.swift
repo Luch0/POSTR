@@ -18,6 +18,7 @@ class EditPostView: UIView {
     lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "cancel"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     
@@ -31,6 +32,7 @@ class EditPostView: UIView {
     lazy var submitButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "checkmark"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     
@@ -49,7 +51,7 @@ class EditPostView: UIView {
     
     lazy var selectImageButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "kitten"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "placeholderImage"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         return button
     }()
