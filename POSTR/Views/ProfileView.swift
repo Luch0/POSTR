@@ -6,7 +6,7 @@
 import UIKit
 import Firebase
 import Kingfisher
-import SnapKit
+//import SnapKit
 
 class ProfileView: UIView {
 

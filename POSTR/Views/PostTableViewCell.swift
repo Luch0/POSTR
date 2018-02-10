@@ -48,14 +48,14 @@ class PostTableViewCell: UITableViewCell {
 		label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
 		return label
 	}()
-	lazy var postTitleLabel: UILabel = {
+	lazy var postCaption: UILabel = {
 		let label = UILabel()
 		label.text = "Title"
 		label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
 		label.textAlignment = .center
 		return label
 	}()
-	lazy var postCategoryLabel: UILabel = {
+	lazy var postCategory: UILabel = {
 		let label = UILabel()
 		label.text = "Category"
 		label.font = UIFont.systemFont(ofSize: 14, weight: .light)
@@ -147,7 +147,7 @@ class PostTableViewCell: UITableViewCell {
 		userImageView.layer.masksToBounds = true
 	}
 	private func setupViews() {
-		addTopContainerView(); addUserImageView(); addUsernameLabel(); addPostTitleLabel(); addPostCategoryLabel(); addPostActionsButton()
+		addTopContainerView(); addUserImageView(); addUsernameLabel(); setupPostCaption(); addPostCategoryLabel(); addPostActionsButton()
 		addPostImageView()
 		addBottomContainerView();
 		addDownvoteButton()
@@ -185,20 +185,20 @@ class PostTableViewCell: UITableViewCell {
 		usernameLabel.widthAnchor.constraint(equalTo: topContainer.widthAnchor, multiplier: 0.20).isActive = true
 		usernameLabel.heightAnchor.constraint(equalTo: topContainer.heightAnchor, multiplier: 0.20).isActive = true
 	}
-	private func addPostTitleLabel() {
-		addSubview(postTitleLabel)
-		postTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-		postTitleLabel.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor, constant: 0).isActive = true
-		postTitleLabel.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor).isActive = true
-		postTitleLabel.widthAnchor.constraint(equalTo: topContainer.widthAnchor, multiplier: 0.50).isActive = true
+	private func setupPostCaption() {
+		addSubview(postCaption)
+		postCaption.translatesAutoresizingMaskIntoConstraints = false
+		postCaption.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor, constant: 0).isActive = true
+		postCaption.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor).isActive = true
+		postCaption.widthAnchor.constraint(equalTo: topContainer.widthAnchor, multiplier: 0.50).isActive = true
 		//		postTitleLabel.heightAnchor.constraint(equalTo: topContainer.heightAnchor, multiplier: 0.60).isActive = true
 	}
 	private func addPostCategoryLabel() {
-		addSubview(postCategoryLabel)
-		postCategoryLabel.translatesAutoresizingMaskIntoConstraints = false
-		postCategoryLabel.topAnchor.constraint(equalTo: postTitleLabel.bottomAnchor, constant: 0).isActive = true
-		postCategoryLabel.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor).isActive = true
-		postCategoryLabel.widthAnchor.constraint(equalTo: topContainer.widthAnchor, multiplier: 0.30).isActive = true
+		addSubview(postCategory)
+		postCategory.translatesAutoresizingMaskIntoConstraints = false
+		postCategory.topAnchor.constraint(equalTo: postCaption.bottomAnchor, constant: 0).isActive = true
+		postCategory.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor).isActive = true
+		postCategory.widthAnchor.constraint(equalTo: topContainer.widthAnchor, multiplier: 0.30).isActive = true
 	}
 
 	private func addPostActionsButton() {
@@ -286,8 +286,8 @@ class PostTableViewCell: UITableViewCell {
 
 	//Configure Cell
 	public func configurePostCell(post: Post, user: POSTRUser) {
-		postTitleLabel.text = post.caption
-		postCategoryLabel.text = post.category
+		postCaption.text = post.caption
+		postCategory.text = post.category
 		usernameLabel.text = user.username
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
@@ -304,8 +304,8 @@ class PostTableViewCell: UITableViewCell {
 	}
 
 	public func configurePostCell(post: Post) {
-		postTitleLabel.text = post.caption
-		postCategoryLabel.text = post.category
+		postCaption.text = post.caption
+		postCategory.text = post.category
 		usernameLabel.text = post.username
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"

@@ -6,7 +6,7 @@
 import UIKit
 import AVFoundation
 import Toucan
-import Alamofire
+//import Alamofire
 
 
 class NewPostViewController: UIViewController {
@@ -51,10 +51,10 @@ class NewPostViewController: UIViewController {
 	}
 
 	@objc private func addPost() {
-        if !NetworkReachabilityManager()!.isReachable {
-            self.showAlert(title: "No Network", message: "No Network detected. Please check connection.")
-            return
-        }
+//        if !NetworkReachabilityManager()!.isReachable {
+//            self.showAlert(title: "No Network", message: "No Network detected. Please check connection.")
+//            return
+//        }
         let newCaption = newpost.captionTextField.text!
         if newCaption.isEmpty == false {
         DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "", category: selectedCategory, postImageStr: "no image", userImageStr: "AuthUserService.getCurrentUser()?.photoURL", image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
