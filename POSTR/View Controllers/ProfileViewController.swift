@@ -20,7 +20,7 @@ class ProfileViewController: UIViewController {
 	private let imagePicker = UIImagePickerController()
 
 	// MARK: Properties
-	private var currentAuthUser: User!
+	private var currentAuthUser = AuthUserService.getCurrentUser()
 	private var currentUser: POSTRUser! {
 		didSet { profileView.configureProfileView(user: currentUser) }
 	}
@@ -37,7 +37,6 @@ class ProfileViewController: UIViewController {
 	//MARK: View Lifecycle
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		currentAuthUser = AuthUserService.getCurrentUser()
 		loadCurrentUser()
 		loadCurrentUserPosts()
 	}
@@ -59,7 +58,6 @@ class ProfileViewController: UIViewController {
 		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
 		configureNavBar()
 		setupButtonTargets()
-
 	}
 
 
@@ -131,7 +129,7 @@ class ProfileViewController: UIViewController {
 			if let users = users {
 				self.allUsers = users
 				for user in users {
-					if self.currentAuthUser.uid == user.userID { self.currentUser = user }
+					if self.currentAuthUser?.uid == user.userID { self.currentUser = user }
 				}
 			} else {print("error loading users")}
 		}
@@ -262,12 +260,7 @@ extension ProfileViewController: UITableViewDataSource {
 		cell.delegate = self
 		cell.tag = indexPath.row
 		let post = currentUserPosts.reversed()[indexPath.row]
-		for eachUser in allUsers {
-			if post.userID == eachUser.userID {
-				postUser = eachUser
-			}
-		}
-		cell.configurePostCell(post: post, user: postUser)
+		cell.configurePostCell(post: post)
 		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
 		return cell
 	}

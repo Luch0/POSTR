@@ -292,11 +292,12 @@ class ProfileView: UIView {
 	//	public func configureProfileView(user: User) {
 	public func configureProfileView(user: POSTRUser) {
 		usernameTF.text = user.username
-		//		userHeadlineTF.text = "Checking if configure cell works"
+		taglineTF.text = user.userBio
 		if let imageStr = user.userImageStr {
 			profileImageView.kf.indicatorType = .activity
-			profileImageView.kf.setImage(with: URL(string: imageStr), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-			}
+			profileImageView.kf.setImage(with: URL(string: imageStr))
+//			profileImageView.kf.setImage(with: URL(string: imageStr), placeholder: #imageLiteral(resourceName: "user4"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+//			}
 		}
 	}
 

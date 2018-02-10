@@ -9,10 +9,14 @@ import AVFoundation
 import Toucan
 
 
+let currentFBAuthUser = AuthUserService.getCurrentUser()
+
+
 class FeedViewController: UIViewController {
 
 	//MARK: import Views
 	let feedView = FeedView()
+
 
 
 	//MARK: View Lifecycle

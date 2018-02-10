@@ -285,36 +285,57 @@ class PostTableViewCell: UITableViewCell {
 
 
 	//Configure Cell
-	public func configurePostCell(post: Post, user: POSTRUser) {
+	public func configurePostCell(post: Post) {
 		postCaption.text = post.caption
 		postCategory.text = post.category
-		usernameLabel.text = user.username
+		usernameLabel.text = post.username //user.username
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
-		if let imageURL = user.userImageStr {
+		if let imageURL = post.postImageStr {
 			postImageView.kf.indicatorType = .activity
 			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
 			}
 		}
-		if let imageURL = user.userImageStr {
+		if let imageURL = post.userImageStr {
 			userImageView.kf.indicatorType = .activity
 			userImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "userImagePlaceholder"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
 			}
 		}
+//		usernameLabel.text = post.username
+//		if let imageURL = post.userImageStr {
+//			userImageView.kf.indicatorType = .activity
+//			userImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "userImagePlaceholder"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+//			}
+//		}
+//
+//		postCaption.text = post.caption
+//		postCategory.text = post.category
+//		dateLabel.text = post.date
+//		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
+//		if let imageURL = post.postImageStr {
+//			postImageView.kf.indicatorType = .activity
+//			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: #imageLiteral(resourceName: "placeholderImage"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+//			}
+//		}
 	}
-
-	public func configurePostCell(post: Post) {
-		postCaption.text = post.caption
-		postCategory.text = post.category
-		usernameLabel.text = post.username
-		dateLabel.text = post.date
-		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
-		if let imageURL = post.userImageStr {
-			postImageView.kf.indicatorType = .activity
-			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-			}
-		}
-	}
+	
+//	public func configureProfilePostCell(post: Post) {
+//		postCaption.text = post.caption
+//		postCategory.text = post.category
+//		usernameLabel.text = post.username //user.username
+//		dateLabel.text = post.date
+//		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
+//		if let imageURL = post.postImageStr {
+//			postImageView.kf.indicatorType = .activity
+//			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+//			}
+//		}
+//		if let imageURL = post.userImageStr {
+//			userImageView.kf.indicatorType = .activity
+//			userImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "userImagePlaceholder"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+//			}
+//		}
+//	}
 
 
 

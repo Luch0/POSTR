@@ -29,6 +29,9 @@ class EditProfileViewController: UIViewController {
 	private var bgImage: UIImage!
 	private var currentUserPosts = [Post]()
 
+	private var posts = [Post]()
+
+
 
 	//Setup Nib
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?){
@@ -47,10 +50,21 @@ class EditProfileViewController: UIViewController {
 		//		authService.delegate = self
 		loadCurrentUser()
 		addButtonTargets()
+		loadAllPosts()
 	}
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
+	}
+
+	private func loadAllPosts() {
+		DBService.manager.loadAllPosts { (posts) in
+			if let posts = posts {
+				self.posts = posts
+			} else {
+				print("error loading posts")
+			}
+		}
 	}
 
 	private func addButtonTargets(){
@@ -82,16 +96,22 @@ class EditProfileViewController: UIViewController {
 	@objc func dismissView() {
 		dismiss(animated: true, completion: nil)
 	}
-	@objc func saveProfileChanges() {
 
+	@objc func saveProfileChanges() {
 		if let username = editProfileView.usernameTF.text {
 			DBService.manager.updateUserName(userID: dbUser.userDBid, username: username)
+			for eachPost in posts {
+				if eachPost.userID == dbUser.userID {
+					DBService.manager.updatePostUserName(postID: eachPost.postID, username: username)
+				}
+			}
 		}
 		if let tagline = editProfileView.taglineTF.text {
 			DBService.manager.updateUserHeadline(userID: dbUser.userDBid, userBio: tagline)
 		}
 		dismissView()
 	}
+
 	@objc private func changeProfileImage() {
 		let alertController = UIAlertController(title: "Change profile image", message: "Are you sure you want to change profile image?", preferredStyle: UIAlertControllerStyle.alert)
 		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
