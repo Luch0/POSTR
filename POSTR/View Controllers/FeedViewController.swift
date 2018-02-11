@@ -9,15 +9,10 @@ import AVFoundation
 import Toucan
 
 
-let globalCurrentAuthUser = AuthUserService.getCurrentUser()
-var globalCurrentDBUser: POSTRUser?
-
 class FeedViewController: UIViewController {
 
 	//MARK: import Views
 	let feedView = FeedView()
-
-
 
 	//MARK: View Lifecycle
 	override func viewWillAppear(_ animated: Bool) {
@@ -38,6 +33,7 @@ class FeedViewController: UIViewController {
 		feedView.tableView.dataSource = self
 		configureNavBar()
 		loadCurrentUser()
+		feedView.tableView.reloadData()
 	}
 
 
@@ -187,13 +183,26 @@ extension FeedViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return UIScreen.main.bounds.height * 0.55
+		return  UITableViewAutomaticDimension
+//		return UIScreen.main.bounds.height * 0.55
 	}
 
 }
 
 // MARK: Delegate for PostTableViewCell
-extension FeedViewController: PostTableViewCellDelegate {
+extension FeedViewController: PostTableViewCellDelegate {	
+	func didPressShareButton() {
+		let activityVC = UIActivityViewController(activityItems: ["www.google.com"], applicationActivities: nil)
+		present(activityVC, animated: true, completion: nil)
+	}
+
+	func addPostToBookmarks(tableViewCell: PostTableViewCell) {
+		if let currentIndexPath = tableViewCell.currentIndexPath {
+			let post = posts.reversed()[currentIndexPath.row]
+			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+		}
+	}
+
 	internal func didPressBookmark(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]

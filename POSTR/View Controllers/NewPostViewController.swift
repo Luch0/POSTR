@@ -78,7 +78,7 @@ class NewPostViewController: UIViewController {
         DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "",
 																	 category: selectedCategory,
 																	 postImageStr: "no image",
-																	username: currentDBuser.username ?? (currentUser?.displayName)!,
+																	username: currentDBuser.username,
 																	 userImageStr: currentDBuser.userImageStr ?? "",
 																	 image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
         self.dismiss(animated: true, completion: nil)

@@ -11,12 +11,13 @@ extension DBService {
 		public func addUser(userBio: String?, image: UIImage) {
 			let user = DBService.manager.getUsers().child(AuthUserService.getCurrentUser()!.uid)
         user.setValue(["userID"       : AuthUserService.getCurrentUser()!.uid,
-                                "username"     : AuthUserService.getCurrentUser()!.displayName!,
-                                "userTagline"  : "",
-                                "userImageStr" : "",
-																"userBgImageStr": "",
-                                "userFlagCount": 0]) { (error, dbRef) in
-                                    if let error = error {
+											 "username"     : AuthUserService.getCurrentUser()!.displayName!,
+											 "userTagline"  : "",
+											 "userImageStr" : "",
+											 "userBgImageStr": "",
+											 "userFlagCount": 0,
+											 "userSavedPosts": [String]()]) { (error, dbRef) in
+																		if let error = error {
                                         print("addUser error: \(error.localizedDescription)")
                                     } else {
                                         print("user added @ database reference: \(dbRef)")
@@ -26,6 +27,15 @@ extension DBService {
                                     }
         }
     }
+
+	public func addPostToBookmark(userID: String, post: Post) {
+		let user = DBService.manager.getUsers().child(AuthUserService.getCurrentUser()!.uid)
+		user.setValue(["userSavedPosts" : post.postID]) { (error, dbRef) in
+										if let error = error {
+											print("saved Post error: \(error.localizedDescription)")
+										}
+		}
+	}
 
 	public func updateUserName(userID: String, username: String) {
 		DBService.manager.getUsers().child(userID).updateChildValues(["username": username])
@@ -41,6 +51,8 @@ extension DBService {
 	public func updateUserBgImage(userID: String, userBgImageStr: String) {
 		DBService.manager.getUsers().child(userID).updateChildValues(["userBgImageStr": userBgImageStr])
 	}
+
+
     
     public func loadAllUsers(completionHandler: @escaping ([POSTRUser]?) -> Void) {
         let ref = DBService.manager.getUsers()
@@ -73,6 +85,8 @@ extension DBService {
 			completionHandler(currentUser)
 		}
 	}
+
+
 
     
     public func flagUser(user: POSTRUser) {

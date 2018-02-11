@@ -13,21 +13,22 @@ class PostCollectionViewCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.image = #imageLiteral(resourceName: "bgBrunch")
 		imageView.contentMode = .scaleAspectFit
-		imageView.backgroundColor = .white
+		imageView.backgroundColor = .red
 		return imageView
 	}()
 	lazy var postCaption: UILabel = {
 		let label = UILabel()
 		label.text = "Title"
-		label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+		label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
 		label.textAlignment = .center
+		label.backgroundColor = .yellow
 		return label
 	}()
 
 
 	//MARK Custom Setup
 	override init(frame: CGRect) {
-		super.init(frame: UIScreen.main.bounds)
+		super.init(frame: frame)
 		setupViews()
 	}
 	required init?(coder aDecoder: NSCoder) {

@@ -66,6 +66,21 @@ extension DBService {
 		}
 	}
 
+	public func loadOnePost(postID: String, completionHandler: @escaping (Post?) -> Void) {
+		let ref = DBService.manager.getPosts().child(postID)
+		ref.observe(.value) { (snapshot) in
+			var bookmarkPost: Post!
+			for child in snapshot.children {
+				let dataSnapshot = child as! DataSnapshot
+				if let dict = dataSnapshot.value as? [String: Any] {
+					let post = Post.init(dict: dict)
+					bookmarkPost = post
+				}
+			}
+			completionHandler(bookmarkPost)
+		}
+	}
+
 	public func updatePostUserName(postID: String, username: String) {
 		DBService.manager.getPosts().child(postID).updateChildValues(["username": username])
 	}
