@@ -1,10 +1,8 @@
-//
 //  CommentTableViewCell.swift
 //  POSTR
-//
 //  Created by Luis Calle on 1/31/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
+
 
 import UIKit
 import SnapKit
@@ -14,7 +12,7 @@ class CommentTableViewCell: UITableViewCell {
     
     lazy var userImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "userImagePlaceholder")
+        imageView.image = #imageLiteral(resourceName: "user1")
         return imageView
     }()
     
@@ -51,7 +49,7 @@ class CommentTableViewCell: UITableViewCell {
     }
     
     private func commonInit() {
-        backgroundColor = UIColor.groupTableViewBackground
+        backgroundColor = .white
         setupViews()
     }
     

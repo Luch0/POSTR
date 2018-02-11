@@ -1,10 +1,8 @@
-//
 //  EditPostView.swift
 //  POSTR
-//
 //  Created by Luis Calle on 1/31/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
+
 
 import UIKit
 
@@ -18,6 +16,7 @@ class EditPostView: UIView {
     lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "cancel"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     
@@ -31,6 +30,7 @@ class EditPostView: UIView {
     lazy var submitButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "checkmark"), for: .normal)
+        button.backgroundColor = .clear
         return button
     }()
     
@@ -49,7 +49,7 @@ class EditPostView: UIView {
     
     lazy var selectImageButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "kitten"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "placeholderImage"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         return button
     }()
@@ -80,6 +80,10 @@ class EditPostView: UIView {
     private func commonInit() {
         backgroundColor = .white
         setupViews()
+    }
+    
+    public func configureEditPost(post: Post) {
+        captionTextView.text = post.caption
     }
     
     private func setupViews() {
@@ -157,13 +161,13 @@ class EditPostView: UIView {
     }
     
     private func setupCategoryLabel() {
-        addSubview(selectCategoryLabel)
-        selectCategoryLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            selectCategoryLabel.topAnchor.constraint(equalTo: selectImageButton.bottomAnchor, constant: 5),
-            selectCategoryLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.6),
-            selectCategoryLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.05),
-            selectCategoryLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor)
+			addSubview(selectCategoryLabel)
+			selectCategoryLabel.translatesAutoresizingMaskIntoConstraints = false
+			NSLayoutConstraint.activate([
+				selectCategoryLabel.topAnchor.constraint(equalTo: selectImageButton.bottomAnchor, constant: 5),
+				selectCategoryLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.6),
+				selectCategoryLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.05),
+				selectCategoryLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor)
             ])
     }
     
