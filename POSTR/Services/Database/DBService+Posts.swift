@@ -9,20 +9,20 @@ import Firebase
 
 extension DBService {
     
-	public func addPosts(caption: String, category: String, postImageStr: String, userImageStr: String, image: UIImage) {
+	public func addPosts(caption: String, category: String, postImageStr: String, username: String, userImageStr: String, image: UIImage) {
 		let childByAutoId = DBService.manager.getPosts().childByAutoId()
 		childByAutoId.setValue(["postID"        : childByAutoId.key,
 														"userID"        : AuthUserService.getCurrentUser()!.uid,
 														"caption"       : caption,
 														"category"      : category,
 														"date"          : formatDate(with: Date()),
-														"username"      : AuthUserService.getCurrentUser()!.displayName!,
 														"numOfComments" : 0,
 														"upvoteCount"   : 0,
 														"downvoteCount" : 0,
 														"currentVotes"  : 0,
-														"postImageStr"  : postImageStr,
+														"username"			: username,
 														"userImageStr"  : userImageStr,
+														"postImageStr"  : postImageStr,
 														"postFlagCount" : 0]) { (error, dbRef) in
 															if let error = error {
 																print("addPosts error: \(error)")
@@ -87,7 +87,7 @@ extension DBService {
     }
     public func updateUpvote(postToUpdate: Post) {
         print(postToUpdate.postID)
-        guard let userId = AuthUserService.getCurrentUser()?.uid else { fatalError("userId is nil") }
+        guard ((AuthUserService.getCurrentUser()?.uid) != nil) else { fatalError("userId is nil") }
         let postRef = DBService.manager.getPosts().child((postToUpdate.postID))
         postRef.updateChildValues(["upvoteCount": postToUpdate.upvoteCount + 1])
         postRef.updateChildValues(["currentVotes": (postToUpdate.upvoteCount + 1) + postToUpdate.downvoteCount])
