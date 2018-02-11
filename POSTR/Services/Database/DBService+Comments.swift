@@ -10,20 +10,20 @@ import Firebase
 extension DBService {
 	public func addComment(post: Post, commentStr: String) {
         let childByAutoId = DBService.manager.getComments().childByAutoId()
-        childByAutoId.setValue(["postID"           : post.postID,
-                                "userID"           : AuthUserService.getCurrentUser()!.uid,
+        childByAutoId.setValue(["userID"         	 	: AuthUserService.getCurrentUser()!.uid,
+																"username"          : post.username,
+																"postID"          	: post.postID,
+																"postTitle"					: post.caption,
+																"postImageStr"			: post.postImageStr,
+																"postCategory"			: post.category,
+																"dateOfPost"       : formatDate(with: Date()),
                                 "commentID"        : childByAutoId.key,
                                 "commentStr"       : commentStr,
-                                "dateOfPost"       : formatDate(with: Date()),
-                                "commentsFlagCount": 0,
-                                "username"         : post.username]) { (error, dbRef) in
+                                "commentsFlagCount": 0,]) { (error, dbRef) in
                                     if let error = error {
                                         print("addComments error: \(error)")
                                     } else {
                                         print("comments added @ database reference: \(dbRef)")
-                                        // add an image to storage
-                                        //StorageService.manager.storeImage(image: image, commentId: childByAutoId.key)
-                                        // TODO: add image to database
                                     }
         }
     }
