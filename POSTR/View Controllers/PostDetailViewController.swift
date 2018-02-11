@@ -42,7 +42,7 @@ class PostDetailViewController: UIViewController {
         postDetailView.commentsTableView.dataSource = self
 //      postDetailView.commentTextView.delegate = self
         addObservers()
-        DBService.manager.loadPostComments(postID: post.postID.description) { (comments) in
+        DBService.manager.loadAllComments(postID: post.postID.description) { (comments) in
             if let comments = comments {
                 self.comments = comments
             } else {
@@ -93,24 +93,10 @@ class PostDetailViewController: UIViewController {
             showAlert(title: "Alert", message: "Can't post empty comment")
             return
         } else {
-            DBService.manager.addComment(postID: post.postID, commentStr: postDetailView.commentTextView.text!)
+            DBService.manager.addComment(post: post, commentStr: postDetailView.commentTextView.text!)
             postDetailView.commentTextView.text = ""
         }
     }
-    
-    //testing segue back from left
-    //    @objc func goBack() {
-    //        let transition: CATransition = CATransition()
-    //        let timeFunc : CAMediaTimingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-    //        transition.duration = 0.5
-    //        transition.timingFunction = timeFunc
-    //        transition.type = kCATransitionPush
-    //        transition.subtype = kCATransitionFromRight
-    //        self.navigationController?.view.layer.add(transition, forKey: kCATransition)
-    //        self.navigationController?.popToRootViewController(animated: true)
-    //    }
-    
-    
 }
 
 extension PostDetailViewController: UITableViewDataSource {
@@ -150,7 +136,7 @@ extension PostDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == postDetailView.postTableView {
-					let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
+					let cell = tableView.dequeueReusableCell(withIdentifier: "PostListCell", for: indexPath) as! PostTableViewCell
 					cell.configurePostCell(post: self.post)
 					cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
 					return cell

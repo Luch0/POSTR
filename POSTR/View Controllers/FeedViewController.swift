@@ -9,8 +9,8 @@ import AVFoundation
 import Toucan
 
 
-let currentFBAuthUser = AuthUserService.getCurrentUser()
-
+let globalCurrentAuthUser = AuthUserService.getCurrentUser()
+var globalCurrentDBUser: POSTRUser?
 
 class FeedViewController: UIViewController {
 
@@ -37,6 +37,7 @@ class FeedViewController: UIViewController {
 		feedView.tableView.delegate = self
 		feedView.tableView.dataSource = self
 		configureNavBar()
+		loadCurrentUser()
 	}
 
 
@@ -49,6 +50,9 @@ class FeedViewController: UIViewController {
 		}
 	}
 	private var users = [POSTRUser]()
+	public var currentAuthUser = AuthUserService.getCurrentUser()
+	public var currentDBUser: POSTRUser!
+
 
 	//MARK: Methods
 	private func loadAllPosts() {
@@ -61,6 +65,16 @@ class FeedViewController: UIViewController {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {self.users = users}
 			else {print("error loading users")}
+		}
+	}
+	private func loadCurrentUser() {
+		DBService.manager.loadAllUsers { (users) in
+			if let users = users {
+				for user in users {
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(user.userID)") }
+
+				}
+			} else {print("error loading from Firebase Database")}
 		}
 	}
 
@@ -119,7 +133,7 @@ extension FeedViewController: UITableViewDataSource {
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
+		let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "PostListCell", for: indexPath) as! PostTableViewCell
 		let post = posts.reversed()[indexPath.row]
 		cell.delegate = self
 		cell.currentIndexPath = indexPath
@@ -131,7 +145,6 @@ extension FeedViewController: UITableViewDataSource {
 		//			 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
 		return cell
 	}
-
 
 
 	private func showAlert(title: String, message: String) {
@@ -181,6 +194,13 @@ extension FeedViewController: UITableViewDelegate {
 
 // MARK: Delegate for PostTableViewCell
 extension FeedViewController: PostTableViewCellDelegate {
+	internal func didPressBookmark(tableViewCell: PostTableViewCell) {
+		if let currentIndexPath = tableViewCell.currentIndexPath {
+			let post = posts.reversed()[currentIndexPath.row]
+			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+		}
+	}
+
 	internal func didPressOptionButton(_ tag: Int, image: UIImage?) {
 		showOptions(tag: tag, image: image)
 	}
@@ -190,7 +210,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
 			print(postToUpdate.postID)
 			DBService.manager.updateUpvote(postToUpdate: postToUpdate)
-
 		}
 	}
 
@@ -199,7 +218,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
 			print(postToUpdate.postID)
 			DBService.manager.updateDownvote(postToUpdate: postToUpdate)
-
 		}
 	}
 }

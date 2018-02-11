@@ -11,7 +11,7 @@ class EditProfileView: UIView {
 	//Main Container & dismissView
 	lazy var containerView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0)
 		view.layer.cornerRadius = 20
 		view.layer.masksToBounds = true
 		return view
@@ -35,7 +35,7 @@ class EditProfileView: UIView {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFit
 		imageView.image = #imageLiteral(resourceName: "bgPencil")
-		imageView.backgroundColor = .clear
+//		imageView.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0)
 		return imageView
 	}()
 
@@ -50,35 +50,37 @@ class EditProfileView: UIView {
 	lazy var editProfilePhotoButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Edit Profile Pic", for: .normal)
-		button.backgroundColor = .white
-		button.setTitleColor(UIColor.green, for: .normal)
+		button.backgroundColor = .clear
+		button.setTitleColor(UIColor.blue, for: .normal)
 		return button
 	}()
 	lazy var editBgPhotoButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Edit Background Pic", for: .normal)
-		button.backgroundColor = .white
-		button.setTitleColor(UIColor.green, for: .normal)
+		button.backgroundColor = .clear
+		button.setTitleColor(UIColor.blue, for: .normal)
 		return button
 	}()
 	lazy var saveButton: UIButton = {
 		let button = UIButton()
-		button.setTitle("Save", for: .normal)
-		button.backgroundColor = .white
-		button.setTitleColor(UIColor.green, for: .normal)
+//		button.setTitle("Save", for: .normal)
+		button.setImage(#imageLiteral(resourceName: "save"), for: .normal)
+		button.backgroundColor = .clear
+		button.setTitleColor(UIColor.white, for: .normal)
 		return button
 	}()
 	lazy var usernameLabel: UILabel = {
 		let label = UILabel()
 		label.text = "Username"
 		label.textColor = UIColor.black
-		label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+		label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
 		return label
 	}()
 	lazy var usernameTF: UITextField = {
 		let textField = UITextField()
-		textField.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-		textField.placeholder = "Ben Stone"
+		textField.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+		textField.placeholder = "Winston Maragh"
+		textField.adjustsFontSizeToFitWidth = true
 		textField.borderStyle = .roundedRect
 		textField.autocorrectionType = .no
 		textField.autocapitalizationType = .none
@@ -88,13 +90,14 @@ class EditProfileView: UIView {
 		let label = UILabel()
 		label.text = "Tagline"
 		label.textColor = UIColor.black
-		label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+		label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
 		return label
 	}()
 	lazy var taglineTF: UITextField = {
 		let textField = UITextField()
-		textField.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-		textField.placeholder = "Good Stuff!!"
+		textField.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+		textField.placeholder = "Ultimate Coder"
+		textField.adjustsFontSizeToFitWidth = true
 		textField.borderStyle = .roundedRect
 		textField.autocorrectionType = .no
 		textField.autocapitalizationType = .none
@@ -112,16 +115,10 @@ class EditProfileView: UIView {
 		super.init(coder: aDecoder)
 	}
 	override func layoutSubviews() {
-		//here you get the actual frame size of the elements before getting
-		//laid out screen
 		super.layoutSubviews()
-
-		//bioTextView.setContentOffset(CGPoint.zero, animated: false)
-
+		backgroundColor = .clear
 		//make profile image a circle
-		bgImage.layer.cornerRadius = bgImage.bounds.width / 7.0
-		//		bgImage.layer.masksToBounds = true
-		profileImage.layer.cornerRadius = profileImage.bounds.width / 2.0
+		profileImage.layer.cornerRadius = profileImage.bounds.width / 4.0
 		profileImage.layer.masksToBounds = true
 	}
 
@@ -134,16 +131,16 @@ class EditProfileView: UIView {
 		setupProfileImage()
 		setupEditProfilePhotoButton()
 		setupEditBgPhotoButton()
-		setupSaveButton()
 		setupUsernameLabel()
 		setupUsernameTF()
 		setupTaglineLabel()
 		setupTaglineTF()
+		setupSaveButton()
 	}
 
 	private func setupBlurEffectView() {
 		//create blur effect
-		let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
+		let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.light)
 		let visualEffect = UIVisualEffectView(frame: UIScreen.main.bounds)
 		visualEffect.effect = blurEffect
 		addSubview(visualEffect)
@@ -158,105 +155,103 @@ class EditProfileView: UIView {
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 		containerView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
 		containerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-		containerView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.70).isActive = true
-		containerView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.50).isActive = true
+		containerView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.80).isActive = true
+		containerView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.60).isActive = true
 	}
 
 	private func setupBgImage() {
 		addSubview(bgImage)
 		bgImage.translatesAutoresizingMaskIntoConstraints = false
 		bgImage.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
-		bgImage.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
-		bgImage.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-		bgImage.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.55).isActive = true
+		bgImage.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
+		bgImage.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
+		bgImage.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.5).isActive = true
 	}
 
 	private func setupDismissbutton() {
 		addSubview(dismissButton)
 		dismissButton.translatesAutoresizingMaskIntoConstraints = false
-		dismissButton.topAnchor.constraint(equalTo: bgImage.topAnchor, constant: 10).isActive = true
-		dismissButton.leadingAnchor.constraint(equalTo: bgImage.leadingAnchor, constant: 15).isActive = true
-	}
-	private func setupSaveButton() {
-		addSubview(saveButton)
-		saveButton.translatesAutoresizingMaskIntoConstraints = false
-		saveButton.topAnchor.constraint(equalTo: bgImage.topAnchor, constant: 10).isActive = true
-		saveButton.trailingAnchor.constraint(equalTo: bgImage.trailingAnchor, constant: -10).isActive = true
+		dismissButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
+		dismissButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 15).isActive = true
 	}
 
 	private func setupProfileImage(){
 		addSubview(profileImage)
 		profileImage.translatesAutoresizingMaskIntoConstraints = false
-		profileImage.topAnchor.constraint(equalTo: dismissButton.topAnchor, constant: 35).isActive = true
-		profileImage.leadingAnchor.constraint(equalTo: bgImage.leadingAnchor, constant: 20).isActive = true
-		profileImage.heightAnchor.constraint(equalTo: bgImage.heightAnchor, multiplier: 0.4).isActive = true
+		profileImage.centerXAnchor.constraint(equalTo: bgImage.centerXAnchor).isActive = true
+		profileImage.centerYAnchor.constraint(equalTo: bgImage.centerYAnchor).isActive = true
+		profileImage.heightAnchor.constraint(equalTo: bgImage.heightAnchor, multiplier: 0.45).isActive = true
 		profileImage.widthAnchor.constraint(equalTo: profileImage.heightAnchor).isActive = true
 	}
 
 	private func setupEditProfilePhotoButton(){
 		addSubview(editProfilePhotoButton)
 		editProfilePhotoButton.translatesAutoresizingMaskIntoConstraints = false
-		editProfilePhotoButton.topAnchor.constraint(equalTo: bgImage.topAnchor, constant: 70).isActive = true
-		editProfilePhotoButton.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 10).isActive = true
-		editProfilePhotoButton.widthAnchor.constraint(equalTo: bgImage.widthAnchor, multiplier: 0.50).isActive = true
-		editProfilePhotoButton.heightAnchor.constraint(equalTo: bgImage.heightAnchor, multiplier: 0.08).isActive = true
+		editProfilePhotoButton.topAnchor.constraint(equalTo: bgImage.bottomAnchor, constant: 5).isActive = true
+		editProfilePhotoButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
+		editProfilePhotoButton.heightAnchor.constraint(equalToConstant: 14).isActive = true
 	}
 	private func setupEditBgPhotoButton(){
 		addSubview(editBgPhotoButton)
 		editBgPhotoButton.translatesAutoresizingMaskIntoConstraints = false
-		editBgPhotoButton.topAnchor.constraint(equalTo: editProfilePhotoButton.bottomAnchor, constant: 8).isActive = true
-		editBgPhotoButton.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 10).isActive = true
-		editBgPhotoButton.widthAnchor.constraint(equalTo: bgImage.widthAnchor, multiplier: 0.60).isActive = true
-		editBgPhotoButton.heightAnchor.constraint(equalTo: bgImage.heightAnchor, multiplier: 0.08).isActive = true
+		editBgPhotoButton.topAnchor.constraint(equalTo: editProfilePhotoButton.bottomAnchor, constant: 5).isActive = true
+		editBgPhotoButton.centerXAnchor.constraint(equalTo: profileImage.centerXAnchor).isActive = true
+		editBgPhotoButton.heightAnchor.constraint(equalToConstant: 14).isActive = true
 	}
 
 	private func setupUsernameLabel(){
 		addSubview(usernameLabel)
 		usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-		usernameLabel.topAnchor.constraint(equalTo: bgImage.bottomAnchor, constant: 10).isActive = true
-		usernameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20).isActive = true
+		usernameLabel.topAnchor.constraint(equalTo: editBgPhotoButton.bottomAnchor, constant: 10).isActive = true
+		usernameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8).isActive = true
 		usernameLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.25).isActive = true
 		usernameLabel.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.1).isActive = true
 	}
 	private func setupUsernameTF(){
 		addSubview(usernameTF)
 		usernameTF.translatesAutoresizingMaskIntoConstraints = false
-		usernameTF.topAnchor.constraint(equalTo: bgImage.bottomAnchor, constant: 12).isActive = true
-		usernameTF.leadingAnchor.constraint(equalTo: usernameLabel.trailingAnchor, constant: 30).isActive = true
+		usernameTF.centerYAnchor.constraint(equalTo: usernameLabel.centerYAnchor).isActive = true
+		usernameTF.leadingAnchor.constraint(equalTo: usernameLabel.trailingAnchor, constant: 10).isActive = true
 		usernameTF.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.50).isActive = true
 		usernameTF.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.08).isActive = true
 	}
 	private func setupTaglineLabel(){
 		addSubview(taglineLabel)
 		taglineLabel.translatesAutoresizingMaskIntoConstraints = false
-		taglineLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 10).isActive = true
-		taglineLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20).isActive = true
+		taglineLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 5).isActive = true
+		taglineLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8).isActive = true
 		taglineLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.25).isActive = true
 		taglineLabel.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.1).isActive = true
 	}
 	private func setupTaglineTF(){
 		addSubview(taglineTF)
 		taglineTF.translatesAutoresizingMaskIntoConstraints = false
-		taglineTF.topAnchor.constraint(equalTo: usernameTF.bottomAnchor, constant: 10).isActive = true
+		taglineTF.centerYAnchor.constraint(equalTo: taglineLabel.centerYAnchor).isActive = true
 		taglineTF.leadingAnchor.constraint(equalTo: usernameTF.leadingAnchor).isActive = true
 		taglineTF.trailingAnchor.constraint(equalTo: usernameTF.trailingAnchor).isActive = true
 		taglineTF.heightAnchor.constraint(equalTo: usernameTF.heightAnchor).isActive = true
+	}
+	private func setupSaveButton() {
+		addSubview(saveButton)
+		saveButton.translatesAutoresizingMaskIntoConstraints = false
+		saveButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
+		saveButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10).isActive = true
 	}
 
 
 	public func configureProfileView(user: POSTRUser) {
 		usernameTF.text = user.username
-		taglineTF.text = user.userBio ?? ""
+		taglineTF.text = user.userTagline
 		if let imageStr = user.userImageStr {
 			profileImage.kf.indicatorType = .activity
-			profileImage.kf.setImage(with: URL(string: imageStr), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			profileImage.kf.setImage(with: URL(string: imageStr), placeholder: #imageLiteral(resourceName: "user2"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
 			}
 		}
-		//		if let imageStr = user.userBGImageStr {
-		//			bgImage.kf.indicatorType = .activity
-		//			bgImage.kf.setImage(with: URL(string: imageStr), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-		//			}
-		//		}
+		if let imageStr = user.userBgImageStr {
+			bgImage.kf.indicatorType = .activity
+			bgImage.kf.setImage(with: URL(string: imageStr), placeholder: #imageLiteral(resourceName: "bgPencil"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			}
+		}
 	}
 
 }

@@ -10,6 +10,7 @@ import Firebase
 
 protocol PostTableViewCellDelegate : class {
 	func didPressOptionButton(_ tag: Int, image: UIImage?)
+	func didPressBookmark(tableViewCell: PostTableViewCell)
 	func updateUpvote(tableViewCell: PostTableViewCell )
 	func updateDownVote(tableViewCell: PostTableViewCell)
 }
@@ -28,6 +29,9 @@ class PostTableViewCell: UITableViewCell {
 	}
 	@objc func optionsClicked() {
 		delegate?.didPressOptionButton(self.tag, image: self.postImageView.image)
+	}
+	@objc func bookmarkClicked(){
+		delegate?.updateUpvote(tableViewCell: self)
 	}
 
 
@@ -120,6 +124,7 @@ class PostTableViewCell: UITableViewCell {
 		let button = UIButton()
 		button.setImage(#imageLiteral(resourceName: "bookmark_empty"), for: .normal)
 		button.backgroundColor = UIColor.clear
+		button.addTarget(self, action: #selector(bookmarkClicked), for: .touchUpInside)
 		return button
 	}()
 
@@ -135,7 +140,7 @@ class PostTableViewCell: UITableViewCell {
 
 	//Custom Setup
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?){
-		super.init(style: style, reuseIdentifier: "Post Cell")
+		super.init(style: style, reuseIdentifier: "PostListCell")
 		backgroundColor = UIColor.white
 		setupViews()
 	}
@@ -155,8 +160,8 @@ class PostTableViewCell: UITableViewCell {
 		addUpvoteButton()
 		addVoteCountLabel()
 		addDateLabel()
-		addBookmarkButton()
 		addShareButton()
+		addBookmarkButton()
 	}
 
 
@@ -268,7 +273,7 @@ class PostTableViewCell: UITableViewCell {
 	private func addBookmarkButton() {
 		addSubview(bookmarkButton)
 		bookmarkButton.translatesAutoresizingMaskIntoConstraints = false
-		bookmarkButton.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 10).isActive = true
+		bookmarkButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor, constant: 1).isActive = true
 		bookmarkButton.heightAnchor.constraint(equalTo: bottomContainer.heightAnchor, multiplier: 0.6).isActive = true
 		bookmarkButton.widthAnchor.constraint(equalTo: bottomContainer.widthAnchor, multiplier: 0.1).isActive = true
 		bookmarkButton.centerYAnchor.constraint(equalTo: bottomContainer.centerYAnchor).isActive = true
@@ -293,12 +298,12 @@ class PostTableViewCell: UITableViewCell {
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
 		if let imageURL = post.postImageStr {
 			postImageView.kf.indicatorType = .activity
-			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: #imageLiteral(resourceName: "bgGallery"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
 			}
 		}
 		if let imageURL = post.userImageStr {
 			self.userImageView.kf.indicatorType = .activity
-			self.userImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "userImagePlaceholder"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
+			self.userImageView.kf.setImage(with: URL(string:imageURL), placeholder: #imageLiteral(resourceName: "user2"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
 			}
 		}
 	}

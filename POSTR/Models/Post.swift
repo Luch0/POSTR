@@ -10,17 +10,17 @@ import Foundation
 
 class Post {
     let postID: String
+		let postImageStr: String?
     let userID: String
+		let username: String
+		let userImageStr: String?
     let caption: String
     let category: String
     let date: String //TO DO - change
-    let username: String
     let numOfComments: Int
     let upvoteCount: Int
     let downvoteCount: Int
     let currentVotes: Int
-    let postImageStr: String?
-    let userImageStr: String?
     let postFlagCount: Int
     
     init(dict: [String : Any]) {
