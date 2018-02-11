@@ -11,15 +11,22 @@ import SnapKit
 class PostCommentCell: UITableViewCell {
 
 	//MARK: Properties
-	lazy var userImageView: UIImageView = {
+	lazy var postImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.image = #imageLiteral(resourceName: "user1")
+		imageView.image = #imageLiteral(resourceName: "bgGloomy")
 		return imageView
 	}()
-	lazy var usernameLabel: UILabel = {
+	lazy var postTitleLabel: UILabel = {
 		let label = UILabel()
-		label.text = "Winston Maragh"
-		label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+		label.text = "Title"
+		label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+		return label
+	}()
+	lazy var postCategoryLabel: UILabel = {
+		let label = UILabel()
+		label.text = "Category"
+		label.textColor = .gray
+		label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
 		return label
 	}()
 	lazy var dateLabel: UILabel = {
@@ -31,7 +38,7 @@ class PostCommentCell: UITableViewCell {
 	lazy var commentLabel: UILabel = {
 		let label = UILabel()
 		label.text = "Coding is fun"
-		label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+		label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
 		label.numberOfLines = 0
 		return label
 	}()
@@ -50,43 +57,61 @@ class PostCommentCell: UITableViewCell {
 		super.layoutSubviews()
 	}
 	private func setupViews() {
-			setupUserImageView()
-			setupUsernameLabel()
-			setupDateLabel()
-			setupCommentLabel()
+			addPostImageView()
+			addPostTitleLabel()
+			addPostCategoryLabel()
+			addDateLabel()
+			addCommentLabel()
 		}
 
 	//MARK: Add Properties
-	private func setupUserImageView() {
-		addSubview(userImageView)
-		userImageView.snp.makeConstraints { (make) in
-			make.leading.equalTo(safeAreaLayoutGuide.snp.leading).offset(4)
-			make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(4)
-			make.height.equalTo(safeAreaLayoutGuide.snp.height).multipliedBy(0.2)
-			make.width.equalTo(userImageView.snp.height)
-		}
+	private func addPostImageView() {
+		addSubview(postImageView)
+		postImageView.translatesAutoresizingMaskIntoConstraints = false
+		postImageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+		postImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+		postImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.6).isActive = true
+		postImageView.widthAnchor.constraint(equalTo: postImageView.heightAnchor).isActive = true
 	}
-	private func setupUsernameLabel() {
-		addSubview(usernameLabel)
-		usernameLabel.snp.makeConstraints { (make) in
-			make.leading.equalTo(userImageView.snp.trailing).offset(4)
-			make.bottom.equalTo(userImageView.snp.bottom)
-		}
+	private func addPostTitleLabel() {
+		addSubview(postTitleLabel)
+		postTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+		postTitleLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor).isActive = true
+		postTitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+		postTitleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.15).isActive = true
 	}
-	private func setupDateLabel() {
+	private func addPostCategoryLabel() {
+		addSubview(postCategoryLabel)
+		postCategoryLabel.translatesAutoresizingMaskIntoConstraints = false
+		postCategoryLabel.topAnchor.constraint(equalTo: postTitleLabel.bottomAnchor).isActive = true
+		postCategoryLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+		postCategoryLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+		postCategoryLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.15).isActive = true
+	}
+	private func addDateLabel() {
 		addSubview(dateLabel)
-		dateLabel.snp.makeConstraints { (make) in
-			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing).offset(-4)
-			make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(4)
-		}
+		dateLabel.translatesAutoresizingMaskIntoConstraints = false
+		dateLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+		dateLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+		dateLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2).isActive = true
 	}
-	private func setupCommentLabel() {
+	private func addCommentLabel() {
 		addSubview(commentLabel)
-		commentLabel.snp.makeConstraints { (make) in
-			make.centerY.equalTo(safeAreaLayoutGuide.snp.centerY)
-			make.leading.equalTo(safeAreaLayoutGuide.snp.leading).offset(4)
-			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing).offset(-4)
-		}
+		commentLabel.translatesAutoresizingMaskIntoConstraints = false
+		commentLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor).isActive = true
+		commentLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+		commentLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7).isActive = true
 	}
+
+	//MARK: Configure Cell
+	public func configurePostCommentCell(comment: Comment) {
+		commentLabel.text = comment.commentStr
+		dateLabel.text = comment.dateOfPost
+		postTitleLabel.text = comment.postTitle
+		postCategoryLabel.text = comment.postCategory
+		postImageView.kf.indicatorType = .activity
+		postImageView.kf.setImage(with: URL(string:comment.postImageStr))
+	}
+
 }
 

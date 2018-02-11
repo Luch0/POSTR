@@ -180,6 +180,13 @@ extension ProfileViewController: UITableViewDelegate {
 		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if tableView == profileView.tableView {
+			return UIScreen.main.bounds.height * 0.40
+		} else if tableView == profileView.commentView {
+			return UIScreen.main.bounds.height * 0.10
+		} else if tableView == profileView.bookmarkView {
+			return UIScreen.main.bounds.height * 0.20
+		}
 		return UIScreen.main.bounds.height * 0.40
 	}
 }
@@ -228,21 +235,17 @@ extension ProfileViewController: UITableViewDataSource {
 			cell.bookmarkButton.addTarget(self, action: #selector(toggleBookmark), for: .touchUpInside)
 			return cell
 		case profileView.commentView:
-			let commentCell = tableView.dequeueReusableCell(withIdentifier: "PostCommentCell", for: indexPath) as! CommentTableViewCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: "PostCommentCell", for: indexPath) as! PostCommentCell
 			let comment = currentUserComments[indexPath.row]
-			commentCell.commentLabel.text = comment.commentStr
-			commentCell.dateLabel.text = comment.dateOfPost
-			commentCell.usernameLabel.text = comment.username
-			return commentCell
+			cell.configurePostCommentCell(comment: comment)
+			return cell
 		case profileView.bookmarkView:
 			let cell = tableView.dequeueReusableCell(withIdentifier: "PostBookmarkCell", for: indexPath)
 			let post = currentUserPosts.reversed()[indexPath.row]
 			cell.textLabel?.text = post.caption
 			cell.detailTextLabel?.text = post.category
-			if let imageStr = post.postImageStr {
-				cell.imageView?.kf.indicatorType = .activity
-				cell.imageView?.kf.setImage(with: URL(string: imageStr))
-			}
+			cell.imageView?.kf.indicatorType = .activity
+			cell.imageView?.kf.setImage(with: URL(string: post.postImageStr ))
 			return cell
 		default:
 			return UITableViewCell()
@@ -289,11 +292,8 @@ extension ProfileViewController: UICollectionViewDataSource {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 		let post = currentUserPosts.reversed()[indexPath.row]
 		cell.postCaption.text = post.caption
-
-		if let imageURL = post.postImageStr {
-			cell.postImageView.kf.indicatorType = .activity
-			cell.postImageView.kf.setImage(with: URL(string:imageURL))
-		}
+		cell.postImageView.kf.indicatorType = .activity
+		cell.postImageView.kf.setImage(with: URL(string: post.postImageStr ))
 		return cell
 	}
 }

@@ -45,14 +45,14 @@ class PostTableViewCell: UITableViewCell {
 	}()
 	lazy var userImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.image = #imageLiteral(resourceName: "userImagePlaceholder")
+		imageView.image = #imageLiteral(resourceName: "user2")
 		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	lazy var usernameLabel: UILabel = {
 		let label = UILabel()
 		label.text = "username"
-		label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+		label.font = UIFont.systemFont(ofSize: 10, weight: .light)
 		return label
 	}()
 	lazy var postCaption: UILabel = {
@@ -68,7 +68,6 @@ class PostTableViewCell: UITableViewCell {
 		label.font = UIFont.systemFont(ofSize: 14, weight: .light)
 		label.textColor = UIColor.darkGray
 		label.textAlignment = .center
-
 		return label
 	}()
 	lazy var postActionsButton: UIButton = {
@@ -185,16 +184,15 @@ class PostTableViewCell: UITableViewCell {
 	private func addUserImageView() {
 		addSubview(userImageView)
 		userImageView.translatesAutoresizingMaskIntoConstraints = false
-		userImageView.centerYAnchor.constraint(equalTo: topContainer.centerYAnchor, constant: -5).isActive = true
-
+		userImageView.centerYAnchor.constraint(equalTo: topContainer.centerYAnchor, constant: -8).isActive = true
 		userImageView.leadingAnchor.constraint(equalTo: topContainer.leadingAnchor, constant: 5).isActive = true
 		userImageView.widthAnchor.constraint(equalTo: userImageView.heightAnchor).isActive = true
-		userImageView.heightAnchor.constraint(equalTo: topContainer.heightAnchor, multiplier: 0.50).isActive = true
+		userImageView.heightAnchor.constraint(equalTo: topContainer.heightAnchor, multiplier: 0.60).isActive = true
 	}
 	private func addUsernameLabel() {
 		addSubview(usernameLabel)
 		usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-		usernameLabel.topAnchor.constraint(equalTo: userImageView.bottomAnchor, constant: 8).isActive = true
+		usernameLabel.topAnchor.constraint(equalTo: userImageView.bottomAnchor, constant: 5).isActive = true
 		usernameLabel.leadingAnchor.constraint(equalTo: topContainer.leadingAnchor, constant: 5).isActive = true
 		usernameLabel.widthAnchor.constraint(equalTo: topContainer.widthAnchor, multiplier: 0.20).isActive = true
 		usernameLabel.heightAnchor.constraint(equalTo: topContainer.heightAnchor, multiplier: 0.20).isActive = true
@@ -304,10 +302,9 @@ class PostTableViewCell: UITableViewCell {
 		usernameLabel.text = post.username
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
-		if let imageURL = post.postImageStr {
-			postImageView.kf.indicatorType = .activity
-			postImageView.kf.setImage(with: URL(string:imageURL))
-		}
+		postImageView.kf.indicatorType = .activity
+		postImageView.kf.setImage(with: URL(string:post.postImageStr))
+
 		if let imageURL = post.userImageStr {
 			self.userImageView.kf.indicatorType = .activity
 			self.userImageView.kf.setImage(with: URL(string:imageURL))
