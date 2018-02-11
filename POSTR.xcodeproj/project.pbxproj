@@ -20,8 +20,10 @@
 		810828ED202507DD00B7EA40 /* DBService+Posts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810828EC202507DD00B7EA40 /* DBService+Posts.swift */; };
 		810828EF20250BEE00B7EA40 /* DBService+Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810828EE20250BEE00B7EA40 /* DBService+Comments.swift */; };
 		8170B390202F7EFF00BD208F /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170B38D202F7EFF00BD208F /* SplashView.swift */; };
-		8170B391202F7EFF00BD208F /* CustomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170B38E202F7EFF00BD208F /* CustomCollectionViewCell.swift */; };
 		8170B392202F7EFF00BD208F /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170B38F202F7EFF00BD208F /* EditProfileView.swift */; };
+		8170B3F5202FDD0C00BD208F /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170B3F4202FDD0C00BD208F /* PostCollectionViewCell.swift */; };
+		8170B3F72030339600BD208F /* PostCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170B3F62030339600BD208F /* PostCommentCell.swift */; };
+		8170B3F92030352500BD208F /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170B3F82030352400BD208F /* PostTableViewCell.swift */; };
 		E20173E52023BAE200C712AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E20173E42023BAE200C712AC /* GoogleService-Info.plist */; };
 		E230E0272022507600D0CCF9 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E230E0262022507600D0CCF9 /* EditPostViewController.swift */; };
 		E230E029202250F800D0CCF9 /* EditPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E230E028202250F800D0CCF9 /* EditPostView.swift */; };
@@ -35,7 +37,6 @@
 		E2DE797620212F95004799F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2DE797420212F95004799F4 /* LaunchScreen.storyboard */; };
 		E2DE798320213154004799F4 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE798220213154004799F4 /* ProfileViewController.swift */; };
 		E2DE7985202131C7004799F4 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE7984202131C7004799F4 /* ProfileView.swift */; };
-		E2DE7987202131F0004799F4 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE7986202131F0004799F4 /* PostTableViewCell.swift */; };
 		E2DE7989202133A9004799F4 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE7988202133A9004799F4 /* FeedViewController.swift */; };
 		E2DE798B20213592004799F4 /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE798A20213592004799F4 /* FeedView.swift */; };
 		E2DE798D202136CD004799F4 /* PostDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE798C202136CD004799F4 /* PostDetailView.swift */; };
@@ -60,8 +61,10 @@
 		810828EC202507DD00B7EA40 /* DBService+Posts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DBService+Posts.swift"; sourceTree = "<group>"; };
 		810828EE20250BEE00B7EA40 /* DBService+Comments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DBService+Comments.swift"; sourceTree = "<group>"; };
 		8170B38D202F7EFF00BD208F /* SplashView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
-		8170B38E202F7EFF00BD208F /* CustomCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewCell.swift; sourceTree = "<group>"; };
 		8170B38F202F7EFF00BD208F /* EditProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		8170B3F4202FDD0C00BD208F /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
+		8170B3F62030339600BD208F /* PostCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentCell.swift; sourceTree = "<group>"; };
+		8170B3F82030352400BD208F /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		BB32735B4ACFD440671794DD /* Pods_POSTR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_POSTR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C43C6361B573A00770E86B2A /* Pods-POSTR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-POSTR.release.xcconfig"; path = "Pods/Target Support Files/Pods-POSTR/Pods-POSTR.release.xcconfig"; sourceTree = "<group>"; };
 		E20173E42023BAE200C712AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -79,7 +82,6 @@
 		E2DE797720212F95004799F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2DE798220213154004799F4 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		E2DE7984202131C7004799F4 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		E2DE7986202131F0004799F4 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		E2DE7988202133A9004799F4 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		E2DE798A20213592004799F4 /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		E2DE798C202136CD004799F4 /* PostDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailView.swift; sourceTree = "<group>"; };
@@ -177,13 +179,13 @@
 		E2DE797E20212FF0004799F4 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E2DE79B420213EDB004799F4 /* LoginViewController.swift */,
 				E2DE7988202133A9004799F4 /* FeedViewController.swift */,
+				E2DE798E2021370F004799F4 /* PostDetailViewController.swift */,
 				E2DE798220213154004799F4 /* ProfileViewController.swift */,
 				81074C96202F3C2600EBD48A /* EditProfileViewController.swift */,
 				E25AEB8720215C1900864081 /* NewPostViewController.swift */,
 				E230E0262022507600D0CCF9 /* EditPostViewController.swift */,
-				E2DE79B420213EDB004799F4 /* LoginViewController.swift */,
-				E2DE798E2021370F004799F4 /* PostDetailViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -191,18 +193,19 @@
 		E2DE797F20212FFE004799F4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				8170B38E202F7EFF00BD208F /* CustomCollectionViewCell.swift */,
-				8170B38F202F7EFF00BD208F /* EditProfileView.swift */,
 				8170B38D202F7EFF00BD208F /* SplashView.swift */,
+				E2DE79B620213EEE004799F4 /* LoginView.swift */,
 				E2DE798A20213592004799F4 /* FeedView.swift */,
 				E2DE7984202131C7004799F4 /* ProfileView.swift */,
+				8170B38F202F7EFF00BD208F /* EditProfileView.swift */,
 				E25AEB8920215C4700864081 /* NewPostView.swift */,
 				E230E028202250F800D0CCF9 /* EditPostView.swift */,
-				E2DE79B620213EEE004799F4 /* LoginView.swift */,
 				E2DE798C202136CD004799F4 /* PostDetailView.swift */,
-				E2DE7986202131F0004799F4 /* PostTableViewCell.swift */,
-				E25AEB8520215BD300864081 /* CategoriesCell.swift */,
+				8170B3F82030352400BD208F /* PostTableViewCell.swift */,
+				8170B3F4202FDD0C00BD208F /* PostCollectionViewCell.swift */,
+				8170B3F62030339600BD208F /* PostCommentCell.swift */,
 				E29E35A2202190460016FC0D /* CommentTableViewCell.swift */,
+				E25AEB8520215BD300864081 /* CategoriesCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -222,8 +225,8 @@
 			isa = PBXGroup;
 			children = (
 				810828DC2024FFEC00B7EA40 /* POSTRUser.swift */,
-				E2DE7992202139F6004799F4 /* Comment.swift */,
 				E2DE7994202139FF004799F4 /* Post.swift */,
+				E2DE7992202139F6004799F4 /* Comment.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -389,17 +392,18 @@
 				810828E12025001700B7EA40 /* AuthUserService.swift in Sources */,
 				E2DE798B20213592004799F4 /* FeedView.swift in Sources */,
 				E25AEB8820215C1900864081 /* NewPostViewController.swift in Sources */,
+				8170B3F92030352500BD208F /* PostTableViewCell.swift in Sources */,
 				E2DE7985202131C7004799F4 /* ProfileView.swift in Sources */,
 				E2DE798320213154004799F4 /* ProfileViewController.swift in Sources */,
 				810828ED202507DD00B7EA40 /* DBService+Posts.swift in Sources */,
 				E2DE7995202139FF004799F4 /* Post.swift in Sources */,
 				E2DE798D202136CD004799F4 /* PostDetailView.swift in Sources */,
+				8170B3F5202FDD0C00BD208F /* PostCollectionViewCell.swift in Sources */,
 				8170B390202F7EFF00BD208F /* SplashView.swift in Sources */,
 				E2DE798F2021370F004799F4 /* PostDetailViewController.swift in Sources */,
 				810828E9202506B300B7EA40 /* StorageService.swift in Sources */,
 				810828EB2025071500B7EA40 /* StorageService+Images.swift in Sources */,
 				E230E0272022507600D0CCF9 /* EditPostViewController.swift in Sources */,
-				E2DE7987202131F0004799F4 /* PostTableViewCell.swift in Sources */,
 				810828E6202504B100B7EA40 /* DBService+Users.swift in Sources */,
 				E2DE797120212F95004799F4 /* POSTR.xcdatamodeld in Sources */,
 				E2DE79B720213EEE004799F4 /* LoginView.swift in Sources */,
@@ -408,9 +412,9 @@
 				E29E35A3202190460016FC0D /* CommentTableViewCell.swift in Sources */,
 				81074C99202F3C2600EBD48A /* CoreDataService.swift in Sources */,
 				E25AEB8A20215C4700864081 /* NewPostView.swift in Sources */,
+				8170B3F72030339600BD208F /* PostCommentCell.swift in Sources */,
 				E2DE7993202139F6004799F4 /* Comment.swift in Sources */,
 				810828EF20250BEE00B7EA40 /* DBService+Comments.swift in Sources */,
-				8170B391202F7EFF00BD208F /* CustomCollectionViewCell.swift in Sources */,
 				810828DF2024FFF900B7EA40 /* StyleManager.swift in Sources */,
 				E2DE79B520213EDB004799F4 /* LoginViewController.swift in Sources */,
 				E2DE796920212F95004799F4 /* AppDelegate.swift in Sources */,

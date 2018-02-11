@@ -29,6 +29,7 @@ class EditProfileViewController: UIViewController {
 	private var bgImage: UIImage!
 	private var posts = [Post]()
 	private var currentUserPosts = [Post]()
+	private var selectedImageToChange = ""
 
 
 	//Setup Nib
@@ -58,7 +59,6 @@ class EditProfileViewController: UIViewController {
 	private func loadAllPosts() {
 		DBService.manager.loadAllPosts { (posts) in
 			if let posts = posts {
-
 				self.posts = posts
 			} else {
 				print("error loading posts")
@@ -78,7 +78,8 @@ class EditProfileViewController: UIViewController {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
 				for user in users {
-					if self.authUser?.uid == user.userID { self.dbUser = user }
+					if self.authUser?.uid == user.userID { self.dbUser = user; print("<<<<Current User: \(user.userID)") }
+
 				}
 			} else {print("error loading from Firebase Database")}
 		}
@@ -98,7 +99,7 @@ class EditProfileViewController: UIViewController {
 
 	@objc func saveProfileChanges() {
 		if let username = editProfileView.usernameTF.text {
-			DBService.manager.updateUserName(userID: dbUser.userDBid, username: username)
+			DBService.manager.updateUserName(userID: dbUser.userID, username: username)
 			for eachPost in posts {
 				if eachPost.userID == dbUser.userID {
 					DBService.manager.updatePostUserName(postID: eachPost.postID, username: username)
@@ -106,12 +107,13 @@ class EditProfileViewController: UIViewController {
 			}
 		}
 		if let tagline = editProfileView.taglineTF.text {
-			DBService.manager.updateUserHeadline(userID: dbUser.userDBid, userBio: tagline)
+			DBService.manager.updateUserHeadline(userID: dbUser.userID, userTagline: tagline)
 		}
 		dismissView()
 	}
 
 	@objc private func changeProfileImage() {
+		selectedImageToChange = "profileImage"
 		let alertController = UIAlertController(title: "Change profile image", message: "Are you sure you want to change profile image?", preferredStyle: UIAlertControllerStyle.alert)
 		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
 		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
@@ -127,6 +129,7 @@ class EditProfileViewController: UIViewController {
 	}
 
 	@objc private func changeBackgroundImage() {
+		selectedImageToChange = "bgImage"
 		let alertController = UIAlertController(title: "Change Landscape image", message: "Are you sure you want to change landscape image?", preferredStyle: UIAlertControllerStyle.alert)
 		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
 		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
@@ -156,7 +159,7 @@ class EditProfileViewController: UIViewController {
 // MARK: TextField Delegate
 extension EditProfileViewController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		let currentTFUserID = dbUser.userDBid
+		let currentTFUserID = dbUser.userID
 		guard let text = textField.text else {return false}
 		if text == "" {return false}
 
@@ -168,7 +171,7 @@ extension EditProfileViewController: UITextFieldDelegate {
 		}
 
 		if textField == editProfileView.taglineTF {
-			DBService.manager.updateUserHeadline(userID: currentTFUserID, userBio: text)
+			DBService.manager.updateUserHeadline(userID: currentTFUserID, userTagline: text)
 		}
 		return true
 	}
@@ -179,20 +182,22 @@ extension EditProfileViewController: UITextFieldDelegate {
 extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
 		guard let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage else { print("image is nil"); return }
-		// resize the profile image
-		let sizeOfImage: CGSize = CGSize(width: 100, height: 100)
-		let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
-		self.profileImage = toucanImage
 
-		//set image
-		self.editProfileView.bgImage.image = profileImage
-		self.editProfileView.profileImage.image = profileImage
-
-		//Store image in Storage Service
-		StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userDBid, posts: posts)
-
-		//TO DO - create a new field for "bgImageStr" on firebase database
-		
+		if selectedImageToChange == "profileImage" {
+			// resize the profile image
+			let sizeOfImage: CGSize = CGSize(width: 100, height: 100)
+			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
+			self.profileImage = toucanImage
+			self.editProfileView.profileImage.image = profileImage
+			StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userID, posts: posts)
+		} else 	if selectedImageToChange == "bgImage" {
+			// resize the profile image
+			let sizeOfImage: CGSize = CGSize(width: 400, height: 150)
+			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
+			self.bgImage = toucanImage
+			self.editProfileView.bgImage.image = profileImage
+			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID)
+		}
 		self.dismiss(animated: true, completion: nil)
 	}
 	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

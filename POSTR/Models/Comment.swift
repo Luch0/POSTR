@@ -9,13 +9,13 @@
 import Foundation
 
 class Comment {
+		let commentID: String
     let postID: String
     let userID: String
-    let commentID: String
+		let username: String
     let commentStr: String
     let dateOfPost: String
     let commentFlagCount: Int
-    let username: String
     
     init(dict: [String : Any]) {
         postID = dict["postID"] as? String ?? ""

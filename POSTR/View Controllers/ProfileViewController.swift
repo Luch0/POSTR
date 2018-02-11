@@ -17,7 +17,6 @@ class ProfileViewController: UIViewController {
 
 	//MARK: Instances
 	private var authService = AuthUserService()
-	private let imagePicker = UIImagePickerController()
 
 	// MARK: Properties
 	private var currentAuthUser = AuthUserService.getCurrentUser()
@@ -25,18 +24,26 @@ class ProfileViewController: UIViewController {
 		didSet { profileView.configureProfileView(user: currentUser) }
 	}
 	private var allUsers: [POSTRUser] = []
+	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){
 		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
 	}
+	private var currentUserComments = [Comment]() {
+		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
+	}
+	private var currentUserBookmarks = [Post]() {
+		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
+	}
 	private var profileImage: UIImage!
-	let cellSpacing: CGFloat = 5.0
-	var postUser: POSTRUser!
+	private var bgImage: UIImage!
 
+	let cellSpacing: CGFloat = 5.0
 
 
 	//MARK: View Lifecycle
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		currentAuthUser = AuthUserService.getCurrentUser()
 		loadCurrentUser()
 		loadCurrentUserPosts()
 	}
@@ -52,12 +59,12 @@ class ProfileViewController: UIViewController {
 		profileView.commentView.dataSource = self
 		profileView.bookmarkView.delegate = self
 		profileView.bookmarkView.dataSource = self
-		profileView.usernameTF.delegate = self
-		imagePicker.delegate = self
 		authService.delegate = self
 		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
+		loadCurrentUser()
 		configureNavBar()
 		setupButtonTargets()
+		switchToList()
 	}
 
 
@@ -98,17 +105,17 @@ class ProfileViewController: UIViewController {
 		let createPostViewController = NewPostViewController()
 		self.present(createPostViewController, animated: true, completion: nil)
 	}
-	@objc private func switchToCollection() {
-		profileView.collectionView.isHidden = false
-		profileView.commentView.isHidden = true
-		profileView.bookmarkView.isHidden = true
-		profileView.tableView.isHidden = true
-	}
 	@objc private func switchToList() {
 		profileView.collectionView.isHidden = true
 		profileView.tableView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
+	}
+	@objc private func switchToCollection() {
+		profileView.collectionView.isHidden = false
+		profileView.commentView.isHidden = true
+		profileView.bookmarkView.isHidden = true
+		profileView.tableView.isHidden = true
 	}
 	@objc private func switchToComment() {
 		profileView.collectionView.isHidden = true
@@ -141,6 +148,12 @@ class ProfileViewController: UIViewController {
 			else {print("Error loading user posts")}
 		}
 	}
+	private func loadCurrentUserComments() {
+		DBService.manager.loadUserComments(userID: (currentAuthUser?.uid)!) { (comments) in
+			if let comments = comments {self.currentUserComments = comments}
+			else {print("Error loading comments")}
+		}
+	}
 
 	@objc private func logout() {
 		let alertView = UIAlertController(title: "Are you sure you want to Logout?", message: nil, preferredStyle: .alert)
@@ -151,68 +164,6 @@ class ProfileViewController: UIViewController {
 		alertView.addAction(yesOption)
 		alertView.addAction(noOption)
 		present(alertView, animated: true, completion: nil)
-	}
-
-	@objc private func changeProfileImage() {
-		let alertController = UIAlertController(title: "Change profile image", message: "Are you sure you want to change profile image?", preferredStyle: UIAlertControllerStyle.alert)
-		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
-		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
-			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.photoLibrary)
-		}
-		let newPhotoAction = UIAlertAction(title: "Take New Photo", style: .default) { (alertAction) in
-			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.camera)
-		}
-		alertController.addAction(existingPhotoAction)
-		alertController.addAction(newPhotoAction)
-		alertController.addAction(cancelAction)
-		present(alertController, animated: true, completion: nil)
-	}
-
-	@objc private func changeBackgroundImage() {
-		let alertController = UIAlertController(title: "Change Landscape image", message: "Are you sure you want to change landscape image?", preferredStyle: UIAlertControllerStyle.alert)
-		let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
-		let existingPhotoAction = UIAlertAction(title: "Choose Existing Photo", style: .default) { (alertAction) in
-			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.photoLibrary)
-		}
-		let newPhotoAction = UIAlertAction(title: "Take New Photo", style: .default) { (alertAction) in
-			self.launchCameraFunctions(type: UIImagePickerControllerSourceType.camera)
-		}
-		alertController.addAction(existingPhotoAction)
-		alertController.addAction(newPhotoAction)
-		alertController.addAction(cancelAction)
-		present(alertController, animated: true, completion: nil)
-	}
-
-	//Camera Functions
-	private func launchCameraFunctions(type: UIImagePickerControllerSourceType){
-		if UIImagePickerController.isSourceTypeAvailable(type){
-			imagePicker.sourceType = type
-			imagePicker.allowsEditing = true
-			self.present(imagePicker, animated: true, completion: nil)
-		}
-	}
-}
-
-
-
-// MARK: TextField Delegate
-extension ProfileViewController: UITextFieldDelegate {
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		let currentTFUserID = currentUser.userDBid
-		guard let text = textField.text else {return false}
-		if text == "" {return false}
-
-		if textField == profileView.usernameTF {
-			DBService.manager.updateUserName(userID: currentTFUserID, username: text)
-			for eachPost in currentUserPosts {
-				DBService.manager.updateUserName(userID: eachPost.postID, username: text)
-			}
-		}
-
-		if textField == profileView.taglineTF {
-			DBService.manager.updateUserHeadline(userID: currentTFUserID, userBio: text)
-		}
-		return true
 	}
 }
 
@@ -251,18 +202,48 @@ extension ProfileViewController: UITableViewDataSource {
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return currentUserPosts.count
+		if tableView == profileView.tableView {
+			return currentUserPosts.count
+		} else if tableView == profileView.commentView {
+			return currentUserComments.count
+		} else if tableView == profileView.bookmarkView {
+			return currentUserBookmarks.count
+		}
+		return 1
 	}
 
+
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		//Cell delegate
-		let cell = tableView.dequeueReusableCell(withIdentifier: "Post Cell", for: indexPath) as! PostTableViewCell
-		cell.delegate = self
-		cell.tag = indexPath.row
-		let post = currentUserPosts.reversed()[indexPath.row]
-		cell.configurePostCell(post: post)
-		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-		return cell
+		switch tableView {
+		case profileView.tableView :
+			let cell = tableView.dequeueReusableCell(withIdentifier: "PostListCell", for: indexPath) as! PostTableViewCell
+			cell.delegate = self
+			cell.tag = indexPath.row
+			let post = currentUserPosts.reversed()[indexPath.row]
+			cell.configurePostCell(post: post)
+			cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
+			cell.bookmarkButton.addTarget(self, action: #selector(toggleBookmark), for: .touchUpInside)
+			return cell
+		case profileView.commentView:
+			let commentCell = tableView.dequeueReusableCell(withIdentifier: "PostCommentCell", for: indexPath) as! CommentTableViewCell
+			let comment = currentUserComments[indexPath.row]
+			commentCell.commentLabel.text = comment.commentStr
+			commentCell.dateLabel.text = comment.dateOfPost
+			commentCell.usernameLabel.text = comment.username
+			return commentCell
+		case profileView.bookmarkView:
+			let cell = tableView.dequeueReusableCell(withIdentifier: "PostBookmarkCell", for: indexPath)
+			let post = currentUserPosts.reversed()[indexPath.row]
+			cell.textLabel?.text = post.caption
+			cell.detailTextLabel?.text = post.category
+			if let imageStr = post.postImageStr {
+				cell.imageView?.kf.indicatorType = .activity
+				cell.imageView?.kf.setImage(with: URL(string: imageStr))
+			}
+			return cell
+		default:
+			return UITableViewCell()
+		}
 	}
 
 	@objc func showOptions(tag: Int, image: UIImage?) {
@@ -274,7 +255,6 @@ extension ProfileViewController: UITableViewDataSource {
 		let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
 			let alertView = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
 			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
-				// TODO: delete user Post - NEED postID
 				DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID)
 			}
 			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
@@ -288,6 +268,9 @@ extension ProfileViewController: UITableViewDataSource {
 		alertView.addAction(cancelOption)
 		self.present(alertView, animated: true, completion: nil)
 	}
+	@objc func toggleBookmark() {
+//		profileView.
+	}
 }
 
 
@@ -296,17 +279,17 @@ extension ProfileViewController: UITableViewDataSource {
 extension ProfileViewController: UICollectionViewDataSource {
 	//Number of items in Section
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 21  //currentUserPosts.count
+		return currentUserPosts.count
 	}
 	//setup for each cell
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionCell", for: indexPath) as! CustomCollectionViewCell
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 		let post = currentUserPosts.reversed()[indexPath.row]
-		cell.postTitleLabel.text = post.caption
-		if let imageURL = post.userImageStr {
+		cell.postCaption.text = post.caption
+
+		if let imageURL = post.postImageStr {
 			cell.postImageView.kf.indicatorType = .activity
-			cell.postImageView.kf.setImage(with: URL(string:imageURL), placeholder: UIImage.init(named: "placeholder-image"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-			}
+			cell.postImageView.kf.setImage(with: URL(string:imageURL))
 		}
 		return cell
 	}
@@ -341,33 +324,6 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
 }
 
 
-//MARK: UIImagePickerController Delegate & NavigationController Delegate
-extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-
-		guard let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage else { print("image is nil"); return }
-		// resize the profile image
-		let sizeOfImage: CGSize = CGSize(width: 100, height: 100)
-		let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
-		self.profileImage = toucanImage
-		self.profileView.profileImageView.image = profileImage
-
-		StorageService.manager.storeUserImage(image: profileImage, userId: currentUser.userID)
-
-		//update the userimage on all user's posts
-		for eachPost in currentUserPosts {
-			DBService.manager.updateUserImage(postID: eachPost.postID, userImageStr: currentUser.userImageStr!)
-		}
-
-
-		self.dismiss(animated: true, completion: nil)
-	}
-	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-		self.dismiss(animated: true, completion: nil)
-	}
-}
-
-
 // MARK: Sign Out
 extension ProfileViewController: AuthUserServiceDelegate {
 	func didSignOut(_ userService: AuthUserService) {
@@ -378,13 +334,13 @@ extension ProfileViewController: AuthUserServiceDelegate {
 		}
 	}
 	func didFailSigningOut(_ userService: AuthUserService, error: Error) {
-		//TODO: alert view
+		print("Signout Failed")
 	}
 }
 
 
 // MARK: Delegate for PostTableViewCell
-extension ProfileViewController: PostTableViewCellDelegate {
+extension ProfileViewController: PostTableViewCellDelegate {	
 	func updateUpvote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = currentUserPosts.reversed()[currentIndexPath.row]
@@ -399,6 +355,12 @@ extension ProfileViewController: PostTableViewCellDelegate {
 	}
 	func didPressOptionButton(_ tag: Int, image: UIImage?) {
 		showOptions(tag: tag, image: image)
+	}
+	func didPressBookmark(tableViewCell: PostTableViewCell) {
+		if let currentIndexPath = tableViewCell.currentIndexPath {
+			let post = currentUserPosts.reversed()[currentIndexPath.row]
+			DBService.manager.addBookmark(postID: post.postID, userID: currentUser.userID)
+		}
 	}
 }
 

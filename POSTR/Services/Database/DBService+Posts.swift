@@ -8,7 +8,6 @@ import UIKit
 import Firebase
 
 extension DBService {
-    
 	public func addPosts(caption: String, category: String, postImageStr: String, username: String, userImageStr: String, image: UIImage) {
 		let childByAutoId = DBService.manager.getPosts().childByAutoId()
 		childByAutoId.setValue(["postID"        : childByAutoId.key,
@@ -99,6 +98,11 @@ extension DBService {
         postRef.updateChildValues(["downvoteCount": postToUpdate.downvoteCount - 1])
         postRef.updateChildValues(["currentVotes": (postToUpdate.downvoteCount - 1) + postToUpdate.upvoteCount])
     }
+
+		public func addBookmark(postID: String, userID: String) {
+			let userRef = DBService.manager.getUsers().child((userID))
+			userRef.updateChildValues(["userSavedPosts": postID])
+		}
 
 }
 

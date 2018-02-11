@@ -14,7 +14,7 @@ class FeedView: UIView {
 
 	lazy var tableView: UITableView = {
 		let tv = UITableView()
-		tv.register(PostTableViewCell.self, forCellReuseIdentifier: "Post Cell")
+		tv.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
 		return tv
 	}()
 
