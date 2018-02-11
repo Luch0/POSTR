@@ -94,14 +94,11 @@ class ProfileView: UIView {
 	}()
 
 
-	//Create CollectionView
-	lazy var collectionView: UICollectionView = {
-		let layout = UICollectionViewFlowLayout()
-		layout.scrollDirection = .vertical
-		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
-		cv.backgroundColor = UIColor.yellow
-		cv.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: "PostCollectionCell")
-		return cv
+	//Container
+	lazy var dataContainer: UIView = {
+		let dc = UIView()
+		dc.backgroundColor = .red
+		return dc
 	}()
 	//Create ListView
 	lazy var tableView: UITableView = {
@@ -109,14 +106,24 @@ class ProfileView: UIView {
 		tbv.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
 		return tbv
 	}()
-	//Create commentView (ListView)
+	//Create CollectionView
+	lazy var collectionView: UICollectionView = {
+		let layout = UICollectionViewFlowLayout()
+		layout.scrollDirection = .vertical
+//		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
+		let cv = UICollectionView(frame: dataContainer.layer.bounds, collectionViewLayout: layout)
+		cv.backgroundColor = UIColor.yellow
+		cv.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: "PostCollectionCell")
+		return cv
+	}()
+	//Create commentView
 	lazy var commentView: UITableView = {
 		let tbv = UITableView()
-		tbv.register(CommentTableViewCell.self, forCellReuseIdentifier: "PostCommentCell")
+		tbv.register(PostCommentCell.self, forCellReuseIdentifier: "PostCommentCell")
 		tbv.backgroundColor = UIColor.green
 		return tbv
 	}()
-	//Create bookmarkView (ListView)
+	//Create bookmarkView
 	lazy var bookmarkView: UITableView = {
 		let tbv = UITableView()
 		tbv.backgroundColor = UIColor.blue
@@ -150,6 +157,7 @@ class ProfileView: UIView {
 		addOptionCollectionButton()
 		addOptionCommentButton()
 		addOptionBookmarkButton()
+		addDataContainer()
 		addTableView()
 		addCollectionView()
 		addCommentView()
@@ -224,7 +232,6 @@ class ProfileView: UIView {
 		toggleContainer.bottomAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
 		toggleContainer.heightAnchor.constraint(equalTo: profileContainer.heightAnchor, multiplier: 0.18).isActive = true
 	}
-
 	private func addOptionListButton() {
 		addSubview(optionListButton)
 		optionListButton.translatesAutoresizingMaskIntoConstraints = false
@@ -258,37 +265,45 @@ class ProfileView: UIView {
 	}
 
 	//Add the different toggle options
+	private func addDataContainer() {
+		addSubview(dataContainer)
+		dataContainer.translatesAutoresizingMaskIntoConstraints = false
+		dataContainer.topAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
+		dataContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+		dataContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
+		dataContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+	}
 	private func addCollectionView() {
 		addSubview(collectionView)
 		collectionView.translatesAutoresizingMaskIntoConstraints = false
-		collectionView.topAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
-		collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-		collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
-		collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+		collectionView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		collectionView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		collectionView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		collectionView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 	private func addTableView() {
 		addSubview(tableView)
 		tableView.translatesAutoresizingMaskIntoConstraints = false
-		tableView.topAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
-		tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-		tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
-		tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+		tableView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		tableView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		tableView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		tableView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 	private func addCommentView() {
 		addSubview(commentView)
 		commentView.translatesAutoresizingMaskIntoConstraints = false
-		commentView.topAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
-		commentView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-		commentView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
-		commentView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+		commentView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		commentView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		commentView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		commentView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 	private func addBookmarkView() {
 		addSubview(bookmarkView)
 		bookmarkView.translatesAutoresizingMaskIntoConstraints = false
-		bookmarkView.topAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
-		bookmarkView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-		bookmarkView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
-		bookmarkView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+		bookmarkView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		bookmarkView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		bookmarkView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		bookmarkView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 
 

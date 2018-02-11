@@ -10,7 +10,7 @@ import Foundation
 
 class Post {
     let postID: String
-		let postImageStr: String?
+		let postImageStr: String
     let userID: String
 		let username: String
 		let userImageStr: String?
