@@ -3,11 +3,12 @@
 //  Created by Winston Maragh on 2/10/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
 
+
 import UIKit
 
 class PostCollectionViewCell: UICollectionViewCell {
 
-	//Properties
+	//MARK: Properties
 	lazy var postImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.image = #imageLiteral(resourceName: "bgBrunch")
@@ -24,7 +25,7 @@ class PostCollectionViewCell: UICollectionViewCell {
 	}()
 
 
-	//Custom Setup
+	//MARK Custom Setup
 	override init(frame: CGRect) {
 		super.init(frame: UIScreen.main.bounds)
 		setupViews()
@@ -36,12 +37,13 @@ class PostCollectionViewCell: UICollectionViewCell {
 		super.layoutSubviews()
 	}
 	private func setupViews() {
+		//order matters
 		addPostImageView()
 		addPostTitleLabel()
 	}
 
 
-	//Add
+	//MARK: Add Properties
 	private func addPostImageView() {
 		addSubview(postImageView)
 		postImageView.translatesAutoresizingMaskIntoConstraints = false
