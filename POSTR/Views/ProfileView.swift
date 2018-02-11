@@ -295,14 +295,18 @@ class ProfileView: UIView {
 	//	public func configureProfileView(user: User) {
 	public func configureProfileView(user: POSTRUser) {
 		usernameTF.text = user.username
-		taglineTF.text = user.userTagline
+		usernameTF.placeholder = user.username
+		if let tagline = user.userTagline {
+			taglineTF.text = tagline
+			taglineTF.placeholder = tagline
+		}
 		if let imageStr = user.userImageStr {
 			profileImageView.kf.indicatorType = .activity
 			profileImageView.kf.setImage(with: URL(string: imageStr))
 		}
 		if let imageStr = user.userBgImageStr {
-			profileImageView.kf.indicatorType = .activity
-			profileImageView.kf.setImage(with: URL(string: imageStr))
+			backgroundImageView.kf.indicatorType = .activity
+			backgroundImageView.kf.setImage(with: URL(string: imageStr))
 		}
 	}
 }

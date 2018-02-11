@@ -29,10 +29,10 @@ class ProfileViewController: UIViewController {
 		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
 	}
 	private var currentUserComments = [Comment]() {
-		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
+		didSet { DispatchQueue.main.async { self.profileView.commentView.reloadData() } }
 	}
 	private var currentUserBookmarks = [Post]() {
-		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
+		didSet { DispatchQueue.main.async { self.profileView.bookmarkView.reloadData() } }
 	}
 	private var profileImage: UIImage!
 	private var bgImage: UIImage!
@@ -62,6 +62,9 @@ class ProfileViewController: UIViewController {
 		authService.delegate = self
 		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
 		loadCurrentUser()
+		loadCurrentUserPosts()
+		loadCurrentUserComments()
+		
 		configureNavBar()
 		setupButtonTargets()
 		switchToList()

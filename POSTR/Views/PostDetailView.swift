@@ -1,10 +1,7 @@
-//
 //  PostDetailView.swift
 //  POSTR
-//
 //  Created by Luis Calle on 1/30/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
 
 import UIKit
 import SnapKit
@@ -40,22 +37,21 @@ class PostDetailView: UIView {
 		return button
 	}()
 
+
 	override init(frame: CGRect) {
 		super.init(frame: UIScreen.main.bounds)
 		commonInit()
 	}
-
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		commonInit()
 	}
-
 	private func commonInit() {
 		backgroundColor = .white
 		setupViews()
 	}
-
 	private func setupViews() {
+		//order matters for dependent constraints
 		setupPostTableView()
 		setupCommentsTableView()
 		setupCommentTextView()
