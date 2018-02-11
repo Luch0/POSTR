@@ -159,19 +159,19 @@ class EditProfileViewController: UIViewController {
 // MARK: TextField Delegate
 extension EditProfileViewController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		let currentTFUserID = dbUser.userID
-		guard let text = textField.text else {return false}
-		if text == "" {return false}
+//		let currentTFUserID =
 
 		if textField == editProfileView.usernameTF {
-			DBService.manager.updateUserName(userID: currentTFUserID, username: text)
+			guard let text = textField.text else {return false}
+			DBService.manager.updateUserName(userID: dbUser.userID, username: text)
 			for eachPost in currentUserPosts {
 				DBService.manager.updateUserName(userID: eachPost.postID, username: text)
 			}
 		}
 
 		if textField == editProfileView.taglineTF {
-			DBService.manager.updateUserHeadline(userID: currentTFUserID, userTagline: text)
+			guard let text = textField.text else {return false}
+			DBService.manager.updateUserHeadline(userID: dbUser.userID, userTagline: text)
 		}
 		return true
 	}

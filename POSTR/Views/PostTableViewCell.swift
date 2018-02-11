@@ -1,12 +1,13 @@
 //  PostTableViewCell.swift
-//  NEWUI
+//  POSTR
 //  Created by Winston Maragh on 2/9/18.
 //  Copyright © 2018 Winston Maragh. All rights reserved.
 
+
 import UIKit
-import SnapKit
 import Kingfisher
 import Firebase
+
 
 protocol PostTableViewCellDelegate : class {
 	func didPressOptionButton(_ tag: Int, image: UIImage?)
@@ -35,6 +36,7 @@ class PostTableViewCell: UITableViewCell {
 	}
 
 
+	//MARK: Properties
 	//top Container
 	lazy var topContainer: UIView = {
 		let view = UIView()
@@ -137,8 +139,7 @@ class PostTableViewCell: UITableViewCell {
 
 
 
-
-	//Custom Setup
+	//MARK: Custom Setup
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?){
 		super.init(style: style, reuseIdentifier: "PostListCell")
 		backgroundColor = UIColor.white
@@ -153,9 +154,15 @@ class PostTableViewCell: UITableViewCell {
 		userImageView.layer.masksToBounds = true
 	}
 	private func setupViews() {
-		addTopContainerView(); addUserImageView(); addUsernameLabel(); setupPostCaption(); addPostCategoryLabel(); addPostActionsButton()
+		//order matters for dependent constraints
+		addTopContainerView()
+		addUserImageView()
+		addUsernameLabel()
+		setupPostCaption()
+		addPostCategoryLabel()
+		addPostActionsButton()
 		addPostImageView()
-		addBottomContainerView();
+		addBottomContainerView()
 		addDownvoteButton()
 		addUpvoteButton()
 		addVoteCountLabel()
@@ -165,6 +172,7 @@ class PostTableViewCell: UITableViewCell {
 	}
 
 
+	//MARK: Add Properties
 	//Add Top Container & subviews
 	private func addTopContainerView() {
 		addSubview(topContainer)
@@ -289,22 +297,20 @@ class PostTableViewCell: UITableViewCell {
 	}
 
 
-	//Configure Cell
+	//MARK: Configure Cell
 	public func configurePostCell(post: Post) {
 		postCaption.text = post.caption
 		postCategory.text = post.category
-		usernameLabel.text = post.username //user.username
+		usernameLabel.text = post.username
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
 		if let imageURL = post.postImageStr {
 			postImageView.kf.indicatorType = .activity
-			postImageView.kf.setImage(with: URL(string:imageURL), placeholder: #imageLiteral(resourceName: "bgGallery"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-			}
+			postImageView.kf.setImage(with: URL(string:imageURL))
 		}
 		if let imageURL = post.userImageStr {
 			self.userImageView.kf.indicatorType = .activity
-			self.userImageView.kf.setImage(with: URL(string:imageURL), placeholder: #imageLiteral(resourceName: "user2"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-			}
+			self.userImageView.kf.setImage(with: URL(string:imageURL))
 		}
 	}
 }
