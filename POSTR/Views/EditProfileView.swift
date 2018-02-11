@@ -96,7 +96,7 @@ class EditProfileView: UIView {
 	lazy var taglineTF: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-		textField.placeholder = "Ultimate Coder"
+		textField.placeholder = "Coder"
 		textField.adjustsFontSizeToFitWidth = true
 		textField.borderStyle = .roundedRect
 		textField.autocorrectionType = .no
@@ -240,17 +240,19 @@ class EditProfileView: UIView {
 
 
 	public func configureProfileView(user: POSTRUser) {
-		usernameTF.text = user.username
-		taglineTF.text = user.userTagline
 		if let imageStr = user.userImageStr {
 			profileImage.kf.indicatorType = .activity
-			profileImage.kf.setImage(with: URL(string: imageStr), placeholder: #imageLiteral(resourceName: "user2"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-			}
+			profileImage.kf.setImage(with: URL(string: imageStr))
 		}
 		if let imageStr = user.userBgImageStr {
 			bgImage.kf.indicatorType = .activity
-			bgImage.kf.setImage(with: URL(string: imageStr), placeholder: #imageLiteral(resourceName: "bgPencil"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-			}
+			bgImage.kf.setImage(with: URL(string: imageStr))
+		}
+		usernameTF.text = user.username
+		usernameTF.placeholder = user.username
+		if let tagline = user.userTagline {
+			taglineTF.text = tagline
+			taglineTF.placeholder = tagline
 		}
 	}
 
