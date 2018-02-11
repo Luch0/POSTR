@@ -6,7 +6,6 @@
 import UIKit
 import Firebase
 import Kingfisher
-//import SnapKit
 
 class ProfileView: UIView {
 
@@ -28,7 +27,8 @@ class ProfileView: UIView {
 
 	lazy var usernameTF: UITextField = {
 		let tf = UITextField()
-		tf.placeholder = "Ben Stone"
+		tf.placeholder = "Winston Maragh"
+		tf.isEnabled = false
 		tf.textAlignment = .left
 		tf.font = UIFont.systemFont(ofSize: 13, weight: .light)
 		tf.tag = 0
@@ -37,7 +37,8 @@ class ProfileView: UIView {
 	}()
 	lazy var taglineTF: UITextField = {
 		let tf = UITextField()
-		tf.placeholder = "Good Stuff!! Good Stuff!!!"
+		tf.isEnabled = false
+		tf.placeholder = "Coder"
 		tf.textColor = UIColor.black
 		tf.font = UIFont.systemFont(ofSize: 18, weight: .medium)
 		tf.tag = 1
@@ -99,24 +100,26 @@ class ProfileView: UIView {
 		layout.scrollDirection = .vertical
 		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
 		cv.backgroundColor = UIColor.yellow
-		cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CollectionCell")
+		cv.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: "PostCollectionCell")
 		return cv
 	}()
 	//Create ListView
 	lazy var tableView: UITableView = {
 		let tbv = UITableView()
-		tbv.register(PostTableViewCell.self, forCellReuseIdentifier: "Post Cell")
+		tbv.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
 		return tbv
 	}()
 	//Create commentView (ListView)
 	lazy var commentView: UITableView = {
 		let tbv = UITableView()
-		//		tbv.register(CommentTableViewCell.self, forCellReuseIdentifier: "CommentPostCell")
+		tbv.register(CommentTableViewCell.self, forCellReuseIdentifier: "PostCommentCell")
+		tbv.backgroundColor = UIColor.green
 		return tbv
 	}()
 	//Create bookmarkView (ListView)
 	lazy var bookmarkView: UITableView = {
 		let tbv = UITableView()
+		tbv.backgroundColor = UIColor.blue
 		return tbv
 	}()
 
@@ -148,9 +151,9 @@ class ProfileView: UIView {
 		addOptionCommentButton()
 		addOptionBookmarkButton()
 		addTableView()
-//		addCollectionView()
-//		addCommentView()
-//		addBookmarkView()
+		addCollectionView()
+		addCommentView()
+		addBookmarkView()
 	}
 
 
@@ -176,14 +179,14 @@ class ProfileView: UIView {
 		addSubview(profileImageView)
 		profileImageView.translatesAutoresizingMaskIntoConstraints = false
 		profileImageView.centerYAnchor.constraint(equalTo: backgroundImageView.bottomAnchor).isActive = true
-		profileImageView.heightAnchor.constraint(equalTo: backgroundImageView.heightAnchor, multiplier: 0.4).isActive = true
+		profileImageView.heightAnchor.constraint(equalTo: backgroundImageView.heightAnchor, multiplier: 0.45).isActive = true
 		profileImageView.widthAnchor.constraint(equalTo: profileImageView.heightAnchor).isActive = true
-		profileImageView.leadingAnchor.constraint(equalTo: profileContainer.leadingAnchor, constant: 10).isActive = true
+		profileImageView.leadingAnchor.constraint(equalTo: profileContainer.leadingAnchor, constant: 8).isActive = true
 	}
 	private func addUsernameTF() {
 		addSubview(usernameTF)
 		usernameTF.translatesAutoresizingMaskIntoConstraints = false
-		usernameTF.leadingAnchor.constraint(equalTo: profileContainer.leadingAnchor, constant: 10).isActive = true
+		usernameTF.leadingAnchor.constraint(equalTo: profileContainer.leadingAnchor, constant: 15).isActive = true
 		usernameTF.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 3).isActive = true
 		usernameTF.widthAnchor.constraint(equalTo: profileContainer.widthAnchor, multiplier: 0.30).isActive = true
 		usernameTF.heightAnchor.constraint(equalTo: profileImageView.heightAnchor, multiplier: 0.25).isActive = true
@@ -192,14 +195,14 @@ class ProfileView: UIView {
 		addSubview(editUserButton)
 		editUserButton.translatesAutoresizingMaskIntoConstraints = false
 		editUserButton.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: 3).isActive = true
-		editUserButton.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor, constant: -8).isActive = true
+		editUserButton.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 2).isActive = true
 		editUserButton.widthAnchor.constraint(equalTo: profileContainer.widthAnchor, multiplier: 0.09).isActive = true
 		editUserButton.heightAnchor.constraint(equalTo: profileContainer.heightAnchor, multiplier: 0.09).isActive = true
 	}
 	private func 	addLogoutButton() {
 		addSubview(logoutButton)
 		logoutButton.translatesAutoresizingMaskIntoConstraints = false
-		logoutButton.topAnchor.constraint(equalTo: editUserButton.bottomAnchor, constant: 3).isActive = true
+		logoutButton.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: 15).isActive = true
 		logoutButton.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor, constant: -8).isActive = true
 		logoutButton.widthAnchor.constraint(equalTo: profileContainer.widthAnchor, multiplier: 0.09).isActive = true
 		logoutButton.heightAnchor.constraint(equalTo: profileContainer.heightAnchor, multiplier: 0.09).isActive = true
@@ -292,14 +295,14 @@ class ProfileView: UIView {
 	//	public func configureProfileView(user: User) {
 	public func configureProfileView(user: POSTRUser) {
 		usernameTF.text = user.username
-		taglineTF.text = user.userBio
+		taglineTF.text = user.userTagline
 		if let imageStr = user.userImageStr {
 			profileImageView.kf.indicatorType = .activity
 			profileImageView.kf.setImage(with: URL(string: imageStr))
-//			profileImageView.kf.setImage(with: URL(string: imageStr), placeholder: #imageLiteral(resourceName: "user4"), options: nil, progressBlock: nil) { (image, error, cacheType, url) in
-//			}
+		}
+		if let imageStr = user.userBgImageStr {
+			profileImageView.kf.indicatorType = .activity
+			profileImageView.kf.setImage(with: URL(string: imageStr))
 		}
 	}
-
 }
-

@@ -47,14 +47,12 @@ class LoginView: UIView {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Email Address Login"
-        textField.text = "luiscalle@ac.c4q.nyc" //FIX: remove, only for testing
-        //        textField.layer.borderWidth = 1
+        textField.text = "wsmaragh@gmail.com" //FIX: remove, only for testing
         textField.layer.cornerRadius = 5
         textField.borderStyle = .roundedRect
         let myColor : UIColor = UIColor( red: 0.5, green: 0.5, blue:0, alpha: 1.0 )
         textField.layer.borderColor = myColor.cgColor
         textField.textColor = FlatPurpleDark()
-        //textField.layer.borderColor = .purple
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
         return textField
@@ -64,13 +62,11 @@ class LoginView: UIView {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.placeholder = "Password"
-        textField.text = "testtest"
+        textField.text = "1234567"
         textField.borderStyle = .roundedRect
         let flatPurpleDark = FlatPurpleDark()
         textField.layer.borderColor = flatPurpleDark.cgColor
         textField.isSecureTextEntry = true // this helps to obscure the user's password with *******
-        //        textField.layer.borderWidth = 1
-        //        textField.layer.cornerRadius = 5
         textField.textColor = FlatPurpleDark()
         return textField
     }()

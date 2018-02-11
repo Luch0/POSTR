@@ -13,8 +13,8 @@ class PostDetailView: UIView {
 
 	lazy var postTableView: UITableView = {
 		let tableView = UITableView()
-        tableView.isScrollEnabled = false
-		tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "Post Cell")
+		tableView.isScrollEnabled = false
+		tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
 		return tableView
 	}()
 

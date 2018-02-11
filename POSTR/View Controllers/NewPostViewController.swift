@@ -29,6 +29,7 @@ class NewPostViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(newpost)
+		loadCurrentUser()
 		selectedCategory = categories[0]
 		newpost.categoriesTableView.delegate = self
 		newpost.categoriesTableView.dataSource = self
@@ -38,9 +39,10 @@ class NewPostViewController: UIViewController {
 		imagePicker.delegate = self
 //				authService.delegate = self
 		newpost.selectImageButton.addTarget(self, action: #selector(changePostImage), for: UIControlEvents.allTouchEvents)
+
 	}
 	override func viewWillAppear(_ animated: Bool) {
-		loadCurrentUser()
+
 	}
 
 	private func loadCurrentUser() {
@@ -76,8 +78,8 @@ class NewPostViewController: UIViewController {
         DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "",
 																	 category: selectedCategory,
 																	 postImageStr: "no image",
-																	 username: currentDBuser.username,
-																	 userImageStr: currentDBuser.userImageStr!,
+																	username: currentDBuser.username ?? (currentUser?.displayName)!,
+																	 userImageStr: currentDBuser.userImageStr ?? "",
 																	 image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
         self.dismiss(animated: true, completion: nil)
         } else {
