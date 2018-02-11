@@ -37,6 +37,7 @@ extension DBService {
 
 	public func updateUserImage(userID: String, userImageStr: String) {
 		DBService.manager.getUsers().child(userID).updateChildValues(["userImageStr": userImageStr])
+		DBService.manager.getUsers().child(userID).child("userImageStr")
 	}
 
     
