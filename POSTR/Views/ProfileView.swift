@@ -305,8 +305,8 @@ class ProfileView: UIView {
 			profileImageView.kf.setImage(with: URL(string: imageStr))
 		}
 		if let imageStr = user.userBgImageStr {
-			profileImageView.kf.indicatorType = .activity
-			profileImageView.kf.setImage(with: URL(string: imageStr))
+			backgroundImageView.kf.indicatorType = .activity
+			backgroundImageView.kf.setImage(with: URL(string: imageStr))
 		}
 	}
 }
