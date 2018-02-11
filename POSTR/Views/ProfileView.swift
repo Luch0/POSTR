@@ -143,14 +143,14 @@ class ProfileView: UIView {
 		addEditUserButton()
 		addLogoutButton()
 		addToggleContainer()
-		addOptionCollectionButton()
 		addOptionListButton()
+		addOptionCollectionButton()
 		addOptionCommentButton()
 		addOptionBookmarkButton()
 		addTableView()
-		//		addCollectionView()
-		//		addCommentView()
-		//		addBookmarkView()
+//		addCollectionView()
+//		addCommentView()
+//		addBookmarkView()
 	}
 
 
@@ -221,13 +221,13 @@ class ProfileView: UIView {
 		toggleContainer.bottomAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
 		toggleContainer.heightAnchor.constraint(equalTo: profileContainer.heightAnchor, multiplier: 0.18).isActive = true
 	}
+
 	private func addOptionListButton() {
 		addSubview(optionListButton)
 		optionListButton.translatesAutoresizingMaskIntoConstraints = false
 		optionListButton.topAnchor.constraint(equalTo: toggleContainer.topAnchor).isActive = true
 		optionListButton.bottomAnchor.constraint(equalTo: toggleContainer.bottomAnchor).isActive = true
 		optionListButton.widthAnchor.constraint(equalTo: toggleContainer.widthAnchor, multiplier: 0.25).isActive = true
-		optionListButton.leadingAnchor.constraint(equalTo: toggleContainer.leadingAnchor).isActive = true
 	}
 	private func addOptionCollectionButton() {
 		addSubview(optionCollectionButton)
@@ -235,7 +235,7 @@ class ProfileView: UIView {
 		optionCollectionButton.topAnchor.constraint(equalTo: toggleContainer.topAnchor).isActive = true
 		optionCollectionButton.bottomAnchor.constraint(equalTo: toggleContainer.bottomAnchor).isActive = true
 		optionCollectionButton.widthAnchor.constraint(equalTo: toggleContainer.widthAnchor, multiplier: 0.25).isActive = true
-		optionListButton.leadingAnchor.constraint(equalTo: optionListButton.trailingAnchor).isActive = true
+		optionCollectionButton.leadingAnchor.constraint(equalTo: optionListButton.trailingAnchor).isActive = true
 	}
 	private func addOptionCommentButton() {
 		addSubview(optionCommentButton)
@@ -243,7 +243,7 @@ class ProfileView: UIView {
 		optionCommentButton.topAnchor.constraint(equalTo: toggleContainer.topAnchor).isActive = true
 		optionCommentButton.bottomAnchor.constraint(equalTo: toggleContainer.bottomAnchor).isActive = true
 		optionCommentButton.widthAnchor.constraint(equalTo: toggleContainer.widthAnchor, multiplier: 0.25).isActive = true
-		optionCommentButton.leadingAnchor.constraint(equalTo: optionListButton.trailingAnchor).isActive = true
+		optionCommentButton.leadingAnchor.constraint(equalTo: optionCollectionButton.trailingAnchor).isActive = true
 	}
 	private func addOptionBookmarkButton() {
 		addSubview(optionBookmarkButton)

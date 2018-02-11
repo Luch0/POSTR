@@ -192,7 +192,6 @@ class PostTableViewCell: UITableViewCell {
 		postCaption.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor, constant: 0).isActive = true
 		postCaption.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor).isActive = true
 		postCaption.widthAnchor.constraint(equalTo: topContainer.widthAnchor, multiplier: 0.50).isActive = true
-		//		postTitleLabel.heightAnchor.constraint(equalTo: topContainer.heightAnchor, multiplier: 0.60).isActive = true
 	}
 	private func addPostCategoryLabel() {
 		addSubview(postCategory)
