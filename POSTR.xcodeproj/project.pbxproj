@@ -49,7 +49,7 @@
 /* Begin PBXFileReference section */
 		1559E71FC78DDB560B6938E4 /* Pods-POSTR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-POSTR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-POSTR/Pods-POSTR.debug.xcconfig"; sourceTree = "<group>"; };
 		81074C96202F3C2600EBD48A /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
-		81074C97202F3C2600EBD48A /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
+		81074C97202F3C2600EBD48A /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataService.swift; path = "../../View Controllers/CoreDataService.swift"; sourceTree = "<group>"; };
 		810828DC2024FFEC00B7EA40 /* POSTRUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POSTRUser.swift; sourceTree = "<group>"; };
 		810828DE2024FFF900B7EA40 /* StyleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleManager.swift; sourceTree = "<group>"; };
 		810828E02025001700B7EA40 /* AuthUserService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthUserService.swift; path = Services/AuthUserService.swift; sourceTree = "<group>"; };
@@ -126,6 +126,7 @@
 			children = (
 				810828E8202506B300B7EA40 /* StorageService.swift */,
 				810828EA2025071500B7EA40 /* StorageService+Images.swift */,
+				81074C97202F3C2600EBD48A /* CoreDataService.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -176,10 +177,9 @@
 		E2DE797E20212FF0004799F4 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				81074C97202F3C2600EBD48A /* CoreDataService.swift */,
-				81074C96202F3C2600EBD48A /* EditProfileViewController.swift */,
 				E2DE7988202133A9004799F4 /* FeedViewController.swift */,
 				E2DE798220213154004799F4 /* ProfileViewController.swift */,
+				81074C96202F3C2600EBD48A /* EditProfileViewController.swift */,
 				E25AEB8720215C1900864081 /* NewPostViewController.swift */,
 				E230E0262022507600D0CCF9 /* EditPostViewController.swift */,
 				E2DE79B420213EDB004799F4 /* LoginViewController.swift */,

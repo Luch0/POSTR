@@ -352,7 +352,13 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 		self.profileImage = toucanImage
 		self.profileView.profileImageView.image = profileImage
 
-		StorageService.manager.storeUserProfileImage(image: profileImage, userId: currentUser.userID, posts: currentUserPosts)
+		StorageService.manager.storeUserImage(image: profileImage, userId: currentUser.userID)
+
+		//update the userimage on all user's posts
+		for eachPost in currentUserPosts {
+			DBService.manager.updateUserImage(postID: eachPost.postID, userImageStr: currentUser.userImageStr!)
+		}
+
 
 		self.dismiss(animated: true, completion: nil)
 	}

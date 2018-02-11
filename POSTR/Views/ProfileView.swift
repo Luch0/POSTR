@@ -17,7 +17,7 @@ class ProfileView: UIView {
 	}()
 	lazy var backgroundImageView: UIImageView = {
 		let iv = UIImageView()
-		iv.image = #imageLiteral(resourceName: "bgBrunch")
+		iv.image = #imageLiteral(resourceName: "bgPencil")
 		return iv
 	}()
 	lazy var profileImageView: UIImageView = {
@@ -221,21 +221,21 @@ class ProfileView: UIView {
 		toggleContainer.bottomAnchor.constraint(equalTo: profileContainer.bottomAnchor).isActive = true
 		toggleContainer.heightAnchor.constraint(equalTo: profileContainer.heightAnchor, multiplier: 0.18).isActive = true
 	}
-	private func addOptionCollectionButton() {
-		addSubview(optionCollectionButton)
-		optionCollectionButton.translatesAutoresizingMaskIntoConstraints = false
-		optionCollectionButton.topAnchor.constraint(equalTo: toggleContainer.topAnchor).isActive = true
-		optionCollectionButton.bottomAnchor.constraint(equalTo: toggleContainer.bottomAnchor).isActive = true
-		optionCollectionButton.widthAnchor.constraint(equalTo: toggleContainer.widthAnchor, multiplier: 0.25).isActive = true
-		optionCollectionButton.leadingAnchor.constraint(equalTo: toggleContainer.leadingAnchor).isActive = true
-	}
 	private func addOptionListButton() {
 		addSubview(optionListButton)
 		optionListButton.translatesAutoresizingMaskIntoConstraints = false
 		optionListButton.topAnchor.constraint(equalTo: toggleContainer.topAnchor).isActive = true
 		optionListButton.bottomAnchor.constraint(equalTo: toggleContainer.bottomAnchor).isActive = true
 		optionListButton.widthAnchor.constraint(equalTo: toggleContainer.widthAnchor, multiplier: 0.25).isActive = true
-		optionListButton.leadingAnchor.constraint(equalTo: optionCollectionButton.trailingAnchor).isActive = true
+		optionListButton.leadingAnchor.constraint(equalTo: toggleContainer.leadingAnchor).isActive = true
+	}
+	private func addOptionCollectionButton() {
+		addSubview(optionCollectionButton)
+		optionCollectionButton.translatesAutoresizingMaskIntoConstraints = false
+		optionCollectionButton.topAnchor.constraint(equalTo: toggleContainer.topAnchor).isActive = true
+		optionCollectionButton.bottomAnchor.constraint(equalTo: toggleContainer.bottomAnchor).isActive = true
+		optionCollectionButton.widthAnchor.constraint(equalTo: toggleContainer.widthAnchor, multiplier: 0.25).isActive = true
+		optionListButton.leadingAnchor.constraint(equalTo: optionListButton.trailingAnchor).isActive = true
 	}
 	private func addOptionCommentButton() {
 		addSubview(optionCommentButton)

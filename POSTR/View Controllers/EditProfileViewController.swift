@@ -27,10 +27,8 @@ class EditProfileViewController: UIViewController {
 	//MARK: Properties
 	private var profileImage: UIImage!
 	private var bgImage: UIImage!
-	private var currentUserPosts = [Post]()
-
 	private var posts = [Post]()
-
+	private var currentUserPosts = [Post]()
 
 
 	//Setup Nib
@@ -60,6 +58,7 @@ class EditProfileViewController: UIViewController {
 	private func loadAllPosts() {
 		DBService.manager.loadAllPosts { (posts) in
 			if let posts = posts {
+
 				self.posts = posts
 			} else {
 				print("error loading posts")
@@ -190,9 +189,10 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
 		self.editProfileView.profileImage.image = profileImage
 
 		//Store image in Storage Service
-		//		StorageService.manager.storeUserImage(image: profileImage, userId: currentUser.userDBid, posts: nil)
-		//		StorageService.manager.storeUserBGImage(image: bgImage, userId)
+		StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userDBid, posts: posts)
+
 		//TO DO - create a new field for "bgImageStr" on firebase database
+		
 		self.dismiss(animated: true, completion: nil)
 	}
 	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
