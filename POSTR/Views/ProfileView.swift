@@ -101,13 +101,13 @@ class ProfileView: UIView {
 		return dc
 	}()
 	//Create ListView
-	lazy var tableView: UITableView = {
+	lazy var postTableView: UITableView = {
 		let tbv = UITableView()
 		tbv.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
 		return tbv
 	}()
 	//Create CollectionView
-	lazy var collectionView: UICollectionView = {
+	lazy var postCollectionView: UICollectionView = {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .vertical
 		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
@@ -273,20 +273,20 @@ class ProfileView: UIView {
 		dataContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
 	}
 	private func addCollectionView() {
-		addSubview(collectionView)
-		collectionView.translatesAutoresizingMaskIntoConstraints = false
-		collectionView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
-		collectionView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
-		collectionView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
-		collectionView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
+		addSubview(postCollectionView)
+		postCollectionView.translatesAutoresizingMaskIntoConstraints = false
+		postCollectionView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		postCollectionView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		postCollectionView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		postCollectionView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 	private func addTableView() {
-		addSubview(tableView)
-		tableView.translatesAutoresizingMaskIntoConstraints = false
-		tableView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
-		tableView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
-		tableView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
-		tableView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
+		addSubview(postTableView)
+		postTableView.translatesAutoresizingMaskIntoConstraints = false
+		postTableView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		postTableView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		postTableView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		postTableView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 	private func addCommentView() {
 		addSubview(commentView)

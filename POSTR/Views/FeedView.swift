@@ -62,6 +62,12 @@ class FeedView: UIView {
 		button.backgroundColor = .clear
 		return button
 	}()
+
+	lazy var dataContainer: UIView = {
+		let dc = UIView()
+		dc.backgroundColor = .white
+		return dc
+	}()
 	lazy var postTableView: UITableView = {
 		let tv = UITableView()
 		tv.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
@@ -103,6 +109,7 @@ class FeedView: UIView {
 		addOptionCommentButton()
 		addOptionBookmarkButton()
 		setupTableView()
+		addCollectionView()
 	}
 
 
@@ -181,6 +188,15 @@ class FeedView: UIView {
 	private func setupTableView() {
 		addSubview(postTableView)
 		postTableView.snp.makeConstraints{(make) in
+			make.top.equalTo(toggleContainer.snp.bottom)
+			make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
+			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
+			make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
+		}
+	}
+	private func addCollectionView() {
+		addSubview(postCollectionView)
+		postCollectionView.snp.makeConstraints{(make) in
 			make.top.equalTo(toggleContainer.snp.bottom)
 			make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
 			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)

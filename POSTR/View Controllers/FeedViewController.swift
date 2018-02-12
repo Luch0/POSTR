@@ -32,14 +32,27 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(feedView)
+		//Datasource & delegate
 		feedView.postTableView.delegate = self
 		feedView.postTableView.dataSource = self
 		feedView.favesCollectionView.delegate = self
 		feedView.favesCollectionView.dataSource = self
-		feedView.postTableView.reloadData()
+		feedView.postCollectionView.delegate = self
+		feedView.postCollectionView.dataSource = self
+		//reload data
 		feedView.favesCollectionView.reloadData()
-		configureNavBar()
+		feedView.postTableView.reloadData()
+		feedView.postCollectionView.reloadData()
+		feedView.postTableView.reloadData()
+		//Load
 		loadCurrentUser()
+		//Setup
+		configureNavBar()
+		setupButtonTargets()
+		switchToList()
+		//Self-Sizing Tableview Height
+		feedView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.1
+		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
@@ -49,6 +62,7 @@ class FeedViewController: UIViewController {
 		didSet {
 			DispatchQueue.main.async {
 				self.feedView.postTableView.reloadData()
+				self.feedView.postCollectionView.reloadData()
 			}
 		}
 	}
@@ -111,15 +125,15 @@ class FeedViewController: UIViewController {
 
 
 	private func setupButtonTargets(){
-		feedView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
 		feedView.optionListButton.addTarget(self, action: #selector(switchToList), for: .touchUpInside)
-		feedView.optionCommentButton.addTarget(self, action: #selector(switchToComment), for: .touchUpInside)
-		feedView.optionBookmarkButton.addTarget(self, action: #selector(switchToBookmark), for: .touchUpInside)
+		feedView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
+		//feedView.optionCommentButton.addTarget(self, action: #selector(switchToComment), for: .touchUpInside)
+		//feedView.optionBookmarkButton.addTarget(self, action: #selector(switchToBookmark), for: .touchUpInside)
 	}
 
 	@objc private func switchToList() {
 		feedView.postTableView.isHidden = false
-		feedView.favesCollectionView.isHidden = true
+		feedView.postCollectionView.isHidden = true
 //		feedView.commentView.isHidden = true
 //		feedView.bookmarkView.isHidden = true
 		feedView.optionListButton.backgroundColor = .white
@@ -129,7 +143,7 @@ class FeedViewController: UIViewController {
 	}
 	@objc private func switchToCollection() {
 		feedView.postTableView.isHidden = true
-		feedView.favesCollectionView.isHidden = false
+		feedView.postCollectionView.isHidden = false
 //		feedView.commentView.isHidden = true
 //		feedView.bookmarkView.isHidden = true
 		feedView.optionListButton.backgroundColor = .clear
@@ -295,18 +309,21 @@ extension FeedViewController: PostTableViewCellDelegate {
 extension FeedViewController: UICollectionViewDataSource {
 	//Number of items in Section
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if collectionView == feedView.favesCollectionView {
-			return faves.count
-		}
 		if collectionView == feedView.postCollectionView {
+			print("CV Post count: "); print(posts.count)
 			return posts.count
 		}
-		return 10
+		if collectionView == feedView.favesCollectionView {
+			print("CV Faves count: "); print(faves.count)
+			return faves.count
+		}
+		print("CV Else Count:")
+		return posts.count
 	}
 	//setup for each cell
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		switch collectionView {
-		case feedView.favesCollectionView :
+		case feedView.favesCollectionView:
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavesCollectionCell", for: indexPath) as! FavesCollectionViewCell
 			cell.backgroundColor = .orange
 			let fave = faves[indexPath.row]

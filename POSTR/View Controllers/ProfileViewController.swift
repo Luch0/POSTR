@@ -28,8 +28,8 @@ class ProfileViewController: UIViewController {
 	private var currentUserPosts = [Post](){
 		didSet {
 			DispatchQueue.main.async {
-				self.profileView.collectionView.reloadData()
-				self.profileView.tableView.reloadData()
+				self.profileView.postCollectionView.reloadData()
+				self.profileView.postTableView.reloadData()
 			}
 		}
 	}
@@ -56,16 +56,17 @@ class ProfileViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(profileView)
-		profileView.tableView.delegate = self
-		profileView.tableView.dataSource = self
-		profileView.collectionView.delegate = self
-		profileView.collectionView.dataSource = self
+		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
+		//Datasource & delegate
+		profileView.postTableView.delegate = self
+		profileView.postTableView.dataSource = self
+		profileView.postCollectionView.delegate = self
+		profileView.postCollectionView.dataSource = self
 		profileView.commentView.delegate = self
 		profileView.commentView.dataSource = self
 		profileView.bookmarkView.delegate = self
 		profileView.bookmarkView.dataSource = self
 		authService.delegate = self
-		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
 		//Load
 		loadCurrentUser()
 		loadCurrentUserPosts()
@@ -75,8 +76,9 @@ class ProfileViewController: UIViewController {
 		configureNavBar()
 		setupButtonTargets()
 		switchToList()
-		profileView.tableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.4
-		profileView.tableView.rowHeight = UITableViewAutomaticDimension
+		//Self-Sizing Tableview Height
+		profileView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.4
+//		profileView.tableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
@@ -118,8 +120,8 @@ class ProfileViewController: UIViewController {
 		self.present(createPostViewController, animated: true, completion: nil)
 	}
 	@objc private func switchToList() {
-		profileView.collectionView.isHidden = true
-		profileView.tableView.isHidden = false
+		profileView.postCollectionView.isHidden = true
+		profileView.postTableView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
 		profileView.optionListButton.backgroundColor = .white
@@ -128,18 +130,18 @@ class ProfileViewController: UIViewController {
 		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToCollection() {
-		profileView.collectionView.isHidden = false
+		profileView.postCollectionView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
-		profileView.tableView.isHidden = true
+		profileView.postTableView.isHidden = true
 		profileView.optionListButton.backgroundColor = .clear
 		profileView.optionCollectionButton.backgroundColor = .white
 		profileView.optionCommentButton.backgroundColor = .clear
 		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToComment() {
-		profileView.collectionView.isHidden = true
-		profileView.tableView.isHidden = true
+		profileView.postCollectionView.isHidden = true
+		profileView.postTableView.isHidden = true
 		profileView.commentView.isHidden = false
 		profileView.bookmarkView.isHidden = true
 		profileView.optionListButton.backgroundColor = .clear
@@ -148,8 +150,8 @@ class ProfileViewController: UIViewController {
 		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToBookmark() {
-		profileView.collectionView.isHidden = true
-		profileView.tableView.isHidden = true
+		profileView.postCollectionView.isHidden = true
+		profileView.postTableView.isHidden = true
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = false
 		profileView.optionListButton.backgroundColor = .clear
@@ -208,7 +210,7 @@ extension ProfileViewController: UITableViewDelegate {
 		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		if tableView == profileView.tableView {
+		if tableView == profileView.postTableView {
 			return UITableViewAutomaticDimension
 		} else
 		if tableView == profileView.commentView {
@@ -226,22 +228,22 @@ extension ProfileViewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
 		var numOfSections: Int = 0
 		if currentUserPosts.count > 0 {
-			profileView.tableView.backgroundView = nil
-			profileView.tableView.separatorStyle = .singleLine
+			profileView.postTableView.backgroundView = nil
+			profileView.postTableView.separatorStyle = .singleLine
 			numOfSections = 1
 		} else {
-			let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: profileView.tableView.bounds.size.width, height: profileView.tableView.bounds.size.height))
+			let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: profileView.postTableView.bounds.size.width, height: profileView.postTableView.bounds.size.height))
 			noDataLabel.text = "You Haven't Posted Yet"
 			noDataLabel.font = UIFont.systemFont(ofSize: 25, weight: .semibold)
 			noDataLabel.textAlignment = .center
-			profileView.tableView.backgroundView = noDataLabel
-			profileView.tableView.separatorStyle = .none
+			profileView.postTableView.backgroundView = noDataLabel
+			profileView.postTableView.separatorStyle = .none
 		}
 		return numOfSections
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if tableView == profileView.tableView {
+		if tableView == profileView.postTableView {
 			print("Table View Count (List): ");print(currentUserPosts.count)
 			return currentUserPosts.count
 		} else if tableView == profileView.commentView {
@@ -257,7 +259,7 @@ extension ProfileViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch tableView {
-		case profileView.tableView :
+		case profileView.postTableView :
 			let cell = tableView.dequeueReusableCell(withIdentifier: "PostListCell", for: indexPath) as! PostTableViewCell
 			cell.delegate = self
 			cell.tag = indexPath.row
@@ -316,7 +318,6 @@ extension ProfileViewController: UITableViewDataSource {
 //MARK: CollectionView - Datasource
 extension ProfileViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-			print("Collection View Count:");print(currentUserPosts.count)
 			return currentUserPosts.count
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
