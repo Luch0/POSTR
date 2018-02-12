@@ -106,8 +106,6 @@ class FeedView: UIView {
 		addToggleContainer()
 		addOptionListButton()
 		addOptionCollectionButton()
-		addOptionCommentButton()
-		addOptionBookmarkButton()
 		setupTableView()
 		addCollectionView()
 	}
@@ -154,7 +152,7 @@ class FeedView: UIView {
 		optionListButton.snp.makeConstraints { (make) in
 			make.top.equalTo(toggleContainer.snp.top)
 			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
+			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.50)
 			make.leading.equalTo(toggleContainer.snp.leading)
 		}
 	}
@@ -163,26 +161,8 @@ class FeedView: UIView {
 		optionCollectionButton.snp.makeConstraints { (make) in
 			make.top.equalTo(toggleContainer.snp.top)
 			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
+			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.50)
 			make.leading.equalTo(optionListButton.snp.trailing)
-		}
-	}
-	private func addOptionCommentButton() {
-		addSubview(optionCommentButton)
-		optionCommentButton.snp.makeConstraints { (make) in
-			make.top.equalTo(toggleContainer.snp.top)
-			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
-			make.leading.equalTo(optionCollectionButton.snp.trailing)
-		}
-	}
-	private func addOptionBookmarkButton() {
-		addSubview(optionBookmarkButton)
-		optionBookmarkButton.snp.makeConstraints { (make) in
-			make.top.equalTo(toggleContainer.snp.top)
-			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
-			make.leading.equalTo(optionCommentButton.snp.trailing)
 		}
 	}
 	private func setupTableView() {

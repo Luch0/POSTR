@@ -99,8 +99,6 @@ class FeedViewController: UIViewController {
 		//TitleView (Center)
 		let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
 		let titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
-		//		let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-		//		let titleImageView = UIImageView(image: UIImage(named: "logo"))
 		titleImageView.frame = CGRect(x: 0, y: 0, width: titleView.frame.width, height: titleView.frame.height)
 		titleView.addSubview(titleImageView)
 		navigationItem.titleView = titleView
@@ -127,51 +125,20 @@ class FeedViewController: UIViewController {
 	private func setupButtonTargets(){
 		feedView.optionListButton.addTarget(self, action: #selector(switchToList), for: .touchUpInside)
 		feedView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
-		//feedView.optionCommentButton.addTarget(self, action: #selector(switchToComment), for: .touchUpInside)
-		//feedView.optionBookmarkButton.addTarget(self, action: #selector(switchToBookmark), for: .touchUpInside)
 	}
 
 	@objc private func switchToList() {
 		feedView.postTableView.isHidden = false
 		feedView.postCollectionView.isHidden = true
-//		feedView.commentView.isHidden = true
-//		feedView.bookmarkView.isHidden = true
 		feedView.optionListButton.backgroundColor = .white
 		feedView.optionCollectionButton.backgroundColor = .clear
-		feedView.optionCommentButton.backgroundColor = .clear
-		feedView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToCollection() {
 		feedView.postTableView.isHidden = true
 		feedView.postCollectionView.isHidden = false
-//		feedView.commentView.isHidden = true
-//		feedView.bookmarkView.isHidden = true
 		feedView.optionListButton.backgroundColor = .clear
 		feedView.optionCollectionButton.backgroundColor = .white
-		feedView.optionCommentButton.backgroundColor = .clear
-		feedView.optionBookmarkButton.backgroundColor = .clear
 	}
-	@objc private func switchToComment() {
-		feedView.favesCollectionView.isHidden = true
-		feedView.postTableView.isHidden = true
-//		feedView.commentView.isHidden = false
-//		feedView.bookmarkView.isHidden = true
-		feedView.optionListButton.backgroundColor = .clear
-		feedView.optionCollectionButton.backgroundColor = .clear
-		feedView.optionCommentButton.backgroundColor = .white
-		feedView.optionBookmarkButton.backgroundColor = .clear
-	}
-	@objc private func switchToBookmark() {
-		feedView.favesCollectionView.isHidden = true
-		feedView.postTableView.isHidden = true
-//		feedView.commentView.isHidden = true
-//		feedView.bookmarkView.isHidden = false
-		feedView.optionListButton.backgroundColor = .clear
-		feedView.optionCollectionButton.backgroundColor = .clear
-		feedView.optionCommentButton.backgroundColor = .clear
-		feedView.optionBookmarkButton.backgroundColor = .white
-	}
-
 }
 
 extension FeedViewController: UITableViewDataSource {
@@ -207,9 +174,7 @@ extension FeedViewController: UITableViewDataSource {
 		cell.tag = indexPath.row
 		cell.configurePostCell(post: post)
 		cell.backgroundColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 1.0)
-
 		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-		//			 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
 		return cell
 	}
 
@@ -255,7 +220,6 @@ extension FeedViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return  UITableViewAutomaticDimension
-//		return UIScreen.main.bounds.height * 0.55
 	}
 
 }
@@ -332,7 +296,7 @@ extension FeedViewController: UICollectionViewDataSource {
 		case feedView.postCollectionView:
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 			let post = posts.reversed()[indexPath.row]
-			cell.backgroundColor = UIColor.lightGray
+			cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
 			cell.imgView.kf.setImage(with: URL(string: post.postImageStr))
 			return cell
 		default:
