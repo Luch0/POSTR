@@ -23,7 +23,7 @@ class PostCollectionViewCell: UICollectionViewCell {
 	let imgView : UIImageView = {
 		let imageView = UIImageView()
 		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.image = #imageLiteral(resourceName: "user2")
+		imageView.image = #imageLiteral(resourceName: "bgPencil")
 		imageView.layer.cornerRadius = imageView.bounds.width / 2
 		imageView.layer.masksToBounds = true
 		imageView.contentMode = .scaleAspectFit
