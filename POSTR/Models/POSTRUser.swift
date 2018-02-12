@@ -23,7 +23,7 @@ struct POSTRUser: Codable {
         userImageStr = dict["userImageStr"] as? String ?? ""
 				userBgImageStr = dict["userBgImageStr"] as? String ?? ""
         userFlagCount = dict["userFlagCount"] as? Int ?? 0
-				userSavedPosts = dict["uerSavedPosts"] as? [String] ?? [String]()
+				userSavedPosts = dict["userSavedPosts"] as? [String] ?? [String]()
     }
     
     

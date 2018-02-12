@@ -3,17 +3,19 @@
 //  Created by Winston Maragh on 2/9/18.
 //  Copyright © 2018 Winston Maragh. All rights reserved.
 
-
 import UIKit
+import Foundation
 import Kingfisher
 import Firebase
 
 
-protocol PostTableViewCellDelegate : class {
-	func didPressOptionButton(_ tag: Int, image: UIImage?)
-	func didPressBookmark(tableViewCell: PostTableViewCell)
-	func updateUpvote(tableViewCell: PostTableViewCell )
-	func updateDownVote(tableViewCell: PostTableViewCell)
+@objc protocol PostTableViewCellDelegate : class {
+	@objc func didPressOptionButton(_ tag: Int, image: UIImage?)
+	@objc func didPressShareButton()
+	@objc optional func addPostToBookmarks(tableViewCell: PostTableViewCell)
+//	@objc optional func removePostFromBookmarks(tableViewCell: PostTableViewCell)
+	@objc func updateUpvote(tableViewCell: PostTableViewCell)
+	@objc func updateDownVote(tableViewCell: PostTableViewCell)
 }
 
 
@@ -31,12 +33,30 @@ class PostTableViewCell: UITableViewCell {
 	@objc func optionsClicked() {
 		delegate?.didPressOptionButton(self.tag, image: self.postImageView.image)
 	}
-	@objc func bookmarkClicked(){
-		delegate?.updateUpvote(tableViewCell: self)
+	@objc func bookmarkClicked(sender: UIButton){
+		if sender.image(for: .normal) == #imageLiteral(resourceName: "bookmark_empty"){
+			sender.setImage(#imageLiteral(resourceName: "bookmark_filled"), for: .normal)
+			//TODO: Add post to bookmarks on firebase
+			delegate?.addPostToBookmarks!(tableViewCell: self)
+		} else if sender.image(for: .normal) == #imageLiteral(resourceName: "bookmark_filled") {
+			sender.setImage(#imageLiteral(resourceName: "bookmark_empty"), for: .normal)
+			//TODO: Remove post to bookmarks on firebase
+//			delegate?.removePostFromBookmarks!(tableViewCell: self)
+		}
+	}
+	@objc func shareClicked(){
+		delegate?.didPressShareButton()
 	}
 
 
+
+
 	//MARK: Properties
+	lazy var cellContainer: UIView = {
+		let view = UIView()
+		view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+		return view
+	}()
 	//top Container
 	lazy var topContainer: UIView = {
 		let view = UIView()
@@ -92,7 +112,7 @@ class PostTableViewCell: UITableViewCell {
 	//Bottom Container
 	lazy var bottomContainer: UIView = {
 		let view = UIView()
-		view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+		view.backgroundColor = .white
 		return view
 	}()
 	lazy var downvoteButton: UIButton = {
@@ -125,7 +145,7 @@ class PostTableViewCell: UITableViewCell {
 		let button = UIButton()
 		button.setImage(#imageLiteral(resourceName: "bookmark_empty"), for: .normal)
 		button.backgroundColor = UIColor.clear
-		button.addTarget(self, action: #selector(bookmarkClicked), for: .touchUpInside)
+		button.addTarget(self, action: #selector(bookmarkClicked(sender:)), for: .touchUpInside)
 		return button
 	}()
 
@@ -133,6 +153,7 @@ class PostTableViewCell: UITableViewCell {
 		let button = UIButton()
 		button.setImage(#imageLiteral(resourceName: "share_empty"), for: .normal)
 		button.backgroundColor = UIColor.clear
+		button.addTarget(self, action: #selector(shareClicked), for: .touchUpInside)
 		return button
 	}()
 
@@ -154,13 +175,13 @@ class PostTableViewCell: UITableViewCell {
 	}
 	private func setupViews() {
 		//order matters for dependent constraints
+		addCellContainer()
 		addTopContainerView()
 		addUserImageView()
 		addUsernameLabel()
 		setupPostCaption()
 		addPostCategoryLabel()
 		addPostActionsButton()
-		addPostImageView()
 		addBottomContainerView()
 		addDownvoteButton()
 		addUpvoteButton()
@@ -168,18 +189,28 @@ class PostTableViewCell: UITableViewCell {
 		addDateLabel()
 		addShareButton()
 		addBookmarkButton()
+		addPostImageView()
 	}
 
 
 	//MARK: Add Properties
 	//Add Top Container & subviews
+	private func addCellContainer() {
+		addSubview(cellContainer)
+		cellContainer.translatesAutoresizingMaskIntoConstraints = false
+		cellContainer.topAnchor.constraint(equalTo: topAnchor).isActive = true
+		cellContainer.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+		cellContainer.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+		cellContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+	}
 	private func addTopContainerView() {
 		addSubview(topContainer)
 		topContainer.translatesAutoresizingMaskIntoConstraints = false
-		topContainer.topAnchor.constraint(equalTo: topAnchor).isActive = true
-		topContainer.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-		topContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.18).isActive = true
-		topContainer.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+		topContainer.topAnchor.constraint(equalTo: cellContainer.topAnchor).isActive = true
+		topContainer.leadingAnchor.constraint(equalTo: cellContainer.leadingAnchor).isActive = true
+		topContainer.trailingAnchor.constraint(equalTo: cellContainer.trailingAnchor).isActive = true
+		topContainer.heightAnchor.constraint(equalToConstant: 80).isActive = true
+//		topContainer.bottomAnchor.constraint(equalTo: postImageView.topAnchor).isActive = true
 	}
 	private func addUserImageView() {
 		addSubview(userImageView)
@@ -226,10 +257,10 @@ class PostTableViewCell: UITableViewCell {
 	private func addPostImageView() {
 		addSubview(postImageView)
 		postImageView.translatesAutoresizingMaskIntoConstraints = false
+		postImageView.leadingAnchor.constraint(equalTo: cellContainer.leadingAnchor).isActive = true
+		postImageView.trailingAnchor.constraint(equalTo: cellContainer.trailingAnchor).isActive = true
 		postImageView.topAnchor.constraint(equalTo: topContainer.bottomAnchor).isActive = true
-		postImageView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-		postImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.71).isActive = true
-		postImageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+		postImageView.bottomAnchor.constraint(equalTo: bottomContainer.topAnchor).isActive = true
 	}
 
 
@@ -237,10 +268,11 @@ class PostTableViewCell: UITableViewCell {
 	private func addBottomContainerView() {
 		addSubview(bottomContainer)
 		bottomContainer.translatesAutoresizingMaskIntoConstraints = false
-		bottomContainer.topAnchor.constraint(equalTo: postImageView.bottomAnchor).isActive = true
-		bottomContainer.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-		bottomContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.10).isActive = true
-		bottomContainer.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+//		bottomContainer.topAnchor.constraint(equalTo: postImageView.bottomAnchor).isActive = true
+		bottomContainer.leadingAnchor.constraint(equalTo: cellContainer.leadingAnchor).isActive = true
+		bottomContainer.trailingAnchor.constraint(equalTo: cellContainer.trailingAnchor).isActive = true
+		bottomContainer.bottomAnchor.constraint(equalTo: cellContainer.bottomAnchor).isActive = true
+		bottomContainer.heightAnchor.constraint(equalToConstant: 60).isActive = true
 	}
 
 	private func addDownvoteButton() {
@@ -303,7 +335,8 @@ class PostTableViewCell: UITableViewCell {
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
 		postImageView.kf.indicatorType = .activity
-		postImageView.kf.setImage(with: URL(string:post.postImageStr))
+		postImageView.kf.setImage(with: URL(string:post.postImageStr), placeholder: #imageLiteral(resourceName: "placeholderCamera"), options: nil, progressBlock: nil, completionHandler: nil)
+//		postImageView.kf.setImage(with: URL(string:post.postImageStr))
 
 		if let imageURL = post.userImageStr {
 			self.userImageView.kf.indicatorType = .activity

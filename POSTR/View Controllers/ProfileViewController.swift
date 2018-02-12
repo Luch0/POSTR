@@ -26,7 +26,12 @@ class ProfileViewController: UIViewController {
 	private var allUsers: [POSTRUser] = []
 	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){
-		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
+		didSet {
+			DispatchQueue.main.async {
+				self.profileView.collectionView.reloadData()
+				self.profileView.tableView.reloadData()
+			}
+		}
 	}
 	private var currentUserComments = [Comment]() {
 		didSet { DispatchQueue.main.async { self.profileView.commentView.reloadData() } }
@@ -37,8 +42,6 @@ class ProfileViewController: UIViewController {
 	private var profileImage: UIImage!
 	private var bgImage: UIImage!
 
-	let cellSpacing: CGFloat = 5.0
-
 
 	//MARK: View Lifecycle
 	override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +49,8 @@ class ProfileViewController: UIViewController {
 		currentAuthUser = AuthUserService.getCurrentUser()
 		loadCurrentUser()
 		loadCurrentUserPosts()
+		loadCurrentUserComments()
+		loadCurrentUserBookmarkPosts()
 	}
 
 	override func viewDidLoad() {
@@ -61,13 +66,17 @@ class ProfileViewController: UIViewController {
 		profileView.bookmarkView.dataSource = self
 		authService.delegate = self
 		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
+		//Load
 		loadCurrentUser()
 		loadCurrentUserPosts()
 		loadCurrentUserComments()
-		
+		loadCurrentUserBookmarkPosts()
+		//Setup
 		configureNavBar()
 		setupButtonTargets()
 		switchToList()
+		profileView.tableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.4
+		profileView.tableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
@@ -113,24 +122,40 @@ class ProfileViewController: UIViewController {
 		profileView.tableView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
+		profileView.optionListButton.backgroundColor = .white
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToCollection() {
 		profileView.collectionView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
 		profileView.tableView.isHidden = true
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .white
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToComment() {
 		profileView.collectionView.isHidden = true
 		profileView.tableView.isHidden = true
 		profileView.commentView.isHidden = false
 		profileView.bookmarkView.isHidden = true
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .white
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToBookmark() {
 		profileView.collectionView.isHidden = true
 		profileView.tableView.isHidden = true
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = false
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .white
 	}
 
 
@@ -144,7 +169,6 @@ class ProfileViewController: UIViewController {
 			} else {print("error loading users")}
 		}
 	}
-
 	private func loadCurrentUserPosts() {
 		DBService.manager.loadUserPosts(userID: (currentAuthUser?.uid)!) { (userPosts) in
 			if let userPosts = userPosts {self.currentUserPosts = userPosts}
@@ -157,6 +181,10 @@ class ProfileViewController: UIViewController {
 			else {print("Error loading comments")}
 		}
 	}
+	private func loadCurrentUserBookmarkPosts() {
+//		DBService.manager.loadOnePost(postID: <#T##String#>, completionHandler: <#T##(Post?) -> Void#>)
+	}
+
 
 	@objc private func logout() {
 		let alertView = UIAlertController(title: "Are you sure you want to Logout?", message: nil, preferredStyle: .alert)
@@ -181,11 +209,12 @@ extension ProfileViewController: UITableViewDelegate {
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if tableView == profileView.tableView {
-			return UIScreen.main.bounds.height * 0.40
-		} else if tableView == profileView.commentView {
+			return UITableViewAutomaticDimension
+		} else
+		if tableView == profileView.commentView {
 			return UIScreen.main.bounds.height * 0.10
 		} else if tableView == profileView.bookmarkView {
-			return UIScreen.main.bounds.height * 0.20
+			return UIScreen.main.bounds.height * 0.10
 		}
 		return UIScreen.main.bounds.height * 0.40
 	}
@@ -213,10 +242,13 @@ extension ProfileViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if tableView == profileView.tableView {
+			print("Table View Count (List): ");print(currentUserPosts.count)
 			return currentUserPosts.count
 		} else if tableView == profileView.commentView {
+			print("Table View Count (Comment):");print(currentUserComments.count)
 			return currentUserComments.count
 		} else if tableView == profileView.bookmarkView {
+			print("Table View Count (Bookmarks):");print(currentUserPosts.count)
 			return currentUserBookmarks.count
 		}
 		return 1
@@ -241,11 +273,11 @@ extension ProfileViewController: UITableViewDataSource {
 			return cell
 		case profileView.bookmarkView:
 			let cell = tableView.dequeueReusableCell(withIdentifier: "PostBookmarkCell", for: indexPath)
-			let post = currentUserPosts.reversed()[indexPath.row]
+			let post = currentUserBookmarks.reversed()[indexPath.row]
 			cell.textLabel?.text = post.caption
 			cell.detailTextLabel?.text = post.category
 			cell.imageView?.kf.indicatorType = .activity
-			cell.imageView?.kf.setImage(with: URL(string: post.postImageStr ))
+			cell.imageView?.kf.setImage(with: URL(string: post.postImageStr))
 			return cell
 		default:
 			return UITableViewCell()
@@ -283,17 +315,15 @@ extension ProfileViewController: UITableViewDataSource {
 
 //MARK: CollectionView - Datasource
 extension ProfileViewController: UICollectionViewDataSource {
-	//Number of items in Section
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return currentUserPosts.count
+			print("Collection View Count:");print(currentUserPosts.count)
+			return currentUserPosts.count
 	}
-	//setup for each cell
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 		let post = currentUserPosts.reversed()[indexPath.row]
-		cell.postCaption.text = post.caption
-		cell.postImageView.kf.indicatorType = .activity
-		cell.postImageView.kf.setImage(with: URL(string: post.postImageStr ))
+		cell.backgroundColor = UIColor.lightGray
+		cell.imgView.kf.setImage(with: URL(string: post.postImageStr))
 		return cell
 	}
 }
@@ -310,19 +340,19 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
 		let numSpaces: CGFloat = numCells + 1
 		let screenWidth = UIScreen.main.bounds.width
 		let screenHeight = UIScreen.main.bounds.height
-		return CGSize(width: (screenWidth - (cellSpacing * numSpaces)) / numCells, height: screenHeight * 0.25)
+		return CGSize(width: (screenWidth - (5.0 * numSpaces)) / numCells, height: screenHeight * 0.25)
 	}
 	//Layout - Inset for section
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-		return UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: 0, right: cellSpacing)
+		return UIEdgeInsets(top: 5.0, left: 5.0, bottom: 0, right: 5.0)
 	}
 	//Layout - line spacing
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-		return cellSpacing
+		return 5.0
 	}
 	//Layout - inter item spacing
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-		return cellSpacing
+		return 5.0
 	}
 }
 
@@ -342,8 +372,22 @@ extension ProfileViewController: AuthUserServiceDelegate {
 }
 
 
+
 // MARK: Delegate for PostTableViewCell
-extension ProfileViewController: PostTableViewCellDelegate {	
+extension ProfileViewController: PostTableViewCellDelegate {
+	func didPressShareButton() {
+		//TO DO: share options
+		let activityVC = UIActivityViewController(activityItems: ["www.google.com"], applicationActivities: nil)
+		present(activityVC, animated: true, completion: nil)
+	}
+
+	func addPostToBookmarks(tableViewCell: PostTableViewCell) {
+		if let currentIndexPath = tableViewCell.currentIndexPath {
+			let postToAdd = currentUserPosts.reversed()[currentIndexPath.row]
+			DBService.manager.updateUpvote(postToUpdate: postToAdd)
+		}
+	}
+
 	func updateUpvote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = currentUserPosts.reversed()[currentIndexPath.row]
