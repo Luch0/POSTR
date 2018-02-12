@@ -8,21 +8,20 @@ import UIKit
 import Firebase
 
 extension DBService {
-    
-	public func addPosts(caption: String, category: String, postImageStr: String, userImageStr: String, image: UIImage) {
+	public func addPosts(caption: String, category: String, postImageStr: String, username: String, userImageStr: String, image: UIImage) {
 		let childByAutoId = DBService.manager.getPosts().childByAutoId()
 		childByAutoId.setValue(["postID"        : childByAutoId.key,
 														"userID"        : AuthUserService.getCurrentUser()!.uid,
 														"caption"       : caption,
 														"category"      : category,
 														"date"          : formatDate(with: Date()),
-														"username"      : AuthUserService.getCurrentUser()!.displayName!,
 														"numOfComments" : 0,
 														"upvoteCount"   : 0,
 														"downvoteCount" : 0,
 														"currentVotes"  : 0,
-														"postImageStr"  : postImageStr,
+														"username"			: username,
 														"userImageStr"  : userImageStr,
+														"postImageStr"  : postImageStr,
 														"postFlagCount" : 0]) { (error, dbRef) in
 															if let error = error {
 																print("addPosts error: \(error)")
@@ -67,6 +66,21 @@ extension DBService {
 		}
 	}
 
+	public func loadOnePost(postID: String, completionHandler: @escaping (Post?) -> Void) {
+		let ref = DBService.manager.getPosts().child(postID)
+		ref.observe(.value) { (snapshot) in
+			var bookmarkPost: Post!
+			for child in snapshot.children {
+				let dataSnapshot = child as! DataSnapshot
+				if let dict = dataSnapshot.value as? [String: Any] {
+					let post = Post.init(dict: dict)
+					bookmarkPost = post
+				}
+			}
+			completionHandler(bookmarkPost)
+		}
+	}
+
 	public func updatePostUserName(postID: String, username: String) {
 		DBService.manager.getPosts().child(postID).updateChildValues(["username": username])
 	}
@@ -99,6 +113,11 @@ extension DBService {
         postRef.updateChildValues(["downvoteCount": postToUpdate.downvoteCount - 1])
         postRef.updateChildValues(["currentVotes": (postToUpdate.downvoteCount - 1) + postToUpdate.upvoteCount])
     }
+
+		public func addBookmark(postID: String, userID: String) {
+			let userRef = DBService.manager.getUsers().child((userID))
+			userRef.updateChildValues(["userSavedPosts": postID])
+		}
 
 }
 
