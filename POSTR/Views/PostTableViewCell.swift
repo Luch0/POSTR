@@ -103,7 +103,7 @@ class PostTableViewCell: UITableViewCell {
 	lazy var postImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.image = #imageLiteral(resourceName: "bgBrunch")
-		imageView.contentMode = .scaleToFill
+		imageView.contentMode = .scaleAspectFit
 		imageView.backgroundColor = .white
 		return imageView
 	}()
@@ -112,7 +112,7 @@ class PostTableViewCell: UITableViewCell {
 	//Bottom Container
 	lazy var bottomContainer: UIView = {
 		let view = UIView()
-		view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+		view.backgroundColor = .white
 		return view
 	}()
 	lazy var downvoteButton: UIButton = {
@@ -335,7 +335,8 @@ class PostTableViewCell: UITableViewCell {
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
 		postImageView.kf.indicatorType = .activity
-		postImageView.kf.setImage(with: URL(string:post.postImageStr))
+		postImageView.kf.setImage(with: URL(string:post.postImageStr), placeholder: #imageLiteral(resourceName: "placeholderCamera"), options: nil, progressBlock: nil, completionHandler: nil)
+//		postImageView.kf.setImage(with: URL(string:post.postImageStr))
 
 		if let imageURL = post.userImageStr {
 			self.userImageView.kf.indicatorType = .activity

@@ -111,7 +111,6 @@ class ProfileView: UIView {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .vertical
 		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
-//		let cv = UICollectionView(frame: dataContainer.layer.bounds, collectionViewLayout: layout)
 		cv.backgroundColor = UIColor.white
 		cv.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: "PostCollectionCell")
 		return cv

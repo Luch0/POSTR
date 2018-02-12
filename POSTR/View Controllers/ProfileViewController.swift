@@ -26,7 +26,12 @@ class ProfileViewController: UIViewController {
 	private var allUsers: [POSTRUser] = []
 	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){
-		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
+		didSet {
+			DispatchQueue.main.async {
+				self.profileView.collectionView.reloadData()
+				self.profileView.tableView.reloadData()
+			}
+		}
 	}
 	private var currentUserComments = [Comment]() {
 		didSet { DispatchQueue.main.async { self.profileView.commentView.reloadData() } }
@@ -117,24 +122,40 @@ class ProfileViewController: UIViewController {
 		profileView.tableView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
+		profileView.optionListButton.backgroundColor = .white
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToCollection() {
 		profileView.collectionView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
 		profileView.tableView.isHidden = true
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .white
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToComment() {
 		profileView.collectionView.isHidden = true
 		profileView.tableView.isHidden = true
 		profileView.commentView.isHidden = false
 		profileView.bookmarkView.isHidden = true
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .white
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToBookmark() {
 		profileView.collectionView.isHidden = true
 		profileView.tableView.isHidden = true
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = false
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .white
 	}
 
 
@@ -221,10 +242,13 @@ extension ProfileViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if tableView == profileView.tableView {
+			print("Table View Count (List): ");print(currentUserPosts.count)
 			return currentUserPosts.count
 		} else if tableView == profileView.commentView {
+			print("Table View Count (Comment):");print(currentUserComments.count)
 			return currentUserComments.count
 		} else if tableView == profileView.bookmarkView {
+			print("Table View Count (Bookmarks):");print(currentUserPosts.count)
 			return currentUserBookmarks.count
 		}
 		return 1
@@ -291,18 +315,15 @@ extension ProfileViewController: UITableViewDataSource {
 
 //MARK: CollectionView - Datasource
 extension ProfileViewController: UICollectionViewDataSource {
-	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 1
-	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return currentUserPosts.count
+			print("Collection View Count:");print(currentUserPosts.count)
+			return currentUserPosts.count
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
-//		let post = currentUserPosts.reversed()[indexPath.row]
-//		cell.postCaption.text = post.caption
-//		cell.postImageView.kf.indicatorType = .activity
-//		cell.postImageView.kf.setImage(with: URL(string: post.postImageStr ))
+		let post = currentUserPosts.reversed()[indexPath.row]
+		cell.backgroundColor = UIColor.lightGray
+		cell.imgView.kf.setImage(with: URL(string: post.postImageStr))
 		return cell
 	}
 }
@@ -317,13 +338,13 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let numCells: CGFloat = 3
 		let numSpaces: CGFloat = numCells + 1
-		let screenWidth = profileView.collectionView.bounds.width
-		let screenHeight = profileView.collectionView.bounds.height
+		let screenWidth = UIScreen.main.bounds.width
+		let screenHeight = UIScreen.main.bounds.height
 		return CGSize(width: (screenWidth - (5.0 * numSpaces)) / numCells, height: screenHeight * 0.25)
 	}
 	//Layout - Inset for section
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-		return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+		return UIEdgeInsets(top: 5.0, left: 5.0, bottom: 0, right: 5.0)
 	}
 	//Layout - line spacing
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
