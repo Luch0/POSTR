@@ -1,10 +1,7 @@
-//
 //  NewPostView.swift
-//  GroupProject2Beta
-//
-//  Created by C4Q on 1/30/18.
-//  Copyright © 2018 Vikash Hart. All rights reserved.
-//
+//  POSTR
+//  Created by Vikash Hart on 2/9/18.
+//  Copyright © 2018 On-The-Line. All rights reserved.
 
 import UIKit
 

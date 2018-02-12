@@ -31,20 +31,19 @@ class AuthUserService: NSObject {
     }
     public func createUser(email: String, password: String) {
         Auth.auth().createUser(withEmail: email, password: password){(user, error) in
-            if let error = error {
-                self.delegate?.didFailCreatingUser?(self, error: error)
-            } else if let user = user {
+            if let error = error {self.delegate?.didFailCreatingUser?(self, error: error)}
+						else if let user = user {
                 //update Authenticated user displayName with their email prefix
                 let changeRequest = user.createProfileChangeRequest()
                 let stringArray = user.email!.components(separatedBy: "@")
                 let username = stringArray[0]
                 changeRequest.displayName = username
+								changeRequest.photoURL = URL(string: "http://santetotal.com/wp-content/uploads/2014/05/default-user-image-0f2a2adaf9515a88fb9b1a911d9f46bb-60x60.png")
                 changeRequest.commitChanges(completion: {(error) in
-                    if let error = error {
-                        print("changeRequest error: \(error)")
-                    } else {
+                    if let error = error {print("changeRequest error: \(error)")}
+										else {
                         print("changeRequest was successful for username: \(username)")
-                        DBService.manager.addUser(userBio: nil, image: #imageLiteral(resourceName: "userImagePlaceholder"))  //ADD USER
+                        DBService.manager.addUser(userBio: "tagline", image: #imageLiteral(resourceName: "user3"))  //ADD USER
                         self.delegate?.didCreateUser?(self, user: user)
                     }
                 })
