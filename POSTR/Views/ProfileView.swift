@@ -1,7 +1,7 @@
 //  ProfileView.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 1/30/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit
 import Firebase
@@ -97,7 +97,7 @@ class ProfileView: UIView {
 	//Container
 	lazy var dataContainer: UIView = {
 		let dc = UIView()
-		dc.backgroundColor = .red
+		dc.backgroundColor = .white
 		return dc
 	}()
 	//Create ListView
@@ -110,9 +110,8 @@ class ProfileView: UIView {
 	lazy var collectionView: UICollectionView = {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .vertical
-//		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
-		let cv = UICollectionView(frame: dataContainer.layer.bounds, collectionViewLayout: layout)
-		cv.backgroundColor = UIColor.yellow
+		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
+		cv.backgroundColor = UIColor.white
 		cv.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: "PostCollectionCell")
 		return cv
 	}()
@@ -120,13 +119,13 @@ class ProfileView: UIView {
 	lazy var commentView: UITableView = {
 		let tbv = UITableView()
 		tbv.register(PostCommentCell.self, forCellReuseIdentifier: "PostCommentCell")
-		tbv.backgroundColor = UIColor.green
+		tbv.backgroundColor = UIColor.white
 		return tbv
 	}()
 	//Create bookmarkView
 	lazy var bookmarkView: UITableView = {
 		let tbv = UITableView()
-		tbv.backgroundColor = UIColor.blue
+		tbv.backgroundColor = UIColor.white
 		return tbv
 	}()
 
