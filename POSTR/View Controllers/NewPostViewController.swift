@@ -1,7 +1,8 @@
 //  CreatePostViewController.swift
-//  POSTR
+//  POSTR1.0 (from previous project - might change later)
 //  Created by Winston Maragh/Vikash Hart on 1/30/18.
-//  Copyright © 2018 Vikash Hart. All rights reserved.
+//  Copyright © 2018 On-The-Line. All rights reserved.
+
 
 import UIKit
 import AVFoundation

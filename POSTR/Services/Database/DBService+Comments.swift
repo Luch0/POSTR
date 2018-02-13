@@ -1,7 +1,7 @@
 //  DBService+Comments.swift
-//  POSTR
-//  Created by Vikash Hart on 2/2/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  POSTR2.0
+//  Created by Winston Maragh on 2/2/18.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import Foundation
 import UIKit
@@ -13,11 +13,11 @@ extension DBService {
 	public func addComment(post: Post, commentStr: String) {
         let childByAutoId = DBService.manager.getComments().childByAutoId()
         childByAutoId.setValue(["userID"         	 	: AuthUserService.getCurrentUser()!.uid,
-																"username"          : post.username,
-																"postID"          	: post.postID,
-																"postTitle"					: post.caption,
-																"postImageStr"			: post.postImageStr,
-																"postCategory"			: post.category,
+																"username"          : post.username!,
+																"postID"          	: post.postID!,
+																"postTitle"					: post.caption!,
+																"postImageStr"			: post.postImageStr!,
+																"postCategory"			: post.category!,
 																"dateOfPost"       : formatDate(with: Date()),
                                 "commentID"        : childByAutoId.key,
                                 "commentStr"       : commentStr,

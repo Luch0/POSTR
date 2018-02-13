@@ -21,7 +21,7 @@ class ProfileView: UIView {
 	}()
 	lazy var profileImageView: UIImageView = {
 		let iv = UIImageView()
-		iv.image = #imageLiteral(resourceName: "user2")
+		iv.image = #imageLiteral(resourceName: "user7")
 		return iv
 	}()
 

@@ -1,5 +1,5 @@
 //  NewPostView.swift
-//  POSTR
+//  POSTR1.0 (from previous project - might change later)
 //  Created by Vikash Hart on 2/9/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
 

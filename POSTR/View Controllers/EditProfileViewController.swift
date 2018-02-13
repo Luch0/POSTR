@@ -1,7 +1,7 @@
 //  EditProfileViewController.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/9/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import Foundation
 import UIKit
@@ -78,7 +78,7 @@ class EditProfileViewController: UIViewController {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
 				for user in users {
-					if self.authUser?.uid == user.userID { self.dbUser = user; print("<<<<Current User: \(user.userID)") }
+					if self.authUser?.uid == user.userID { self.dbUser = user; print("<<<<Current User: \(String(describing: user.userID))") }
 
 				}
 			} else {print("error loading from Firebase Database")}
@@ -159,8 +159,6 @@ class EditProfileViewController: UIViewController {
 // MARK: TextField Delegate
 extension EditProfileViewController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//		let currentTFUserID =
-
 		if textField == editProfileView.usernameTF {
 			guard let text = textField.text else {return false}
 			DBService.manager.updateUserName(userID: dbUser.userID!, username: text)
@@ -199,9 +197,11 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
 			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID!)
 		}
 		self.dismiss(animated: true, completion: nil)
+		imagePicker.dismiss(animated: true, completion: nil)
 	}
 	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
 		self.dismiss(animated: true, completion: nil)
+		imagePicker.dismiss(animated: true, completion: nil)
 	}
 }
 

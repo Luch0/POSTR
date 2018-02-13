@@ -1,13 +1,9 @@
-//
 //  LoginView.swift
-//  LoginPageViewController
-//
+//  POSTR1.0 (from previous project - might change later)
 //  Created by Maryann Yin on 1/30/18.
 //  Copyright © 2018 Maryann Yin. All rights reserved.
-//
 
 import UIKit
-import ChameleonFramework
 
 class LoginView: UIView {
     
@@ -30,7 +26,7 @@ class LoginView: UIView {
         label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
         label.text = "Email: "
         label.textAlignment = .right
-        label.textColor = FlatPurpleDark()
+				label.textColor = UIColor(red: 139/255, green: 0/255, blue: 139/255, alpha: 1.0)
         return label
     }()
     
@@ -39,7 +35,7 @@ class LoginView: UIView {
         label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
         label.textAlignment = .right
         label.text = "Password: "
-        label.textColor = FlatPurpleDark()
+				label.textColor = UIColor(red: 139/255, green: 0/255, blue: 139/255, alpha: 1.0)
         return label
     }()
     
@@ -52,7 +48,7 @@ class LoginView: UIView {
         textField.borderStyle = .roundedRect
         let myColor : UIColor = UIColor( red: 0.5, green: 0.5, blue:0, alpha: 1.0 )
         textField.layer.borderColor = myColor.cgColor
-        textField.textColor = FlatPurpleDark()
+				textField.textColor = UIColor(red: 139/255, green: 0/255, blue: 139/255, alpha: 1.0)
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
         return textField
@@ -64,10 +60,9 @@ class LoginView: UIView {
         textField.placeholder = "Password"
         textField.text = "1234567"
         textField.borderStyle = .roundedRect
-        let flatPurpleDark = FlatPurpleDark()
-        textField.layer.borderColor = flatPurpleDark.cgColor
+        textField.layer.borderColor = UIColor(red: 139/255, green: 0/255, blue: 139/255, alpha: 1.0).cgColor
         textField.isSecureTextEntry = true // this helps to obscure the user's password with *******
-        textField.textColor = FlatPurpleDark()
+        textField.textColor = UIColor(red: 139/255, green: 0/255, blue: 139/255, alpha: 1.0)
         return textField
     }()
     
@@ -84,7 +79,7 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Create New Account", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = FlatPurpleDark()
+        button.backgroundColor = UIColor(red: 139/255, green: 0/255, blue: 139/255, alpha: 1.0)
         button.layer.cornerRadius = 4
         return button
     }()
@@ -93,7 +88,7 @@ class LoginView: UIView {
         let button = UIButton()
         button.setTitle("Forgot Password?", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
-        button.backgroundColor = FlatPurpleDark()
+        button.backgroundColor = UIColor(red: 139/255, green: 0/255, blue: 139/255, alpha: 1.0)
         button.layer.cornerRadius = 4
         return button
     }()

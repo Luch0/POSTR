@@ -1,8 +1,5 @@
 PODS:
   - Alamofire (4.6.0)
-  - ChameleonFramework/Default (2.1.0)
-  - ChameleonFramework/Swift (2.1.0):
-    - ChameleonFramework/Default
   - Firebase/Auth (4.8.2):
     - Firebase/Core
     - FirebaseAuth (= 4.4.2)
@@ -59,7 +56,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
-  - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`, branch `wip/swift4`)
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
@@ -68,19 +64,8 @@ DEPENDENCIES:
   - SnapKit
   - Toucan
 
-EXTERNAL SOURCES:
-  ChameleonFramework:
-    :branch: wip/swift4
-    :git: https://github.com/ViccAlexander/Chameleon.git
-
-CHECKOUT OPTIONS:
-  ChameleonFramework:
-    :commit: db432ca1b1a3d8f83ee1f881208c0c960a325e73
-    :git: https://github.com/ViccAlexander/Chameleon.git
-
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
-  ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   Firebase: 7d3b8cd837ad9fcd391657734c0d56dab8e9a5a3
   FirebaseAnalytics: 388b630c15713f5dbf364071f5f3d6077fb52f4e
   FirebaseAuth: bd2738c5c1e92b108ba5f7f7335908097a4e50bb
@@ -96,6 +81,6 @@ SPEC CHECKSUMS:
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   Toucan: 61867fb10948c02e9804280a95eb183e98eac97a
 
-PODFILE CHECKSUM: d488ccf3af5c81f45c8b9b01b2d6ed47f0fa446c
+PODFILE CHECKSUM: c13a884115c209130bb7af5c50a145a3664f1006
 
 COCOAPODS: 1.4.0
