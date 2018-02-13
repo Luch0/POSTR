@@ -51,7 +51,7 @@ class EditPostViewController: UIViewController {
     @objc private func saveEditedPost() {
         let newCaption = editPost.captionTextView.text!
         if newCaption.isEmpty == false {
-            DBService.manager.saveEditedPost(postID: post.postID, caption: newCaption, newCategory: newCategory)
+					DBService.manager.saveEditedPost(postID: post.postID!, caption: newCaption, newCategory: newCategory)
             self.dismiss(animated: true, completion: nil)
         } else {
             showAlert(title: "Missing fields", message: "Please input a caption")

@@ -46,10 +46,10 @@ class EditProfileViewController: UIViewController {
 		super.viewDidLoad()
 		view.addSubview(editProfileView)
 		imagePicker.delegate = self
-		//		authService.delegate = self
 		loadCurrentUser()
 		addButtonTargets()
 		loadAllPosts()
+		view.backgroundColor = .clear
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -99,15 +99,15 @@ class EditProfileViewController: UIViewController {
 
 	@objc func saveProfileChanges() {
 		if let username = editProfileView.usernameTF.text {
-			DBService.manager.updateUserName(userID: dbUser.userID, username: username)
+			DBService.manager.updateUserName(userID: dbUser.userID!, username: username)
 			for eachPost in posts {
 				if eachPost.userID == dbUser.userID {
-					DBService.manager.updatePostUserName(postID: eachPost.postID, username: username)
+					DBService.manager.updatePostUserName(postID: eachPost.postID!, username: username)
 				}
 			}
 		}
 		if let tagline = editProfileView.taglineTF.text {
-			DBService.manager.updateUserHeadline(userID: dbUser.userID, userTagline: tagline)
+			DBService.manager.updateUserHeadline(userID: dbUser.userID!, userTagline: tagline)
 		}
 		dismissView()
 	}
@@ -163,15 +163,15 @@ extension EditProfileViewController: UITextFieldDelegate {
 
 		if textField == editProfileView.usernameTF {
 			guard let text = textField.text else {return false}
-			DBService.manager.updateUserName(userID: dbUser.userID, username: text)
+			DBService.manager.updateUserName(userID: dbUser.userID!, username: text)
 			for eachPost in currentUserPosts {
-				DBService.manager.updateUserName(userID: eachPost.postID, username: text)
+				DBService.manager.updateUserName(userID: eachPost.postID!, username: text)
 			}
 		}
 
 		if textField == editProfileView.taglineTF {
 			guard let text = textField.text else {return false}
-			DBService.manager.updateUserHeadline(userID: dbUser.userID, userTagline: text)
+			DBService.manager.updateUserHeadline(userID: dbUser.userID!, userTagline: text)
 		}
 		return true
 	}
@@ -189,14 +189,14 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
 			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
 			self.profileImage = toucanImage
 			self.editProfileView.profileImage.image = profileImage
-			StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userID, posts: posts)
+			StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userID!, posts: posts)
 		} else 	if selectedImageToChange == "bgImage" {
 			// resize the profile image
 			let sizeOfImage: CGSize = CGSize(width: 400, height: 150)
 			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
 			self.bgImage = toucanImage
 			self.editProfileView.bgImage.image = profileImage
-			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID)
+			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID!)
 		}
 		self.dismiss(animated: true, completion: nil)
 	}

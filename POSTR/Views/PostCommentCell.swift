@@ -110,7 +110,7 @@ class PostCommentCell: UITableViewCell {
 		postTitleLabel.text = comment.postTitle
 		postCategoryLabel.text = comment.postCategory
 		postImageView.kf.indicatorType = .activity
-		postImageView.kf.setImage(with: URL(string:comment.postImageStr))
+		postImageView.kf.setImage(with: URL(string:comment.postImageStr!))
 	}
 
 }

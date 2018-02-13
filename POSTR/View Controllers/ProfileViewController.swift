@@ -24,7 +24,7 @@ class ProfileViewController: UIViewController {
 		didSet { profileView.configureProfileView(user: currentUser) }
 	}
 	private var allUsers: [POSTRUser] = []
-	private var postUser: POSTRUser!
+//	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){
 		didSet {
 			DispatchQueue.main.async {
@@ -113,6 +113,8 @@ class ProfileViewController: UIViewController {
 
 	@objc private func editProfile() {
 		let editProfileVC = EditProfileViewController()
+		editProfileVC.modalTransitionStyle = .crossDissolve
+		editProfileVC.modalPresentationStyle = .overCurrentContext
 		self.present(editProfileVC, animated: true, completion: nil)
 	}
 	@objc private func addPostButton() {
@@ -279,7 +281,7 @@ extension ProfileViewController: UITableViewDataSource {
 			cell.textLabel?.text = post.caption
 			cell.detailTextLabel?.text = post.category
 			cell.imageView?.kf.indicatorType = .activity
-			cell.imageView?.kf.setImage(with: URL(string: post.postImageStr))
+			cell.imageView?.kf.setImage(with: URL(string: post.postImageStr!))
 			return cell
 		default:
 			return UITableViewCell()
@@ -295,7 +297,7 @@ extension ProfileViewController: UITableViewDataSource {
 		let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
 			let alertView = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
 			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
-				DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID)
+				DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID!)
 			}
 			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
 			alertView.addAction(yesOption)
@@ -324,7 +326,7 @@ extension ProfileViewController: UICollectionViewDataSource {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 		let post = currentUserPosts.reversed()[indexPath.row]
 		cell.backgroundColor = UIColor.lightGray
-		cell.imgView.kf.setImage(with: URL(string: post.postImageStr))
+		cell.imgView.kf.setImage(with: URL(string: post.postImageStr!))
 		return cell
 	}
 }
@@ -407,7 +409,7 @@ extension ProfileViewController: PostTableViewCellDelegate {
 	func didPressBookmark(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = currentUserPosts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentUser.userID!)
 		}
 	}
 }

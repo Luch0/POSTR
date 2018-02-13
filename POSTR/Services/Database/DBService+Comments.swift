@@ -6,6 +6,8 @@
 import Foundation
 import UIKit
 import Firebase
+import CoreData
+
 
 extension DBService {
 	public func addComment(post: Post, commentStr: String) {
@@ -36,7 +38,17 @@ extension DBService {
             for child in snapshot.children {
                 let dataSnapshot = child as! DataSnapshot
                 if let dict = dataSnapshot.value as? [String: Any] {
-                    let comment = Comment.init(dict: dict)
+//									let comment = Comment.init(dict: dict)
+									let comment = Comment.init(postID: dict["postID"] as! String,
+																						 postCategory: dict["postCategory"] as! String,
+																						 postImageStr: dict["postImageStr"] as! String,
+																						 postTitle: dict["postTitle"] as! String,
+																						 userID: dict["userID"] as! String,
+																						 username: dict["username"] as! String,
+																						 commentID: dict["commentID"] as! String,
+																						 commentStr: dict["commentStr"] as! String,
+																						 dateOfPost: dict["dateOfPost"] as! String,
+																						 commentFlagCount: dict["commentFlagCount"] as? Int16)
                     if comment.postID == postID {
                         allComments.append(comment)
                     }
@@ -53,7 +65,17 @@ extension DBService {
 			for child in snapshot.children {
 				let dataSnapshot = child as! DataSnapshot
 				if let dict = dataSnapshot.value as? [String: Any] {
-					let comment = Comment.init(dict: dict)
+//					let comment = Comment.init(dict: dict)
+					let comment = Comment.init(postID: dict["postID"] as! String,
+																		 postCategory: dict["postCategory"] as! String,
+																		 postImageStr: dict["postImageStr"] as! String,
+																		 postTitle: dict["postTitle"] as! String,
+																		 userID: dict["userID"] as! String,
+																		 username: dict["username"] as! String,
+																		 commentID: dict["commentID"] as! String,
+																		 commentStr: dict["commentStr"] as! String,
+																		 dateOfPost: dict["dateOfPost"] as! String,
+																		 commentFlagCount: dict["commentFlagCount"] as? Int16)
 					if userID == comment.userID {
 						userComments.append(comment)
 					}
