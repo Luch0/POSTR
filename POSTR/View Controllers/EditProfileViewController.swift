@@ -159,8 +159,6 @@ class EditProfileViewController: UIViewController {
 // MARK: TextField Delegate
 extension EditProfileViewController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//		let currentTFUserID =
-
 		if textField == editProfileView.usernameTF {
 			guard let text = textField.text else {return false}
 			DBService.manager.updateUserName(userID: dbUser.userID!, username: text)
@@ -199,9 +197,11 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
 			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID!)
 		}
 		self.dismiss(animated: true, completion: nil)
+		imagePicker.dismiss(animated: true, completion: nil)
 	}
 	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
 		self.dismiss(animated: true, completion: nil)
+		imagePicker.dismiss(animated: true, completion: nil)
 	}
 }
 

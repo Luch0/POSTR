@@ -24,9 +24,6 @@ class FeedViewController: UIViewController {
 		} else {
 			loadAllPosts()
 			loadAllUsers()
-//			feedView.postTableView.reloadData()
-//			feedView.favesCollectionView.reloadData()
-
 		}
 	}
 	override func viewDidLoad() {
@@ -39,11 +36,6 @@ class FeedViewController: UIViewController {
 		feedView.favesCollectionView.dataSource = self
 		feedView.postCollectionView.delegate = self
 		feedView.postCollectionView.dataSource = self
-		//reload data
-//		feedView.favesCollectionView.reloadData()
-//		feedView.postTableView.reloadData()
-//		feedView.postCollectionView.reloadData()
-//		feedView.postTableView.reloadData()
 		//Load
 		loadCurrentUser()
 		//Setup
