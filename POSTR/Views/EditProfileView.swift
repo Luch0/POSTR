@@ -1,5 +1,5 @@
 //  EditProfileView.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/9/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
 

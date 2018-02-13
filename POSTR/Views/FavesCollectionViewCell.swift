@@ -1,10 +1,8 @@
-//
 //  FavesCollectionViewCell.swift
-//  POSTR
-//
-//  Created by C4Q on 2/11/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
-//
+//  POSTR2.0
+//  Created by Winston Maragh on 2/11/18.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
+
 
 import UIKit
 

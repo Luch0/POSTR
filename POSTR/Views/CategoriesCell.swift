@@ -1,10 +1,7 @@
-//
 //  CategoriesCell.swift
-//  GroupProject2Beta
-//
-//  Created by C4Q on 1/30/18.
-//  Copyright © 2018 Vikash Hart. All rights reserved.
-//
+//  POSTR1.0 (from previous project - might change later)
+//  Created by Vikash Hard on 1/30/18.
+//  Copyright © 2018 On-the-Line. All rights reserved.
 
 import UIKit
 

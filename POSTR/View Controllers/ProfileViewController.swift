@@ -331,8 +331,15 @@ extension ProfileViewController: UICollectionViewDataSource {
 	}
 }
 
+
 // MARK: CollectionView Delegate
-extension ProfileViewController: UICollectionViewDelegate { }
+extension ProfileViewController: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let selectedPost = currentUserPosts.reversed()[indexPath.row]
+		let postDetailViewController = PostDetailViewController(post: selectedPost)
+		self.navigationController?.pushViewController(postDetailViewController, animated: true)
+	}
+}
 
 
 //MARK: CollectionView - Delegate Flow Layout
