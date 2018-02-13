@@ -8,28 +8,28 @@ import UIKit
 import Firebase
 
 extension DBService {
-    public func addComment(postID: String, commentStr: String) {
+	public func addComment(post: Post, commentStr: String) {
         let childByAutoId = DBService.manager.getComments().childByAutoId()
-        childByAutoId.setValue(["postID"           : postID ,
-                                "userID"           : AuthUserService.getCurrentUser()!.uid,
+        childByAutoId.setValue(["userID"         	 	: AuthUserService.getCurrentUser()!.uid,
+																"username"          : post.username,
+																"postID"          	: post.postID,
+																"postTitle"					: post.caption,
+																"postImageStr"			: post.postImageStr,
+																"postCategory"			: post.category,
+																"dateOfPost"       : formatDate(with: Date()),
                                 "commentID"        : childByAutoId.key,
                                 "commentStr"       : commentStr,
-                                "dateOfPost"       : formatDate(with: Date()),
-                                "commentsFlagCount": 0,
-                                "username"          : AuthUserService.getCurrentUser()!.displayName!]) { (error, dbRef) in
+                                "commentsFlagCount": 0,]) { (error, dbRef) in
                                     if let error = error {
                                         print("addComments error: \(error)")
                                     } else {
                                         print("comments added @ database reference: \(dbRef)")
-                                        // add an image to storage
-                                        //StorageService.manager.storeImage(image: image, commentId: childByAutoId.key)
-                                        // TODO: add image to database
                                     }
         }
     }
     
     
-    public func loadPostComments(postID: String, completionHandler: @escaping ([Comment]?) -> Void) {
+    public func loadAllComments(postID: String, completionHandler: @escaping ([Comment]?) -> Void) {
         let ref = DBService.manager.getComments()
         ref.observe(.value) { (snapshot) in
             var allComments = [Comment]()
@@ -45,5 +45,22 @@ extension DBService {
             completionHandler(allComments)
         }
     }
+
+	public func loadUserComments(userID: String, completionHandler: @escaping ([Comment]?) -> Void) {
+		let ref = DBService.manager.getComments()
+		ref.observe(.value) { (snapshot) in
+			var userComments = [Comment]()
+			for child in snapshot.children {
+				let dataSnapshot = child as! DataSnapshot
+				if let dict = dataSnapshot.value as? [String: Any] {
+					let comment = Comment.init(dict: dict)
+					if userID == comment.userID {
+						userComments.append(comment)
+					}
+				}
+			}
+			completionHandler(userComments)
+		}
+	}
 }
 

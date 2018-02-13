@@ -17,6 +17,7 @@ class NewPostViewController: UIViewController {
 	// MARK: Properties
     private var categories = ["Cats", "Food", "Travel", "People", "Memes"]
 	private var currentUser = AuthUserService.getCurrentUser()
+	private var currentDBuser: POSTRUser!
 	private var postImage: UIImage!
 	private var selectedCategory: String! // cats as default
 	private var gesture: UIGestureRecognizer!
@@ -28,6 +29,7 @@ class NewPostViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(newpost)
+		loadCurrentUser()
 		selectedCategory = categories[0]
 		newpost.categoriesTableView.delegate = self
 		newpost.categoriesTableView.dataSource = self
@@ -35,10 +37,25 @@ class NewPostViewController: UIViewController {
 		newpost.cancelButton.addTarget(self, action: #selector(cancelPost), for: .touchUpInside)
 		newpost.submitButton.addTarget(self, action: #selector(addPost), for: .touchUpInside)
 		imagePicker.delegate = self
-		//		authService.delegate = self
+//				authService.delegate = self
 		newpost.selectImageButton.addTarget(self, action: #selector(changePostImage), for: UIControlEvents.allTouchEvents)
+
 	}
-    
+	override func viewWillAppear(_ animated: Bool) {
+
+	}
+
+	private func loadCurrentUser() {
+		DBService.manager.loadAllUsers { (users) in
+			if let users = users {
+				for user in users {
+					if self.currentUser?.uid == user.userID { self.currentDBuser = user }
+				}
+			} else {print("error loading users")}
+		}
+	}
+
+
     private func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default) {alert in }
@@ -56,8 +73,14 @@ class NewPostViewController: UIViewController {
             return
         }
         let newCaption = newpost.captionTextField.text!
+
         if newCaption.isEmpty == false {
-        DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "", category: selectedCategory, postImageStr: "no image", userImageStr: "AuthUserService.getCurrentUser()?.photoURL", image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
+        DBService.manager.addPosts(caption: newpost.captionTextField.text ?? "",
+																	 category: selectedCategory,
+																	 postImageStr: "no image",
+																	username: currentDBuser.username,
+																	 userImageStr: currentDBuser.userImageStr ?? "",
+																	 image: postImage ?? #imageLiteral(resourceName: "placeholderImage"))
         self.dismiss(animated: true, completion: nil)
         } else {
             showAlert(title: "Caption needed", message: "Please add caption")

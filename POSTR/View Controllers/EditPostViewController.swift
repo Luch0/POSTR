@@ -56,9 +56,9 @@ class EditPostViewController: UIViewController {
         } else {
             showAlert(title: "Missing fields", message: "Please input a caption")
         }
-//        if !NetworkReachabilityManager()!.isReachable {
-//            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
-//        }
+        if !NetworkReachabilityManager()!.isReachable {
+            showAlert(title: "No Network", message: "No Network detected. Please check connection.")
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
