@@ -32,42 +32,57 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(feedView)
+		//Datasource & delegate
 		feedView.postTableView.delegate = self
 		feedView.postTableView.dataSource = self
 		feedView.favesCollectionView.delegate = self
 		feedView.favesCollectionView.dataSource = self
-		feedView.postTableView.reloadData()
+		feedView.postCollectionView.delegate = self
+		feedView.postCollectionView.dataSource = self
+		//reload data
 		feedView.favesCollectionView.reloadData()
-		configureNavBar()
+		feedView.postTableView.reloadData()
+		feedView.postCollectionView.reloadData()
+		feedView.postTableView.reloadData()
+		//Load
 		loadCurrentUser()
+		//Setup
+		configureNavBar()
+		setupButtonTargets()
+		switchToList()
+		//Self-Sizing Tableview Height
+		feedView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.1
+		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
 	//MARK: Properties
+	private var users = [POSTRUser]()
+	public var currentAuthUser = AuthUserService.getCurrentUser()
+	public var currentDBUser: POSTRUser!
 	private var faves: [UIImage] = [#imageLiteral(resourceName: "user2"), #imageLiteral(resourceName: "user1"), #imageLiteral(resourceName: "user3"), #imageLiteral(resourceName: "user4"),#imageLiteral(resourceName: "user5"), #imageLiteral(resourceName: "user6"),#imageLiteral(resourceName: "user7"),#imageLiteral(resourceName: "user8"),#imageLiteral(resourceName: "user9"),#imageLiteral(resourceName: "user10")]
 	private var posts = [Post](){
 		didSet {
 			DispatchQueue.main.async {
 				self.feedView.postTableView.reloadData()
+				self.feedView.postCollectionView.reloadData()
 			}
 		}
 	}
-	private var users = [POSTRUser]()
-	public var currentAuthUser = AuthUserService.getCurrentUser()
-	public var currentDBUser: POSTRUser!
 
 
 	//MARK: Methods
-	private func loadAllPosts() {
-		DBService.manager.loadAllPosts { (posts) in
-			if let posts = posts { self.posts = posts}
-			else {print("error loading posts")}
-		}
-	}
 	private func loadAllUsers() {
 		DBService.manager.loadAllUsers { (users) in
-			if let users = users {self.users = users}
-			else {print("error loading users")}
+			if let users = users {
+				self.users = users
+				for user in users {
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user }
+				}
+//				for user in users.filter({ $0.userID == self.currentAuthUser?.uid }) {
+//					self.currentDBUser = user
+//				}
+			} else {print("error loading users")}
 		}
 	}
 	private func loadCurrentUser() {
@@ -79,14 +94,18 @@ class FeedViewController: UIViewController {
 			} else {print("error loading from Firebase Database")}
 		}
 	}
+	private func loadAllPosts() {
+		DBService.manager.loadAllPosts { (posts) in
+			if let posts = posts { self.posts = posts}
+			else {print("error loading posts")}
+		}
+	}
 
 	private func configureNavBar() {
 		self.navigationItem.title = "Feed"
 		//TitleView (Center)
 		let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
 		let titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
-		//		let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-		//		let titleImageView = UIImageView(image: UIImage(named: "logo"))
 		titleImageView.frame = CGRect(x: 0, y: 0, width: titleView.frame.width, height: titleView.frame.height)
 		titleView.addSubview(titleImageView)
 		navigationItem.titleView = titleView
@@ -102,6 +121,8 @@ class FeedViewController: UIViewController {
 
 	@objc private func editProfile() {
 		let editProfileVC = EditProfileViewController()
+		editProfileVC.modalTransitionStyle = .crossDissolve
+		editProfileVC.modalPresentationStyle = .overCurrentContext
 		self.present(editProfileVC, animated: true, completion: nil)
 	}
 	@objc private func addPostButton() {
@@ -111,53 +132,22 @@ class FeedViewController: UIViewController {
 
 
 	private func setupButtonTargets(){
-		feedView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
 		feedView.optionListButton.addTarget(self, action: #selector(switchToList), for: .touchUpInside)
-		feedView.optionCommentButton.addTarget(self, action: #selector(switchToComment), for: .touchUpInside)
-		feedView.optionBookmarkButton.addTarget(self, action: #selector(switchToBookmark), for: .touchUpInside)
+		feedView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
 	}
 
 	@objc private func switchToList() {
 		feedView.postTableView.isHidden = false
-		feedView.favesCollectionView.isHidden = true
-//		feedView.commentView.isHidden = true
-//		feedView.bookmarkView.isHidden = true
+		feedView.postCollectionView.isHidden = true
 		feedView.optionListButton.backgroundColor = .white
 		feedView.optionCollectionButton.backgroundColor = .clear
-		feedView.optionCommentButton.backgroundColor = .clear
-		feedView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToCollection() {
 		feedView.postTableView.isHidden = true
-		feedView.favesCollectionView.isHidden = false
-//		feedView.commentView.isHidden = true
-//		feedView.bookmarkView.isHidden = true
+		feedView.postCollectionView.isHidden = false
 		feedView.optionListButton.backgroundColor = .clear
 		feedView.optionCollectionButton.backgroundColor = .white
-		feedView.optionCommentButton.backgroundColor = .clear
-		feedView.optionBookmarkButton.backgroundColor = .clear
 	}
-	@objc private func switchToComment() {
-		feedView.favesCollectionView.isHidden = true
-		feedView.postTableView.isHidden = true
-//		feedView.commentView.isHidden = false
-//		feedView.bookmarkView.isHidden = true
-		feedView.optionListButton.backgroundColor = .clear
-		feedView.optionCollectionButton.backgroundColor = .clear
-		feedView.optionCommentButton.backgroundColor = .white
-		feedView.optionBookmarkButton.backgroundColor = .clear
-	}
-	@objc private func switchToBookmark() {
-		feedView.favesCollectionView.isHidden = true
-		feedView.postTableView.isHidden = true
-//		feedView.commentView.isHidden = true
-//		feedView.bookmarkView.isHidden = false
-		feedView.optionListButton.backgroundColor = .clear
-		feedView.optionCollectionButton.backgroundColor = .clear
-		feedView.optionCommentButton.backgroundColor = .clear
-		feedView.optionBookmarkButton.backgroundColor = .white
-	}
-
 }
 
 extension FeedViewController: UITableViewDataSource {
@@ -193,9 +183,7 @@ extension FeedViewController: UITableViewDataSource {
 		cell.tag = indexPath.row
 		cell.configurePostCell(post: post)
 		cell.backgroundColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 1.0)
-
 		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-		//			 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
 		return cell
 	}
 
@@ -241,7 +229,6 @@ extension FeedViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return  UITableViewAutomaticDimension
-//		return UIScreen.main.bounds.height * 0.55
 	}
 
 }
@@ -256,14 +243,14 @@ extension FeedViewController: PostTableViewCellDelegate {
 	func addPostToBookmarks(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
 		}
 	}
 
 	internal func didPressBookmark(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
 		}
 	}
 
@@ -295,18 +282,21 @@ extension FeedViewController: PostTableViewCellDelegate {
 extension FeedViewController: UICollectionViewDataSource {
 	//Number of items in Section
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if collectionView == feedView.favesCollectionView {
-			return faves.count
-		}
 		if collectionView == feedView.postCollectionView {
+			print("CV Post count: "); print(posts.count)
 			return posts.count
 		}
-		return 10
+		if collectionView == feedView.favesCollectionView {
+			print("CV Faves count: "); print(faves.count)
+			return faves.count
+		}
+		print("CV Else Count:")
+		return posts.count
 	}
 	//setup for each cell
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		switch collectionView {
-		case feedView.favesCollectionView :
+		case feedView.favesCollectionView:
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavesCollectionCell", for: indexPath) as! FavesCollectionViewCell
 			cell.backgroundColor = .orange
 			let fave = faves[indexPath.row]
@@ -315,8 +305,8 @@ extension FeedViewController: UICollectionViewDataSource {
 		case feedView.postCollectionView:
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 			let post = posts.reversed()[indexPath.row]
-			cell.backgroundColor = UIColor.lightGray
-			cell.imgView.kf.setImage(with: URL(string: post.postImageStr))
+			cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+			cell.imgView.kf.setImage(with: URL(string: post.postImageStr!))
 			return cell
 		default:
 			return UICollectionViewCell()

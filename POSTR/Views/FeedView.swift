@@ -1,10 +1,7 @@
-//
 //  FeedView.swift
 //  POSTR
-//
-//  Created by Lisa Jiang on 1/30/18.
+//  Created by Lisa Jiang/Winston Maragh on 1/30/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
 
 import UIKit
 import SnapKit
@@ -62,6 +59,12 @@ class FeedView: UIView {
 		button.backgroundColor = .clear
 		return button
 	}()
+
+	lazy var dataContainer: UIView = {
+		let dc = UIView()
+		dc.backgroundColor = .white
+		return dc
+	}()
 	lazy var postTableView: UITableView = {
 		let tv = UITableView()
 		tv.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
@@ -100,9 +103,8 @@ class FeedView: UIView {
 		addToggleContainer()
 		addOptionListButton()
 		addOptionCollectionButton()
-		addOptionCommentButton()
-		addOptionBookmarkButton()
 		setupTableView()
+		addCollectionView()
 	}
 
 
@@ -147,7 +149,7 @@ class FeedView: UIView {
 		optionListButton.snp.makeConstraints { (make) in
 			make.top.equalTo(toggleContainer.snp.top)
 			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
+			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.50)
 			make.leading.equalTo(toggleContainer.snp.leading)
 		}
 	}
@@ -156,31 +158,22 @@ class FeedView: UIView {
 		optionCollectionButton.snp.makeConstraints { (make) in
 			make.top.equalTo(toggleContainer.snp.top)
 			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
+			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.50)
 			make.leading.equalTo(optionListButton.snp.trailing)
-		}
-	}
-	private func addOptionCommentButton() {
-		addSubview(optionCommentButton)
-		optionCommentButton.snp.makeConstraints { (make) in
-			make.top.equalTo(toggleContainer.snp.top)
-			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
-			make.leading.equalTo(optionCollectionButton.snp.trailing)
-		}
-	}
-	private func addOptionBookmarkButton() {
-		addSubview(optionBookmarkButton)
-		optionBookmarkButton.snp.makeConstraints { (make) in
-			make.top.equalTo(toggleContainer.snp.top)
-			make.bottom.equalTo(toggleContainer.snp.bottom)
-			make.width.equalTo(toggleContainer.snp.width).multipliedBy(0.25)
-			make.leading.equalTo(optionCommentButton.snp.trailing)
 		}
 	}
 	private func setupTableView() {
 		addSubview(postTableView)
 		postTableView.snp.makeConstraints{(make) in
+			make.top.equalTo(toggleContainer.snp.bottom)
+			make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
+			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
+			make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
+		}
+	}
+	private func addCollectionView() {
+		addSubview(postCollectionView)
+		postCollectionView.snp.makeConstraints{(make) in
 			make.top.equalTo(toggleContainer.snp.bottom)
 			make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
 			make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)

@@ -1,4 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17D47" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Comment" representedClassName="Comment" syncable="YES" codeGenerationType="class">
+        <attribute name="commentFlagCount" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="commentID" attributeType="String" syncable="YES"/>
+        <attribute name="commentStr" attributeType="String" syncable="YES"/>
+        <attribute name="dateOfPost" attributeType="String" syncable="YES"/>
+        <attribute name="postCategory" attributeType="String" syncable="YES"/>
+        <attribute name="postID" attributeType="String" syncable="YES"/>
+        <attribute name="postImageStr" attributeType="String" syncable="YES"/>
+        <attribute name="postTitle" attributeType="String" syncable="YES"/>
+        <attribute name="userID" attributeType="String" syncable="YES"/>
+        <attribute name="username" attributeType="String" syncable="YES"/>
+        <relationship name="post" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Post" inverseName="comments" inverseEntity="Post" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="POSTRUser" inverseName="comments" inverseEntity="POSTRUser" syncable="YES"/>
+    </entity>
+    <entity name="Post" representedClassName="Post" syncable="YES" codeGenerationType="class">
+        <attribute name="caption" attributeType="String" syncable="YES"/>
+        <attribute name="category" attributeType="String" syncable="YES"/>
+        <attribute name="currentVotes" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="date" attributeType="String" syncable="YES"/>
+        <attribute name="downvoteCount" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="numOfComments" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="postFlagCount" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="postID" attributeType="String" syncable="YES"/>
+        <attribute name="postImageStr" attributeType="String" syncable="YES"/>
+        <attribute name="upvoteCount" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="userID" attributeType="String" syncable="YES"/>
+        <attribute name="userImageStr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" attributeType="String" syncable="YES"/>
+        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Comment" inverseName="post" inverseEntity="Comment" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="POSTRUser" inverseName="posts" inverseEntity="POSTRUser" syncable="YES"/>
+    </entity>
+    <entity name="POSTRUser" representedClassName="POSTRUser" syncable="YES" codeGenerationType="class">
+        <attribute name="userBgImageStr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userFlagCount" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="userID" attributeType="String" syncable="YES"/>
+        <attribute name="userImageStr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" attributeType="String" syncable="YES"/>
+        <attribute name="userTagline" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Comment" inverseName="user" inverseEntity="Comment" syncable="YES"/>
+        <relationship name="posts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Post" inverseName="user" inverseEntity="Post" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Comment" positionX="135" positionY="45" width="128" height="225"/>
+        <element name="Post" positionX="-36" positionY="-90" width="128" height="268"/>
+        <element name="POSTRUser" positionX="-200" positionY="27" width="128" height="163"/>
+    </elements>
 </model>

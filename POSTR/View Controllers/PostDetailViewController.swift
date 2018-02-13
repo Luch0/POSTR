@@ -42,7 +42,7 @@ class PostDetailViewController: UIViewController {
         postDetailView.commentsTableView.dataSource = self
 //      postDetailView.commentTextView.delegate = self
         addObservers()
-        DBService.manager.loadAllComments(postID: post.postID.description) { (comments) in
+			DBService.manager.loadAllComments(postID: (post.postID?.description)!) { (comments) in
             if let comments = comments {
                 self.comments = comments
             } else {

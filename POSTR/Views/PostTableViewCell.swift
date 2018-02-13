@@ -335,7 +335,7 @@ class PostTableViewCell: UITableViewCell {
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
 		postImageView.kf.indicatorType = .activity
-		postImageView.kf.setImage(with: URL(string:post.postImageStr), placeholder: #imageLiteral(resourceName: "placeholderCamera"), options: nil, progressBlock: nil, completionHandler: nil)
+		postImageView.kf.setImage(with: URL(string:post.postImageStr!), placeholder: #imageLiteral(resourceName: "placeholderCamera"), options: nil, progressBlock: nil, completionHandler: nil)
 //		postImageView.kf.setImage(with: URL(string:post.postImageStr))
 
 		if let imageURL = post.userImageStr {
