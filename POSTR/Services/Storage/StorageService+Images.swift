@@ -177,7 +177,7 @@ extension StorageService {
 			let imageURL = String(describing: snapshot.metadata!.downloadURL()!)
 			DBService.manager.getUsers().child("\(userId)/userImageStr").setValue(imageURL)
 			for post in posts {
-				DBService.manager.updateUserImage(postID: post.postID, userImageStr: imageURL)
+				DBService.manager.updateUserImage(postID: post.postID!, userImageStr: imageURL)
 			}
 		}
 

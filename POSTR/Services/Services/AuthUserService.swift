@@ -43,7 +43,8 @@ class AuthUserService: NSObject {
                     if let error = error {print("changeRequest error: \(error)")}
 										else {
                         print("changeRequest was successful for username: \(username)")
-                        DBService.manager.addUser(userBio: "tagline", image: #imageLiteral(resourceName: "user3"))  //ADD USER
+												DBService.manager.addUser()
+//                        DBService.manager.addUser(userBio: "tagline", image: #imageLiteral(resourceName: "user3"))  //ADD USER
                         self.delegate?.didCreateUser?(self, user: user)
                     }
                 })

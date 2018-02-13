@@ -6,6 +6,8 @@
 
 import Foundation
 import FirebaseDatabase
+import CoreData
+
 
 class DBService {
 

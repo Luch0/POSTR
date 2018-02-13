@@ -57,6 +57,9 @@ class FeedViewController: UIViewController {
 
 
 	//MARK: Properties
+	private var users = [POSTRUser]()
+	public var currentAuthUser = AuthUserService.getCurrentUser()
+	public var currentDBUser: POSTRUser!
 	private var faves: [UIImage] = [#imageLiteral(resourceName: "user2"), #imageLiteral(resourceName: "user1"), #imageLiteral(resourceName: "user3"), #imageLiteral(resourceName: "user4"),#imageLiteral(resourceName: "user5"), #imageLiteral(resourceName: "user6"),#imageLiteral(resourceName: "user7"),#imageLiteral(resourceName: "user8"),#imageLiteral(resourceName: "user9"),#imageLiteral(resourceName: "user10")]
 	private var posts = [Post](){
 		didSet {
@@ -66,22 +69,20 @@ class FeedViewController: UIViewController {
 			}
 		}
 	}
-	private var users = [POSTRUser]()
-	public var currentAuthUser = AuthUserService.getCurrentUser()
-	public var currentDBUser: POSTRUser!
 
 
 	//MARK: Methods
-	private func loadAllPosts() {
-		DBService.manager.loadAllPosts { (posts) in
-			if let posts = posts { self.posts = posts}
-			else {print("error loading posts")}
-		}
-	}
 	private func loadAllUsers() {
 		DBService.manager.loadAllUsers { (users) in
-			if let users = users {self.users = users}
-			else {print("error loading users")}
+			if let users = users {
+				self.users = users
+				for user in users {
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user }
+				}
+//				for user in users.filter({ $0.userID == self.currentAuthUser?.uid }) {
+//					self.currentDBUser = user
+//				}
+			} else {print("error loading users")}
 		}
 	}
 	private func loadCurrentUser() {
@@ -91,6 +92,12 @@ class FeedViewController: UIViewController {
 					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(user.userID)") }
 				}
 			} else {print("error loading from Firebase Database")}
+		}
+	}
+	private func loadAllPosts() {
+		DBService.manager.loadAllPosts { (posts) in
+			if let posts = posts { self.posts = posts}
+			else {print("error loading posts")}
 		}
 	}
 
@@ -114,6 +121,8 @@ class FeedViewController: UIViewController {
 
 	@objc private func editProfile() {
 		let editProfileVC = EditProfileViewController()
+		editProfileVC.modalTransitionStyle = .crossDissolve
+		editProfileVC.modalPresentationStyle = .overCurrentContext
 		self.present(editProfileVC, animated: true, completion: nil)
 	}
 	@objc private func addPostButton() {
@@ -234,14 +243,14 @@ extension FeedViewController: PostTableViewCellDelegate {
 	func addPostToBookmarks(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
 		}
 	}
 
 	internal func didPressBookmark(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
 		}
 	}
 
@@ -297,7 +306,7 @@ extension FeedViewController: UICollectionViewDataSource {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 			let post = posts.reversed()[indexPath.row]
 			cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
-			cell.imgView.kf.setImage(with: URL(string: post.postImageStr))
+			cell.imgView.kf.setImage(with: URL(string: post.postImageStr!))
 			return cell
 		default:
 			return UICollectionViewCell()

@@ -6,22 +6,34 @@
 import Foundation
 import CoreData
 import Firebase
+import UIKit
 
 class CoreDataService {
 	private init() {}
 
 	static var context: NSManagedObjectContext = persistentContainer.viewContext
 
+
 	// MARK: - Core Data stack
 	static var persistentContainer: NSPersistentContainer = {
-		let container = NSPersistentContainer(name: "NumberFacts")
+		let container = NSPersistentContainer(name: "POSTR")
+//		var dispatchGroup = DispatchGroup()
+//		dispatchGroup.enter()
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 			if let error = error as NSError? {
 				fatalError("Unresolved error \(error), \(error.userInfo)")
 			}
+//			dispatchGroup.leave()
 		})
+//		dispatchGroup.notify(queue: DispatchQueue.main) {
+//
+//		}
 		return container
+
 	}()
+
+
+
 
 
 	// MARK: - Core Data Saving support

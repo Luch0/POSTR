@@ -6,24 +6,21 @@
 import Foundation
 import UIKit
 import Firebase
+import CoreData
 
 extension DBService {
-		public func addUser(userBio: String?, image: UIImage) {
+		public func addUser() {
 			let user = DBService.manager.getUsers().child(AuthUserService.getCurrentUser()!.uid)
         user.setValue(["userID"       : AuthUserService.getCurrentUser()!.uid,
 											 "username"     : AuthUserService.getCurrentUser()!.displayName!,
 											 "userTagline"  : "",
 											 "userImageStr" : "",
 											 "userBgImageStr": "",
-											 "userFlagCount": 0,
-											 "userSavedPosts": [String]()]) { (error, dbRef) in
+											 "userFlagCount": 0]) { (error, dbRef) in
 																		if let error = error {
                                         print("addUser error: \(error.localizedDescription)")
                                     } else {
                                         print("user added @ database reference: \(dbRef)")
-                                        // add an image to FireBase Storage & CoreData
-                                        // StorageService.manager.storeUserImage(image: image, userId: childByAutoId.key)
-                                        // TODO: add image to CoreData
                                     }
         }
     }
@@ -61,8 +58,13 @@ extension DBService {
             for child in snapshot.children {
                 let dataSnapshot = child as! DataSnapshot
                 if let dict = dataSnapshot.value as? [String: Any] {
-                    let user = POSTRUser.init(dict: dict)
-                    allUsers.append(user)
+//									let user = POSTRUser.init(dict: dict)
+									let user = POSTRUser.init(userID: dict["userID"] as! String,
+																						username: dict["username"] as! String,
+																						userTagline: dict["userTagline"] as! String,
+																						userImageStr: dict["userImageStr"] as! String,
+																						userFlagCount: dict["userFlagCount"] as! Int16)
+									allUsers.append(user)
                 }
             }
             completionHandler(allUsers)
@@ -76,7 +78,12 @@ extension DBService {
 			for child in snapshot.children {
 				let dataSnapshot = child as! DataSnapshot
 				if let dict = dataSnapshot.value as? [String: Any] {
-					let user = POSTRUser.init(dict: dict)
+//					let user = POSTRUser.init(dict: dict)
+					let user = POSTRUser.init(userID: dict["userID"] as! String,
+																		username: dict["username"] as! String,
+																		userTagline: dict["userTagline"] as! String,
+																		userImageStr: dict["userImageStr"] as! String,
+																		userFlagCount: dict["userFlagCount"] as! Int16)
 					if authUserID == user.userID {
 						currentUser = user
 					}
@@ -86,11 +93,8 @@ extension DBService {
 		}
 	}
 
-
-
     
-    public func flagUser(user: POSTRUser) {
-        DBService.manager.getUsers().child(user.userID).updateChildValues(["userFlagCount":user.userFlagCount + 1])
-    }
+	public func flagUser(user: POSTRUser) {	DBService.manager.getUsers().child(user.userID!).updateChildValues(["userFlagCount":user.userFlagCount + 1])
+	}
 }
 
