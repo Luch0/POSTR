@@ -1,7 +1,7 @@
 //  POSTUser+Properties.swift
-//  POSTR2
+//  POSTR2.0
 //  Created by Winston Maragh on 2/12/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 
 import Foundation
@@ -20,12 +20,13 @@ extension POSTRUser {
 //			CoreDataService.saveContext()
 //		}
 
-	convenience init(userID: String, username: String, userTagline: String?, userImageStr: String?, userFlagCount: Int16?) {
+	convenience init(userID: String, username: String, userTagline: String?, userImageStr: String?, userBgImageStr: String?, userFlagCount: Int16?) {
 		self.init(context: CoreDataService.context)
 		self.userID = userID
 		self.username = username
 		self.userTagline = userTagline ?? ""
 		self.userImageStr = userImageStr ?? ""
+		self.userBgImageStr = userBgImageStr ?? ""
 		self.userFlagCount = userFlagCount ?? 0
 		CoreDataService.saveContext()
 	}

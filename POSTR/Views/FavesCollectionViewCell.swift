@@ -1,10 +1,8 @@
-//
 //  FavesCollectionViewCell.swift
-//  POSTR
-//
-//  Created by C4Q on 2/11/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
-//
+//  POSTR2.0
+//  Created by Winston Maragh on 2/11/18.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
+
 
 import UIKit
 
@@ -26,7 +24,7 @@ class FavesCollectionViewCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.image = #imageLiteral(resourceName: "user2")
-		imageView.layer.cornerRadius = imageView.bounds.width / 2
+		imageView.layer.cornerRadius = imageView.bounds.width / 4
 		imageView.layer.masksToBounds = true
 		imageView.contentMode = .scaleAspectFit
 		return imageView

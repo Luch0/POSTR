@@ -23,6 +23,7 @@ class ProfileViewController: UIViewController {
 	private var currentUser: POSTRUser! {
 		didSet { profileView.configureProfileView(user: currentUser) }
 	}
+
 	private var allUsers: [POSTRUser] = []
 //	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){
@@ -82,7 +83,7 @@ class ProfileViewController: UIViewController {
 	}
 
 
-	//MARK: Helper Methods
+	//MARK: Helper Functions
 	private func configureNavBar() {
 		self.navigationItem.title = "Profile"
 		//TitleView (Center)
@@ -331,8 +332,15 @@ extension ProfileViewController: UICollectionViewDataSource {
 	}
 }
 
+
 // MARK: CollectionView Delegate
-extension ProfileViewController: UICollectionViewDelegate { }
+extension ProfileViewController: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let selectedPost = currentUserPosts.reversed()[indexPath.row]
+		let postDetailViewController = PostDetailViewController(post: selectedPost)
+		self.navigationController?.pushViewController(postDetailViewController, animated: true)
+	}
+}
 
 
 //MARK: CollectionView - Delegate Flow Layout

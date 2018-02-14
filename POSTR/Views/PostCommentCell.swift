@@ -1,7 +1,7 @@
 //  PostCommentCell.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/11/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 
 import UIKit

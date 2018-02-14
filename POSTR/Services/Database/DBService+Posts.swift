@@ -1,7 +1,7 @@
 //  DBService+Posts.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/2/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import Foundation
 import UIKit
@@ -29,9 +29,7 @@ extension DBService {
 																print("addPosts error: \(error)")
 															} else {
 																print("posts added @ database reference: \(dbRef)")
-																// add an image to storage
 																StorageService.manager.storePostImage(image: image, postId: childByAutoId.key)
-																// TODO: add image to database
 															}
 		}
 	}
@@ -141,7 +139,6 @@ extension DBService {
 	public func flagPost(post: Post) {	DBService.manager.getPosts().child(post.postID!).updateChildValues(["postFlagCount":post.postFlagCount + 1])
     }
     public func updateUpvote(postToUpdate: Post) {
-        print(postToUpdate.postID)
         guard ((AuthUserService.getCurrentUser()?.uid) != nil) else { fatalError("userId is nil") }
 			let postRef = DBService.manager.getPosts().child((postToUpdate.postID)!)
         postRef.updateChildValues(["upvoteCount": postToUpdate.upvoteCount + 1])
@@ -149,7 +146,6 @@ extension DBService {
     }
     
     public func updateDownvote(postToUpdate: Post) {
-        print(postToUpdate.postID)
 			let postRef = DBService.manager.getPosts().child((postToUpdate.postID)!)
         postRef.updateChildValues(["downvoteCount": postToUpdate.downvoteCount - 1])
         postRef.updateChildValues(["currentVotes": (postToUpdate.downvoteCount - 1) + postToUpdate.upvoteCount])

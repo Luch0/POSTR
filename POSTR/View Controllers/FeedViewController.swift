@@ -1,7 +1,7 @@
 //  FeedViewController.swift
-//  POSTR
-//  Created by Lisa Jiang/Winston Maragh on 1/30/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  POSTR2.0
+//  Created by Winston Maragh on 1/30/18.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit
 import Firebase
@@ -24,9 +24,6 @@ class FeedViewController: UIViewController {
 		} else {
 			loadAllPosts()
 			loadAllUsers()
-			feedView.postTableView.reloadData()
-			feedView.favesCollectionView.reloadData()
-			
 		}
 	}
 	override func viewDidLoad() {
@@ -39,11 +36,6 @@ class FeedViewController: UIViewController {
 		feedView.favesCollectionView.dataSource = self
 		feedView.postCollectionView.delegate = self
 		feedView.postCollectionView.dataSource = self
-		//reload data
-		feedView.favesCollectionView.reloadData()
-		feedView.postTableView.reloadData()
-		feedView.postCollectionView.reloadData()
-		feedView.postTableView.reloadData()
 		//Load
 		loadCurrentUser()
 		//Setup
@@ -52,7 +44,7 @@ class FeedViewController: UIViewController {
 		switchToList()
 		//Self-Sizing Tableview Height
 		feedView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.1
-		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
+//		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
@@ -71,7 +63,7 @@ class FeedViewController: UIViewController {
 	}
 
 
-	//MARK: Methods
+	//MARK: Helper Functions
 	private func loadAllUsers() {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
@@ -79,9 +71,6 @@ class FeedViewController: UIViewController {
 				for user in users {
 					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user }
 				}
-//				for user in users.filter({ $0.userID == self.currentAuthUser?.uid }) {
-//					self.currentDBUser = user
-//				}
 			} else {print("error loading users")}
 		}
 	}
@@ -89,7 +78,7 @@ class FeedViewController: UIViewController {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
 				for user in users {
-					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(user.userID)") }
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(String(describing: user.userID))") }
 				}
 			} else {print("error loading from Firebase Database")}
 		}
@@ -261,7 +250,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 	internal func updateUpvote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
-			print(postToUpdate.postID)
 			DBService.manager.updateUpvote(postToUpdate: postToUpdate)
 		}
 	}
@@ -269,7 +257,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 	internal func updateDownVote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
-			print(postToUpdate.postID)
 			DBService.manager.updateDownvote(postToUpdate: postToUpdate)
 		}
 	}
@@ -311,6 +298,16 @@ extension FeedViewController: UICollectionViewDataSource {
 		default:
 			return UICollectionViewCell()
 		}
+	}
+}
+
+
+//MARK: CollectionView - Delegate
+extension FeedViewController: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let selectedPost = posts.reversed()[indexPath.row]
+		let postDetailViewController = PostDetailViewController(post: selectedPost)
+		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 }
 

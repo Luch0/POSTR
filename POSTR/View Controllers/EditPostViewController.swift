@@ -1,10 +1,8 @@
-//
 //  EditPostViewController.swift
-//  POSTR
-//
+//  POSTR1.0 (from previous project - might change later)//
 //  Created by Luis Calle on 1/31/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
+
 
 import UIKit
 import Alamofire

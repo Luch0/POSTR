@@ -1,10 +1,8 @@
-//
 //  AuthUserService.swift
 //  POSTR
-//
 //  Created by Lisa J on 2/1/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
+
 
 import Foundation
 import Firebase
@@ -44,7 +42,6 @@ class AuthUserService: NSObject {
 										else {
                         print("changeRequest was successful for username: \(username)")
 												DBService.manager.addUser()
-//                        DBService.manager.addUser(userBio: "tagline", image: #imageLiteral(resourceName: "user3"))  //ADD USER
                         self.delegate?.didCreateUser?(self, user: user)
                     }
                 })
