@@ -1,11 +1,12 @@
 //  CoreDataService.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/5/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import Foundation
 import CoreData
 import Firebase
+import UIKit
 
 class CoreDataService {
 	private init() {}
@@ -14,14 +15,16 @@ class CoreDataService {
 
 	// MARK: - Core Data stack
 	static var persistentContainer: NSPersistentContainer = {
-		let container = NSPersistentContainer(name: "NumberFacts")
+		let container = NSPersistentContainer(name: "POSTR")
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 			if let error = error as NSError? {
 				fatalError("Unresolved error \(error), \(error.userInfo)")
 			}
 		})
+
 		return container
 	}()
+
 
 
 	// MARK: - Core Data Saving support
@@ -36,26 +39,34 @@ class CoreDataService {
 			}
 		}
 	}
-	//
-	//
-	//	// Get Users
-	//	static func getUsers(completionHandler: ([User]) -> Void) {
-	//		do {
-	//			guard let users = try context.fetch(User.fetchRequest()) as? [User] else { return }
-	//			completionHandler(users)
-	//		}
-	//		catch {print(error)}
-	//	}
-	//
-	//
-	//	// Get Posts
-	//	static func getPosts(completionHandler: ([Post]) -> Void) {
-	//		do {
-	//			guard let posts = try context.fetch(Post.fetchRequest()) as? [Post] else { return }
-	//			completionHandler(posts)
-	//		}
-	//		catch {print(error)}
-	//	}
+
+	// MARK: Get Users
+		static func getUsers(completionHandler: ([POSTRUser]) -> Void) {
+			do {
+				guard let users = try context.fetch(POSTRUser.fetchRequest()) as? [POSTRUser] else { return }
+				completionHandler(users)
+			}
+			catch {print(error)}
+		}
+
+
+	// MARK: Get Posts
+		static func getPosts(completionHandler: ([Post]) -> Void) {
+			do {
+				guard let posts = try context.fetch(Post.fetchRequest()) as? [Post] else { return }
+				completionHandler(posts)
+			}
+			catch {print(error)}
+		}
+
+	// MARK: Get Comments
+	static func getComments(completionHandler: ([Comment]) -> Void) {
+		do {
+			guard let comments = try context.fetch(Comment.fetchRequest()) as? [Comment] else { return }
+			completionHandler(comments)
+		}
+		catch {print(error)}
+	}
 
 }
 

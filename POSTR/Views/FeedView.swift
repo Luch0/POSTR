@@ -1,10 +1,7 @@
-//
 //  FeedView.swift
-//  POSTR
-//
-//  Created by Lisa Jiang on 1/30/18.
+//  POSTR2.0
+//  Created by Lisa Jiang/Winston Maragh on 1/30/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
 
 import UIKit
 import SnapKit

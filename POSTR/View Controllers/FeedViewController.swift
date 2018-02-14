@@ -1,7 +1,7 @@
 //  FeedViewController.swift
-//  POSTR
-//  Created by Lisa Jiang/Winston Maragh on 1/30/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  POSTR2.0
+//  Created by Winston Maragh on 1/30/18.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit
 import Firebase
@@ -24,9 +24,6 @@ class FeedViewController: UIViewController {
 		} else {
 			loadAllPosts()
 			loadAllUsers()
-			feedView.postTableView.reloadData()
-			feedView.favesCollectionView.reloadData()
-			
 		}
 	}
 	override func viewDidLoad() {
@@ -39,11 +36,6 @@ class FeedViewController: UIViewController {
 		feedView.favesCollectionView.dataSource = self
 		feedView.postCollectionView.delegate = self
 		feedView.postCollectionView.dataSource = self
-		//reload data
-		feedView.favesCollectionView.reloadData()
-		feedView.postTableView.reloadData()
-		feedView.postCollectionView.reloadData()
-		feedView.postTableView.reloadData()
 		//Load
 		loadCurrentUser()
 		//Setup
@@ -52,11 +44,14 @@ class FeedViewController: UIViewController {
 		switchToList()
 		//Self-Sizing Tableview Height
 		feedView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.1
-		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
+//		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
 	//MARK: Properties
+	private var users = [POSTRUser]()
+	public var currentAuthUser = AuthUserService.getCurrentUser()
+	public var currentDBUser: POSTRUser!
 	private var faves: [UIImage] = [#imageLiteral(resourceName: "user2"), #imageLiteral(resourceName: "user1"), #imageLiteral(resourceName: "user3"), #imageLiteral(resourceName: "user4"),#imageLiteral(resourceName: "user5"), #imageLiteral(resourceName: "user6"),#imageLiteral(resourceName: "user7"),#imageLiteral(resourceName: "user8"),#imageLiteral(resourceName: "user9"),#imageLiteral(resourceName: "user10")]
 	private var posts = [Post](){
 		didSet {
@@ -66,31 +61,32 @@ class FeedViewController: UIViewController {
 			}
 		}
 	}
-	private var users = [POSTRUser]()
-	public var currentAuthUser = AuthUserService.getCurrentUser()
-	public var currentDBUser: POSTRUser!
 
 
-	//MARK: Methods
-	private func loadAllPosts() {
-		DBService.manager.loadAllPosts { (posts) in
-			if let posts = posts { self.posts = posts}
-			else {print("error loading posts")}
-		}
-	}
+	//MARK: Helper Functions
 	private func loadAllUsers() {
 		DBService.manager.loadAllUsers { (users) in
-			if let users = users {self.users = users}
-			else {print("error loading users")}
+			if let users = users {
+				self.users = users
+				for user in users {
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user }
+				}
+			} else {print("error loading users")}
 		}
 	}
 	private func loadCurrentUser() {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
 				for user in users {
-					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(user.userID)") }
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(String(describing: user.userID))") }
 				}
 			} else {print("error loading from Firebase Database")}
+		}
+	}
+	private func loadAllPosts() {
+		DBService.manager.loadAllPosts { (posts) in
+			if let posts = posts { self.posts = posts}
+			else {print("error loading posts")}
 		}
 	}
 
@@ -114,6 +110,8 @@ class FeedViewController: UIViewController {
 
 	@objc private func editProfile() {
 		let editProfileVC = EditProfileViewController()
+		editProfileVC.modalTransitionStyle = .crossDissolve
+		editProfileVC.modalPresentationStyle = .overCurrentContext
 		self.present(editProfileVC, animated: true, completion: nil)
 	}
 	@objc private func addPostButton() {
@@ -234,14 +232,14 @@ extension FeedViewController: PostTableViewCellDelegate {
 	func addPostToBookmarks(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
 		}
 	}
 
 	internal func didPressBookmark(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
 		}
 	}
 
@@ -252,7 +250,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 	internal func updateUpvote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
-			print(postToUpdate.postID)
 			DBService.manager.updateUpvote(postToUpdate: postToUpdate)
 		}
 	}
@@ -260,7 +257,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 	internal func updateDownVote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
-			print(postToUpdate.postID)
 			DBService.manager.updateDownvote(postToUpdate: postToUpdate)
 		}
 	}
@@ -297,11 +293,21 @@ extension FeedViewController: UICollectionViewDataSource {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 			let post = posts.reversed()[indexPath.row]
 			cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
-			cell.imgView.kf.setImage(with: URL(string: post.postImageStr))
+			cell.imgView.kf.setImage(with: URL(string: post.postImageStr!))
 			return cell
 		default:
 			return UICollectionViewCell()
 		}
+	}
+}
+
+
+//MARK: CollectionView - Delegate
+extension FeedViewController: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let selectedPost = posts.reversed()[indexPath.row]
+		let postDetailViewController = PostDetailViewController(post: selectedPost)
+		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 }
 

@@ -1,10 +1,7 @@
 //  StorageService+Images.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/2/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
-
-import Foundation
-
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import Foundation
 import UIKit
@@ -177,7 +174,7 @@ extension StorageService {
 			let imageURL = String(describing: snapshot.metadata!.downloadURL()!)
 			DBService.manager.getUsers().child("\(userId)/userImageStr").setValue(imageURL)
 			for post in posts {
-				DBService.manager.updateUserImage(postID: post.postID, userImageStr: imageURL)
+				DBService.manager.updateUserImage(postID: post.postID!, userImageStr: imageURL)
 			}
 		}
 

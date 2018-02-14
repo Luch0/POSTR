@@ -1,6 +1,6 @@
 //  PostTableViewCell.swift
-//  POSTR
-//  Created by Winston Maragh on 2/9/18.
+//  POSTR2.0
+//  Created by Luis Calle/Winston Maragh on 2/9/18.
 //  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit
@@ -335,7 +335,7 @@ class PostTableViewCell: UITableViewCell {
 		dateLabel.text = post.date
 		voteCountLabel.text = "\(post.upvoteCount + post.downvoteCount)"
 		postImageView.kf.indicatorType = .activity
-		postImageView.kf.setImage(with: URL(string:post.postImageStr), placeholder: #imageLiteral(resourceName: "placeholderCamera"), options: nil, progressBlock: nil, completionHandler: nil)
+		postImageView.kf.setImage(with: URL(string:post.postImageStr!), placeholder: #imageLiteral(resourceName: "placeholderCamera"), options: nil, progressBlock: nil, completionHandler: nil)
 //		postImageView.kf.setImage(with: URL(string:post.postImageStr))
 
 		if let imageURL = post.userImageStr {

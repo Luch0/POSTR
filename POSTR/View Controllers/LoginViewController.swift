@@ -1,9 +1,9 @@
 //
-//  ViewController.swift
 //  LoginPageViewController
+//  POSTR
 //
 //  Created by Maryann Yin on 1/30/18.
-//  Copyright © 2018 Maryann Yin. All rights reserved.
+//  Copyright © 2018 On-The-Line. All rights reserved.
 //
 
 import UIKit
