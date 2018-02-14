@@ -83,7 +83,7 @@ class ProfileViewController: UIViewController {
 	}
 
 
-	//MARK: Helper Methods
+	//MARK: Helper Functions
 	private func configureNavBar() {
 		self.navigationItem.title = "Profile"
 		//TitleView (Center)

@@ -56,17 +56,7 @@ class EditProfileViewController: UIViewController {
 	}
 
 
-	// Helper Functions
-	private func loadAllPosts() {
-		DBService.manager.loadAllPosts { (posts) in
-			if let posts = posts {
-				self.posts = posts
-			} else {
-				print("error loading posts")
-			}
-		}
-	}
-
+	//MARK: Helper Functions
 	private func loadCurrentUser() {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
@@ -75,6 +65,16 @@ class EditProfileViewController: UIViewController {
 
 				}
 			} else {print("error loading from Firebase Database")}
+		}
+	}
+
+	private func loadAllPosts() {
+		DBService.manager.loadAllPosts { (posts) in
+			if let posts = posts {
+				self.posts = posts
+			} else {
+				print("error loading posts")
+			}
 		}
 	}
 

@@ -1,6 +1,6 @@
 //  PostTableViewCell.swift
 //  POSTR2.0
-//  Created by Winston Maragh on 2/9/18.
+//  Created by Luis Calle/Winston Maragh on 2/9/18.
 //  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit

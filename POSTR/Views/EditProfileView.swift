@@ -169,7 +169,7 @@ class EditProfileView: UIView {
 	private func addDismissbutton() {
 		addSubview(dismissButton)
 		dismissButton.translatesAutoresizingMaskIntoConstraints = false
-		dismissButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
+		dismissButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10).isActive = true
 		dismissButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 15).isActive = true
 	}
 
@@ -232,7 +232,7 @@ class EditProfileView: UIView {
 	private func addSaveButton() {
 		addSubview(saveButton)
 		saveButton.translatesAutoresizingMaskIntoConstraints = false
-		saveButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
+		saveButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10).isActive = true
 		saveButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10).isActive = true
 	}
 
