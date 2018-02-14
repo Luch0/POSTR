@@ -13,26 +13,17 @@ class CoreDataService {
 
 	static var context: NSManagedObjectContext = persistentContainer.viewContext
 
-
 	// MARK: - Core Data stack
 	static var persistentContainer: NSPersistentContainer = {
 		let container = NSPersistentContainer(name: "POSTR")
-//		var dispatchGroup = DispatchGroup()
-//		dispatchGroup.enter()
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 			if let error = error as NSError? {
 				fatalError("Unresolved error \(error), \(error.userInfo)")
 			}
-//			dispatchGroup.leave()
 		})
-//		dispatchGroup.notify(queue: DispatchQueue.main) {
-//
-//		}
+
 		return container
-
 	}()
-
-
 
 
 
@@ -48,26 +39,34 @@ class CoreDataService {
 			}
 		}
 	}
-	//
-	//
-	//	// Get Users
-	//	static func getUsers(completionHandler: ([User]) -> Void) {
-	//		do {
-	//			guard let users = try context.fetch(User.fetchRequest()) as? [User] else { return }
-	//			completionHandler(users)
-	//		}
-	//		catch {print(error)}
-	//	}
-	//
-	//
-	//	// Get Posts
-	//	static func getPosts(completionHandler: ([Post]) -> Void) {
-	//		do {
-	//			guard let posts = try context.fetch(Post.fetchRequest()) as? [Post] else { return }
-	//			completionHandler(posts)
-	//		}
-	//		catch {print(error)}
-	//	}
+
+	// MARK: Get Users
+		static func getUsers(completionHandler: ([POSTRUser]) -> Void) {
+			do {
+				guard let users = try context.fetch(POSTRUser.fetchRequest()) as? [POSTRUser] else { return }
+				completionHandler(users)
+			}
+			catch {print(error)}
+		}
+
+
+	// MARK: Get Posts
+		static func getPosts(completionHandler: ([Post]) -> Void) {
+			do {
+				guard let posts = try context.fetch(Post.fetchRequest()) as? [Post] else { return }
+				completionHandler(posts)
+			}
+			catch {print(error)}
+		}
+
+	// MARK: Get Comments
+	static func getComments(completionHandler: ([Comment]) -> Void) {
+		do {
+			guard let comments = try context.fetch(Comment.fetchRequest()) as? [Comment] else { return }
+			completionHandler(comments)
+		}
+		catch {print(error)}
+	}
 
 }
 

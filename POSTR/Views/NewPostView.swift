@@ -1,8 +1,10 @@
+//
 //  NewPostView.swift
-//  POSTR1.0 (from previous project - might change later)
+//  POSTR
+//
 //  Created by Vikash Hart on 2/9/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-
+//
 import UIKit
 
 class NewPostView: UIView {

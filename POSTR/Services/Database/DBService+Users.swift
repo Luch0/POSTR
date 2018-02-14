@@ -46,6 +46,7 @@ extension DBService {
 																						username: dict["username"] as! String,
 																						userTagline: dict["userTagline"] as? String,
 																						userImageStr: dict["userImageStr"] as? String,
+																						userBgImageStr: dict["userBgImageStr"] as? String,
 																						userFlagCount: dict["userFlagCount"] as? Int16)
 									allUsers.append(user)
                 }
@@ -66,6 +67,7 @@ extension DBService {
 																		username: dict["username"] as! String,
 																		userTagline: dict["userTagline"] as? String,
 																		userImageStr: dict["userImageStr"] as? String,
+																		userBgImageStr: dict["userBgImageStr"] as? String,
 																		userFlagCount: dict["userFlagCount"] as? Int16)
 					if authUserID == user.userID {
 						currentUser = user

@@ -21,7 +21,7 @@ class ProfileView: UIView {
 	}()
 	lazy var profileImageView: UIImageView = {
 		let iv = UIImageView()
-		iv.image = #imageLiteral(resourceName: "user7")
+//		iv.image = #imageLiteral(resourceName: "user7")
 		return iv
 	}()
 
@@ -58,7 +58,6 @@ class ProfileView: UIView {
 		button.backgroundColor = UIColor.clear
 		return button
 	}()
-
 
 
 	//Create Toggle Container & 4 Buttons to access different options
@@ -314,13 +313,14 @@ class ProfileView: UIView {
 			taglineTF.text = tagline
 			taglineTF.placeholder = tagline
 		}
-		if let imageStr = user.userImageStr {
-			profileImageView.kf.indicatorType = .activity
-			profileImageView.kf.setImage(with: URL(string: imageStr))
+		if let userImageStr = user.userImageStr {
+			self.profileImageView.kf.indicatorType = .activity
+			profileImageView.kf.setImage(with: URL(string: userImageStr))
 		}
-		if let imageStr = user.userBgImageStr {
-			backgroundImageView.kf.indicatorType = .activity
-			backgroundImageView.kf.setImage(with: URL(string: imageStr))
+		if let bgImageStr = user.userBgImageStr {
+			print();print("User Bg Image String:"); print(bgImageStr); print()
+			self.backgroundImageView.kf.indicatorType = .activity
+			self.backgroundImageView.kf.setImage(with: URL(string: bgImageStr))
 		}
 	}
 }

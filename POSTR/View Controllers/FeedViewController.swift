@@ -71,9 +71,6 @@ class FeedViewController: UIViewController {
 				for user in users {
 					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user }
 				}
-//				for user in users.filter({ $0.userID == self.currentAuthUser?.uid }) {
-//					self.currentDBUser = user
-//				}
 			} else {print("error loading users")}
 		}
 	}

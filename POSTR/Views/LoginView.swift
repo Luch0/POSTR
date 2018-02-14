@@ -1,8 +1,10 @@
+//
 //  LoginView.swift
-//  POSTR1.0 (from previous project - might change later)
+//  POSTR
+//
 //  Created by Maryann Yin on 1/30/18.
 //  Copyright © 2018 Maryann Yin. All rights reserved.
-
+//
 import UIKit
 
 class LoginView: UIView {

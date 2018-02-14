@@ -23,6 +23,7 @@ class ProfileViewController: UIViewController {
 	private var currentUser: POSTRUser! {
 		didSet { profileView.configureProfileView(user: currentUser) }
 	}
+
 	private var allUsers: [POSTRUser] = []
 //	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){

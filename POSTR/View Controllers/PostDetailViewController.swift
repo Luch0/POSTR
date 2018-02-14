@@ -1,5 +1,5 @@
 //  PostDetailViewController.swift
-//  POSTR1.0 (from previous project - might change later)
+//  POSTR
 //  Created by Luis Calle on 1/30/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
 
@@ -48,8 +48,6 @@ class PostDetailViewController: UIViewController {
             }
         }
         postDetailView.addCommentButton.addTarget(self, action: #selector(addComment), for: .touchUpInside)
-        //testing segue back from left
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goBack))
     }
     
     private func addObservers() {
@@ -61,7 +59,6 @@ class PostDetailViewController: UIViewController {
             if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y == 0 {
                     self.view.frame.origin.y -= keyboardSize.height
-                    //print("keyboard shown: \(self.view.frame.origin.y) ,keyboard height: \(keyboardSize.height)")
                 }
             }
         }
@@ -70,7 +67,6 @@ class PostDetailViewController: UIViewController {
             if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y != 0 {
                     self.view.frame.origin.y += keyboardSize.height - 45
-                    //print("keyboard hidden: \(self.view.frame.origin.y), keyboard height: \(keyboardSize.height)")
                 }
             }
         }

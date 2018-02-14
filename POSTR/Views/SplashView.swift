@@ -1,8 +1,10 @@
+//
 //  SplashView.swift
-//  POSTR1.0 (from previous project - might change later)
+//  POSTR
+//
 //  Created by Maryann Yin on 2/9/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-
+//
 
 import Foundation
 import UIKit

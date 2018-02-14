@@ -51,11 +51,12 @@ class EditProfileViewController: UIViewController {
 		loadAllPosts()
 		view.backgroundColor = .clear
 	}
-
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 	}
 
+
+	// Helper Functions
 	private func loadAllPosts() {
 		DBService.manager.loadAllPosts { (posts) in
 			if let posts = posts {
@@ -64,14 +65,6 @@ class EditProfileViewController: UIViewController {
 				print("error loading posts")
 			}
 		}
-	}
-
-	private func addButtonTargets(){
-		editProfileView.dismissViewButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
-		editProfileView.dismissButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
-		editProfileView.saveButton.addTarget(self, action: #selector(saveProfileChanges), for: .touchUpInside)
-		editProfileView.editBgPhotoButton.addTarget(self, action: #selector(changeBackgroundImage), for: .touchUpInside)
-		editProfileView.editProfilePhotoButton.addTarget(self, action: #selector(changeProfileImage), for: .touchUpInside)
 	}
 
 	private func loadCurrentUser() {
@@ -92,6 +85,13 @@ class EditProfileViewController: UIViewController {
 		}
 	}
 
+	private func addButtonTargets(){
+		editProfileView.dismissViewButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
+		editProfileView.dismissButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
+		editProfileView.saveButton.addTarget(self, action: #selector(saveProfileChanges), for: .touchUpInside)
+		editProfileView.editBgPhotoButton.addTarget(self, action: #selector(changeBackgroundImage), for: .touchUpInside)
+		editProfileView.editProfilePhotoButton.addTarget(self, action: #selector(changeProfileImage), for: .touchUpInside)
+	}
 
 	@objc func dismissView() {
 		dismiss(animated: true, completion: nil)
@@ -186,21 +186,17 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
 			let sizeOfImage: CGSize = CGSize(width: 100, height: 100)
 			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
 			self.profileImage = toucanImage
-			self.editProfileView.profileImage.image = profileImage
 			StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userID!, posts: posts)
 		} else 	if selectedImageToChange == "bgImage" {
 			// resize the profile image
 			let sizeOfImage: CGSize = CGSize(width: 400, height: 150)
 			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
 			self.bgImage = toucanImage
-			self.editProfileView.bgImage.image = profileImage
 			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID!)
 		}
-		self.dismiss(animated: true, completion: nil)
 		imagePicker.dismiss(animated: true, completion: nil)
 	}
 	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-		self.dismiss(animated: true, completion: nil)
 		imagePicker.dismiss(animated: true, completion: nil)
 	}
 }

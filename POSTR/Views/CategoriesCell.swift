@@ -1,7 +1,10 @@
+//
 //  CategoriesCell.swift
-//  POSTR1.0 (from previous project - might change later)
+//  POSTR
+//
 //  Created by Vikash Hard on 1/30/18.
 //  Copyright © 2018 On-the-Line. All rights reserved.
+//
 
 import UIKit
 

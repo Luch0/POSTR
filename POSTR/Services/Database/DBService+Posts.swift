@@ -29,9 +29,7 @@ extension DBService {
 																print("addPosts error: \(error)")
 															} else {
 																print("posts added @ database reference: \(dbRef)")
-																// add an image to storage
 																StorageService.manager.storePostImage(image: image, postId: childByAutoId.key)
-																// TODO: add image to database
 															}
 		}
 	}

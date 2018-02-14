@@ -24,7 +24,7 @@ class FavesCollectionViewCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.image = #imageLiteral(resourceName: "user2")
-		imageView.layer.cornerRadius = imageView.bounds.width / 2
+		imageView.layer.cornerRadius = imageView.bounds.width / 4
 		imageView.layer.masksToBounds = true
 		imageView.contentMode = .scaleAspectFit
 		return imageView
