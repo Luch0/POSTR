@@ -1,10 +1,8 @@
-//
 //  EditPostViewController.swift
-//  POSTR
-//
+//  POSTR1.0 (from previous project - might change later)//
 //  Created by Luis Calle on 1/31/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
+
 
 import UIKit
 import Alamofire
@@ -51,7 +49,7 @@ class EditPostViewController: UIViewController {
     @objc private func saveEditedPost() {
         let newCaption = editPost.captionTextView.text!
         if newCaption.isEmpty == false {
-            DBService.manager.saveEditedPost(postID: post.postID, caption: newCaption, newCategory: newCategory)
+					DBService.manager.saveEditedPost(postID: post.postID!, caption: newCaption, newCategory: newCategory)
             self.dismiss(animated: true, completion: nil)
         } else {
             showAlert(title: "Missing fields", message: "Please input a caption")

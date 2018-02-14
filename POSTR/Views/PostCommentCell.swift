@@ -1,7 +1,7 @@
 //  PostCommentCell.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/11/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 
 import UIKit
@@ -110,7 +110,7 @@ class PostCommentCell: UITableViewCell {
 		postTitleLabel.text = comment.postTitle
 		postCategoryLabel.text = comment.postCategory
 		postImageView.kf.indicatorType = .activity
-		postImageView.kf.setImage(with: URL(string:comment.postImageStr))
+		postImageView.kf.setImage(with: URL(string:comment.postImageStr!))
 	}
 
 }

@@ -1,7 +1,7 @@
 //  ProfileView.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 1/30/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit
 import Firebase
@@ -21,7 +21,7 @@ class ProfileView: UIView {
 	}()
 	lazy var profileImageView: UIImageView = {
 		let iv = UIImageView()
-		iv.image = #imageLiteral(resourceName: "user2")
+//		iv.image = #imageLiteral(resourceName: "user7")
 		return iv
 	}()
 
@@ -60,7 +60,6 @@ class ProfileView: UIView {
 	}()
 
 
-
 	//Create Toggle Container & 4 Buttons to access different options
 	lazy var toggleContainer: UIView = {
 		let view = UIView()
@@ -97,22 +96,21 @@ class ProfileView: UIView {
 	//Container
 	lazy var dataContainer: UIView = {
 		let dc = UIView()
-		dc.backgroundColor = .red
+		dc.backgroundColor = .white
 		return dc
 	}()
 	//Create ListView
-	lazy var tableView: UITableView = {
+	lazy var postTableView: UITableView = {
 		let tbv = UITableView()
 		tbv.register(PostTableViewCell.self, forCellReuseIdentifier: "PostListCell")
 		return tbv
 	}()
 	//Create CollectionView
-	lazy var collectionView: UICollectionView = {
+	lazy var postCollectionView: UICollectionView = {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .vertical
-//		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
-		let cv = UICollectionView(frame: dataContainer.layer.bounds, collectionViewLayout: layout)
-		cv.backgroundColor = UIColor.yellow
+		let cv = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: layout)
+		cv.backgroundColor = UIColor.white
 		cv.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: "PostCollectionCell")
 		return cv
 	}()
@@ -120,13 +118,13 @@ class ProfileView: UIView {
 	lazy var commentView: UITableView = {
 		let tbv = UITableView()
 		tbv.register(PostCommentCell.self, forCellReuseIdentifier: "PostCommentCell")
-		tbv.backgroundColor = UIColor.green
+		tbv.backgroundColor = UIColor.white
 		return tbv
 	}()
 	//Create bookmarkView
 	lazy var bookmarkView: UITableView = {
 		let tbv = UITableView()
-		tbv.backgroundColor = UIColor.blue
+		tbv.backgroundColor = UIColor.white
 		return tbv
 	}()
 
@@ -274,20 +272,20 @@ class ProfileView: UIView {
 		dataContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
 	}
 	private func addCollectionView() {
-		addSubview(collectionView)
-		collectionView.translatesAutoresizingMaskIntoConstraints = false
-		collectionView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
-		collectionView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
-		collectionView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
-		collectionView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
+		addSubview(postCollectionView)
+		postCollectionView.translatesAutoresizingMaskIntoConstraints = false
+		postCollectionView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		postCollectionView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		postCollectionView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		postCollectionView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 	private func addTableView() {
-		addSubview(tableView)
-		tableView.translatesAutoresizingMaskIntoConstraints = false
-		tableView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
-		tableView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
-		tableView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
-		tableView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
+		addSubview(postTableView)
+		postTableView.translatesAutoresizingMaskIntoConstraints = false
+		postTableView.topAnchor.constraint(equalTo: dataContainer.topAnchor).isActive = true
+		postTableView.bottomAnchor.constraint(equalTo: dataContainer.bottomAnchor).isActive = true
+		postTableView.leadingAnchor.constraint(equalTo: dataContainer.leadingAnchor).isActive = true
+		postTableView.trailingAnchor.constraint(equalTo: dataContainer.trailingAnchor).isActive = true
 	}
 	private func addCommentView() {
 		addSubview(commentView)
@@ -315,13 +313,14 @@ class ProfileView: UIView {
 			taglineTF.text = tagline
 			taglineTF.placeholder = tagline
 		}
-		if let imageStr = user.userImageStr {
-			profileImageView.kf.indicatorType = .activity
-			profileImageView.kf.setImage(with: URL(string: imageStr))
+		if let userImageStr = user.userImageStr {
+			self.profileImageView.kf.indicatorType = .activity
+			profileImageView.kf.setImage(with: URL(string: userImageStr))
 		}
-		if let imageStr = user.userBgImageStr {
-			backgroundImageView.kf.indicatorType = .activity
-			backgroundImageView.kf.setImage(with: URL(string: imageStr))
+		if let bgImageStr = user.userBgImageStr {
+			print();print("User Bg Image String:"); print(bgImageStr); print()
+			self.backgroundImageView.kf.indicatorType = .activity
+			self.backgroundImageView.kf.setImage(with: URL(string: bgImageStr))
 		}
 	}
 }

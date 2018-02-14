@@ -1,5 +1,5 @@
 //  ProfileViewController.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 1/30/18.
 //  Copyright © 2018 Winston Maragh. All rights reserved.
 
@@ -11,7 +11,7 @@ import Kingfisher
 
 
 class ProfileViewController: UIViewController {
-
+   
 	// MARK: import Views
 	var profileView = ProfileView()
 
@@ -23,10 +23,16 @@ class ProfileViewController: UIViewController {
 	private var currentUser: POSTRUser! {
 		didSet { profileView.configureProfileView(user: currentUser) }
 	}
+
 	private var allUsers: [POSTRUser] = []
-	private var postUser: POSTRUser!
+//	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){
-		didSet { DispatchQueue.main.async { self.profileView.tableView.reloadData() } }
+		didSet {
+			DispatchQueue.main.async {
+				self.profileView.postCollectionView.reloadData()
+				self.profileView.postTableView.reloadData()
+			}
+		}
 	}
 	private var currentUserComments = [Comment]() {
 		didSet { DispatchQueue.main.async { self.profileView.commentView.reloadData() } }
@@ -37,8 +43,6 @@ class ProfileViewController: UIViewController {
 	private var profileImage: UIImage!
 	private var bgImage: UIImage!
 
-	let cellSpacing: CGFloat = 5.0
-
 
 	//MARK: View Lifecycle
 	override func viewWillAppear(_ animated: Bool) {
@@ -46,32 +50,40 @@ class ProfileViewController: UIViewController {
 		currentAuthUser = AuthUserService.getCurrentUser()
 		loadCurrentUser()
 		loadCurrentUserPosts()
+		loadCurrentUserComments()
+		loadCurrentUserBookmarkPosts()
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(profileView)
-		profileView.tableView.delegate = self
-		profileView.tableView.dataSource = self
-		profileView.collectionView.delegate = self
-		profileView.collectionView.dataSource = self
+		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
+		//Datasource & delegate
+		profileView.postTableView.delegate = self
+		profileView.postTableView.dataSource = self
+		profileView.postCollectionView.delegate = self
+		profileView.postCollectionView.dataSource = self
 		profileView.commentView.delegate = self
 		profileView.commentView.dataSource = self
 		profileView.bookmarkView.delegate = self
 		profileView.bookmarkView.dataSource = self
 		authService.delegate = self
-		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
+		//Load
 		loadCurrentUser()
 		loadCurrentUserPosts()
 		loadCurrentUserComments()
-		
+		loadCurrentUserBookmarkPosts()
+		//Setup
 		configureNavBar()
 		setupButtonTargets()
 		switchToList()
+		//Self-Sizing Tableview Height
+		profileView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.4
+//		profileView.tableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
-	//MARK: Helper Methods
+	//MARK: Helper Functions
 	private func configureNavBar() {
 		self.navigationItem.title = "Profile"
 		//TitleView (Center)
@@ -102,6 +114,8 @@ class ProfileViewController: UIViewController {
 
 	@objc private func editProfile() {
 		let editProfileVC = EditProfileViewController()
+		editProfileVC.modalTransitionStyle = .crossDissolve
+		editProfileVC.modalPresentationStyle = .overCurrentContext
 		self.present(editProfileVC, animated: true, completion: nil)
 	}
 	@objc private func addPostButton() {
@@ -109,28 +123,44 @@ class ProfileViewController: UIViewController {
 		self.present(createPostViewController, animated: true, completion: nil)
 	}
 	@objc private func switchToList() {
-		profileView.collectionView.isHidden = true
-		profileView.tableView.isHidden = false
+		profileView.postCollectionView.isHidden = true
+		profileView.postTableView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
+		profileView.optionListButton.backgroundColor = .white
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToCollection() {
-		profileView.collectionView.isHidden = false
+		profileView.postCollectionView.isHidden = false
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = true
-		profileView.tableView.isHidden = true
+		profileView.postTableView.isHidden = true
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .white
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToComment() {
-		profileView.collectionView.isHidden = true
-		profileView.tableView.isHidden = true
+		profileView.postCollectionView.isHidden = true
+		profileView.postTableView.isHidden = true
 		profileView.commentView.isHidden = false
 		profileView.bookmarkView.isHidden = true
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .white
+		profileView.optionBookmarkButton.backgroundColor = .clear
 	}
 	@objc private func switchToBookmark() {
-		profileView.collectionView.isHidden = true
-		profileView.tableView.isHidden = true
+		profileView.postCollectionView.isHidden = true
+		profileView.postTableView.isHidden = true
 		profileView.commentView.isHidden = true
 		profileView.bookmarkView.isHidden = false
+		profileView.optionListButton.backgroundColor = .clear
+		profileView.optionCollectionButton.backgroundColor = .clear
+		profileView.optionCommentButton.backgroundColor = .clear
+		profileView.optionBookmarkButton.backgroundColor = .white
 	}
 
 
@@ -144,7 +174,6 @@ class ProfileViewController: UIViewController {
 			} else {print("error loading users")}
 		}
 	}
-
 	private func loadCurrentUserPosts() {
 		DBService.manager.loadUserPosts(userID: (currentAuthUser?.uid)!) { (userPosts) in
 			if let userPosts = userPosts {self.currentUserPosts = userPosts}
@@ -157,6 +186,10 @@ class ProfileViewController: UIViewController {
 			else {print("Error loading comments")}
 		}
 	}
+	private func loadCurrentUserBookmarkPosts() {
+//		DBService.manager.loadOnePost(postID: <#T##String#>, completionHandler: <#T##(Post?) -> Void#>)
+	}
+
 
 	@objc private func logout() {
 		let alertView = UIAlertController(title: "Are you sure you want to Logout?", message: nil, preferredStyle: .alert)
@@ -180,12 +213,13 @@ extension ProfileViewController: UITableViewDelegate {
 		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		if tableView == profileView.tableView {
-			return UIScreen.main.bounds.height * 0.40
-		} else if tableView == profileView.commentView {
+		if tableView == profileView.postTableView {
+			return UITableViewAutomaticDimension
+		} else
+		if tableView == profileView.commentView {
 			return UIScreen.main.bounds.height * 0.10
 		} else if tableView == profileView.bookmarkView {
-			return UIScreen.main.bounds.height * 0.20
+			return UIScreen.main.bounds.height * 0.10
 		}
 		return UIScreen.main.bounds.height * 0.40
 	}
@@ -197,26 +231,29 @@ extension ProfileViewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
 		var numOfSections: Int = 0
 		if currentUserPosts.count > 0 {
-			profileView.tableView.backgroundView = nil
-			profileView.tableView.separatorStyle = .singleLine
+			profileView.postTableView.backgroundView = nil
+			profileView.postTableView.separatorStyle = .singleLine
 			numOfSections = 1
 		} else {
-			let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: profileView.tableView.bounds.size.width, height: profileView.tableView.bounds.size.height))
+			let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: profileView.postTableView.bounds.size.width, height: profileView.postTableView.bounds.size.height))
 			noDataLabel.text = "You Haven't Posted Yet"
 			noDataLabel.font = UIFont.systemFont(ofSize: 25, weight: .semibold)
 			noDataLabel.textAlignment = .center
-			profileView.tableView.backgroundView = noDataLabel
-			profileView.tableView.separatorStyle = .none
+			profileView.postTableView.backgroundView = noDataLabel
+			profileView.postTableView.separatorStyle = .none
 		}
 		return numOfSections
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if tableView == profileView.tableView {
+		if tableView == profileView.postTableView {
+			print("Table View Count (List): ");print(currentUserPosts.count)
 			return currentUserPosts.count
 		} else if tableView == profileView.commentView {
+			print("Table View Count (Comment):");print(currentUserComments.count)
 			return currentUserComments.count
 		} else if tableView == profileView.bookmarkView {
+			print("Table View Count (Bookmarks):");print(currentUserPosts.count)
 			return currentUserBookmarks.count
 		}
 		return 1
@@ -225,7 +262,7 @@ extension ProfileViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch tableView {
-		case profileView.tableView :
+		case profileView.postTableView :
 			let cell = tableView.dequeueReusableCell(withIdentifier: "PostListCell", for: indexPath) as! PostTableViewCell
 			cell.delegate = self
 			cell.tag = indexPath.row
@@ -241,11 +278,11 @@ extension ProfileViewController: UITableViewDataSource {
 			return cell
 		case profileView.bookmarkView:
 			let cell = tableView.dequeueReusableCell(withIdentifier: "PostBookmarkCell", for: indexPath)
-			let post = currentUserPosts.reversed()[indexPath.row]
+			let post = currentUserBookmarks.reversed()[indexPath.row]
 			cell.textLabel?.text = post.caption
 			cell.detailTextLabel?.text = post.category
 			cell.imageView?.kf.indicatorType = .activity
-			cell.imageView?.kf.setImage(with: URL(string: post.postImageStr ))
+			cell.imageView?.kf.setImage(with: URL(string: post.postImageStr!))
 			return cell
 		default:
 			return UITableViewCell()
@@ -261,7 +298,7 @@ extension ProfileViewController: UITableViewDataSource {
 		let deleteOption = UIAlertAction(title: "Delete Post", style: .destructive) { (alertAction) in
 			let alertView = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
 			let yesOption = UIAlertAction(title: "Yes", style: .destructive) { (alertAction) in
-				DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID)
+				DBService.manager.removePost(postID: self.currentUserPosts.reversed()[tag].postID!)
 			}
 			let noOption = UIAlertAction(title: "No", style: .cancel, handler: nil)
 			alertView.addAction(yesOption)
@@ -283,23 +320,27 @@ extension ProfileViewController: UITableViewDataSource {
 
 //MARK: CollectionView - Datasource
 extension ProfileViewController: UICollectionViewDataSource {
-	//Number of items in Section
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return currentUserPosts.count
+			return currentUserPosts.count
 	}
-	//setup for each cell
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
 		let post = currentUserPosts.reversed()[indexPath.row]
-		cell.postCaption.text = post.caption
-		cell.postImageView.kf.indicatorType = .activity
-		cell.postImageView.kf.setImage(with: URL(string: post.postImageStr ))
+		cell.backgroundColor = UIColor.lightGray
+		cell.imgView.kf.setImage(with: URL(string: post.postImageStr!))
 		return cell
 	}
 }
 
+
 // MARK: CollectionView Delegate
-extension ProfileViewController: UICollectionViewDelegate { }
+extension ProfileViewController: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let selectedPost = currentUserPosts.reversed()[indexPath.row]
+		let postDetailViewController = PostDetailViewController(post: selectedPost)
+		self.navigationController?.pushViewController(postDetailViewController, animated: true)
+	}
+}
 
 
 //MARK: CollectionView - Delegate Flow Layout
@@ -310,19 +351,19 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
 		let numSpaces: CGFloat = numCells + 1
 		let screenWidth = UIScreen.main.bounds.width
 		let screenHeight = UIScreen.main.bounds.height
-		return CGSize(width: (screenWidth - (cellSpacing * numSpaces)) / numCells, height: screenHeight * 0.25)
+		return CGSize(width: (screenWidth - (5.0 * numSpaces)) / numCells, height: screenHeight * 0.25)
 	}
 	//Layout - Inset for section
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-		return UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: 0, right: cellSpacing)
+		return UIEdgeInsets(top: 5.0, left: 5.0, bottom: 0, right: 5.0)
 	}
 	//Layout - line spacing
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-		return cellSpacing
+		return 5.0
 	}
 	//Layout - inter item spacing
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-		return cellSpacing
+		return 5.0
 	}
 }
 
@@ -342,8 +383,22 @@ extension ProfileViewController: AuthUserServiceDelegate {
 }
 
 
+
 // MARK: Delegate for PostTableViewCell
-extension ProfileViewController: PostTableViewCellDelegate {	
+extension ProfileViewController: PostTableViewCellDelegate {
+	func didPressShareButton() {
+		//TO DO: share options
+		let activityVC = UIActivityViewController(activityItems: ["www.google.com"], applicationActivities: nil)
+		present(activityVC, animated: true, completion: nil)
+	}
+
+	func addPostToBookmarks(tableViewCell: PostTableViewCell) {
+		if let currentIndexPath = tableViewCell.currentIndexPath {
+			let postToAdd = currentUserPosts.reversed()[currentIndexPath.row]
+			DBService.manager.updateUpvote(postToUpdate: postToAdd)
+		}
+	}
+
 	func updateUpvote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = currentUserPosts.reversed()[currentIndexPath.row]
@@ -362,7 +417,7 @@ extension ProfileViewController: PostTableViewCellDelegate {
 	func didPressBookmark(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = currentUserPosts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentUser.userID!)
 		}
 	}
 }

@@ -26,7 +26,7 @@ class SplashView: UIView {
     
     lazy var versionLabel: UILabel = {
         let version = UILabel()
-        version.text = "Version 1.0"
+        version.text = "Version 2.0"
         version.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         version.textAlignment = .center
         return version

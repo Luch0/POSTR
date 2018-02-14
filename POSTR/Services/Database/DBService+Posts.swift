@@ -1,11 +1,13 @@
 //  DBService+Posts.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/2/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import Foundation
 import UIKit
 import Firebase
+import CoreData
+
 
 extension DBService {
 	public func addPosts(caption: String, category: String, postImageStr: String, username: String, userImageStr: String, image: UIImage) {
@@ -27,9 +29,7 @@ extension DBService {
 																print("addPosts error: \(error)")
 															} else {
 																print("posts added @ database reference: \(dbRef)")
-																// add an image to storage
 																StorageService.manager.storePostImage(image: image, postId: childByAutoId.key)
-																// TODO: add image to database
 															}
 		}
 	}
@@ -41,7 +41,20 @@ extension DBService {
 			for child in snapshot.children {
 				let dataSnapshot = child as! DataSnapshot
 				if let dict = dataSnapshot.value as? [String: Any] {
-					let post = Post.init(dict: dict)
+//					let post = Post.init(dict: dict)
+					let post = Post.init(postID: dict["postID"] as! String,
+															 userID: dict["userID"] as! String,
+															 caption: dict["caption"] as! String,
+															 category: dict["category"] as! String,
+															 date: dict["date"] as! String,
+															 username: dict["username"] as! String,
+															 numOfComments: dict["numOfComments"] as? Int16,
+															 upvoteCount: dict["upvoteCount"] as? Int16,
+															 downvoteCount: dict["downvoteCount"] as? Int16,
+															 currentVotes: dict["currentVotes"] as? Int16,
+															 postImageStr: dict["postImageStr"] as! String,
+															 userImageStr: dict["userImageStr"] as? String,
+															 postFlagCount: dict["postFlagCount"] as? Int16)
 					allPosts.append(post)
 				}
 			}
@@ -56,13 +69,54 @@ extension DBService {
 			for child in snapshot.children {
 				let dataSnapshot = child as! DataSnapshot
 				if let dict = dataSnapshot.value as? [String: Any] {
-					let post = Post.init(dict: dict)
+//					let post = Post.init(dict: dict)
+					let post = Post.init(postID: dict["postID"] as! String,
+															 userID: dict["userID"] as! String,
+															 caption: dict["caption"] as! String,
+															 category: dict["category"] as! String,
+															 date: dict["date"] as! String,
+															 username: dict["username"] as! String,
+															 numOfComments: dict["numOfComments"] as? Int16,
+															 upvoteCount: dict["upvoteCount"] as? Int16,
+															 downvoteCount: dict["downvoteCount"] as? Int16,
+															 currentVotes: dict["currentVotes"] as? Int16,
+															 postImageStr: dict["postImageStr"] as! String,
+															 userImageStr: dict["userImageStr"] as? String,
+															 postFlagCount: dict["postFlagCount"] as? Int16)
 					if userID == post.userID {
 						userPosts.append(post)
 					}
 				}
 			}
 			completionHandler(userPosts)
+		}
+	}
+
+	public func loadOnePost(postID: String, completionHandler: @escaping (Post?) -> Void) {
+		let ref = DBService.manager.getPosts().child(postID)
+		ref.observe(.value) { (snapshot) in
+			var bookmarkPost: Post!
+			for child in snapshot.children {
+				let dataSnapshot = child as! DataSnapshot
+				if let dict = dataSnapshot.value as? [String: Any] {
+//					let post = Post.init(dict: dict)
+					let post = Post.init(postID: dict["postID"] as! String,
+															 userID: dict["userID"] as! String,
+															 caption: dict["caption"] as! String,
+															 category: dict["category"] as! String,
+															 date: dict["date"] as! String,
+															 username: dict["username"] as! String,
+															 numOfComments: dict["numOfComments"] as? Int16,
+															 upvoteCount: dict["upvoteCount"] as? Int16,
+															 downvoteCount: dict["downvoteCount"] as? Int16,
+															 currentVotes: dict["currentVotes"] as? Int16,
+															 postImageStr: dict["postImageStr"] as! String,
+															 userImageStr: dict["userImageStr"] as? String,
+															 postFlagCount: dict["postFlagCount"] as? Int16)
+					bookmarkPost = post
+				}
+			}
+			completionHandler(bookmarkPost)
 		}
 	}
 
@@ -82,19 +136,17 @@ extension DBService {
         DBService.manager.getPosts().child(postID).removeValue()
     }
     
-    public func flagPost(post: Post) {	DBService.manager.getPosts().child(post.postID).updateChildValues(["postFlagCount":post.postFlagCount + 1])
+	public func flagPost(post: Post) {	DBService.manager.getPosts().child(post.postID!).updateChildValues(["postFlagCount":post.postFlagCount + 1])
     }
     public func updateUpvote(postToUpdate: Post) {
-        print(postToUpdate.postID)
         guard ((AuthUserService.getCurrentUser()?.uid) != nil) else { fatalError("userId is nil") }
-        let postRef = DBService.manager.getPosts().child((postToUpdate.postID))
+			let postRef = DBService.manager.getPosts().child((postToUpdate.postID)!)
         postRef.updateChildValues(["upvoteCount": postToUpdate.upvoteCount + 1])
         postRef.updateChildValues(["currentVotes": (postToUpdate.upvoteCount + 1) + postToUpdate.downvoteCount])
     }
     
     public func updateDownvote(postToUpdate: Post) {
-        print(postToUpdate.postID)
-        let postRef = DBService.manager.getPosts().child((postToUpdate.postID))
+			let postRef = DBService.manager.getPosts().child((postToUpdate.postID)!)
         postRef.updateChildValues(["downvoteCount": postToUpdate.downvoteCount - 1])
         postRef.updateChildValues(["currentVotes": (postToUpdate.downvoteCount - 1) + postToUpdate.upvoteCount])
     }

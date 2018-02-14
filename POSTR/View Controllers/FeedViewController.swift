@@ -1,7 +1,7 @@
 //  FeedViewController.swift
-//  POSTR
-//  Created by Lisa Jiang/Winston Maragh on 1/30/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  POSTR2.0
+//  Created by Winston Maragh on 1/30/18.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import UIKit
 import Firebase
@@ -9,15 +9,10 @@ import AVFoundation
 import Toucan
 
 
-let globalCurrentAuthUser = AuthUserService.getCurrentUser()
-var globalCurrentDBUser: POSTRUser?
-
 class FeedViewController: UIViewController {
 
 	//MARK: import Views
 	let feedView = FeedView()
-
-
 
 	//MARK: View Lifecycle
 	override func viewWillAppear(_ animated: Bool) {
@@ -34,47 +29,64 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(feedView)
-		feedView.tableView.delegate = self
-		feedView.tableView.dataSource = self
-		configureNavBar()
+		//Datasource & delegate
+		feedView.postTableView.delegate = self
+		feedView.postTableView.dataSource = self
+		feedView.favesCollectionView.delegate = self
+		feedView.favesCollectionView.dataSource = self
+		feedView.postCollectionView.delegate = self
+		feedView.postCollectionView.dataSource = self
+		//Load
 		loadCurrentUser()
+		//Setup
+		configureNavBar()
+		setupButtonTargets()
+		switchToList()
+		//Self-Sizing Tableview Height
+		feedView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.1
+//		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
 	//MARK: Properties
-	private var posts = [Post](){
-		didSet {
-			DispatchQueue.main.async {
-				self.feedView.tableView.reloadData()
-			}
-		}
-	}
 	private var users = [POSTRUser]()
 	public var currentAuthUser = AuthUserService.getCurrentUser()
 	public var currentDBUser: POSTRUser!
-
-
-	//MARK: Methods
-	private func loadAllPosts() {
-		DBService.manager.loadAllPosts { (posts) in
-			if let posts = posts { self.posts = posts}
-			else {print("error loading posts")}
+	private var faves: [UIImage] = [#imageLiteral(resourceName: "user2"), #imageLiteral(resourceName: "user1"), #imageLiteral(resourceName: "user3"), #imageLiteral(resourceName: "user4"),#imageLiteral(resourceName: "user5"), #imageLiteral(resourceName: "user6"),#imageLiteral(resourceName: "user7"),#imageLiteral(resourceName: "user8"),#imageLiteral(resourceName: "user9"),#imageLiteral(resourceName: "user10")]
+	private var posts = [Post](){
+		didSet {
+			DispatchQueue.main.async {
+				self.feedView.postTableView.reloadData()
+				self.feedView.postCollectionView.reloadData()
+			}
 		}
 	}
+
+
+	//MARK: Helper Functions
 	private func loadAllUsers() {
 		DBService.manager.loadAllUsers { (users) in
-			if let users = users {self.users = users}
-			else {print("error loading users")}
+			if let users = users {
+				self.users = users
+				for user in users {
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user }
+				}
+			} else {print("error loading users")}
 		}
 	}
 	private func loadCurrentUser() {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
 				for user in users {
-					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(user.userID)") }
-
+					if self.currentAuthUser?.uid == user.userID { self.currentDBUser = user; print("<<<<Current User: \(String(describing: user.userID))") }
 				}
 			} else {print("error loading from Firebase Database")}
+		}
+	}
+	private func loadAllPosts() {
+		DBService.manager.loadAllPosts { (posts) in
+			if let posts = posts { self.posts = posts}
+			else {print("error loading posts")}
 		}
 	}
 
@@ -83,8 +95,6 @@ class FeedViewController: UIViewController {
 		//TitleView (Center)
 		let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
 		let titleImageView = UIImageView(image: UIImage(named: "smallPostrTitle"))
-		//		let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-		//		let titleImageView = UIImageView(image: UIImage(named: "logo"))
 		titleImageView.frame = CGRect(x: 0, y: 0, width: titleView.frame.width, height: titleView.frame.height)
 		titleView.addSubview(titleImageView)
 		navigationItem.titleView = titleView
@@ -100,6 +110,8 @@ class FeedViewController: UIViewController {
 
 	@objc private func editProfile() {
 		let editProfileVC = EditProfileViewController()
+		editProfileVC.modalTransitionStyle = .crossDissolve
+		editProfileVC.modalPresentationStyle = .overCurrentContext
 		self.present(editProfileVC, animated: true, completion: nil)
 	}
 	@objc private func addPostButton() {
@@ -107,6 +119,24 @@ class FeedViewController: UIViewController {
 		self.present(createPostViewController, animated: true, completion: nil)
 	}
 
+
+	private func setupButtonTargets(){
+		feedView.optionListButton.addTarget(self, action: #selector(switchToList), for: .touchUpInside)
+		feedView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
+	}
+
+	@objc private func switchToList() {
+		feedView.postTableView.isHidden = false
+		feedView.postCollectionView.isHidden = true
+		feedView.optionListButton.backgroundColor = .white
+		feedView.optionCollectionButton.backgroundColor = .clear
+	}
+	@objc private func switchToCollection() {
+		feedView.postTableView.isHidden = true
+		feedView.postCollectionView.isHidden = false
+		feedView.optionListButton.backgroundColor = .clear
+		feedView.optionCollectionButton.backgroundColor = .white
+	}
 }
 
 extension FeedViewController: UITableViewDataSource {
@@ -114,16 +144,18 @@ extension FeedViewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
 		var numOfSections: Int = 0
 		if posts.count > 0 {
-			feedView.tableView.backgroundView = nil
-			feedView.tableView.separatorStyle = .singleLine
+			feedView.postTableView.backgroundView = nil
+			feedView.postTableView.separatorStyle = .singleLine
+			feedView.postTableView.separatorColor = UIColor.darkGray
+//			feedView.tableView.separatorInset = UIEdgeInsets.init(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
 			numOfSections = 1
 		} else {
-			let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: feedView.tableView.bounds.size.width, height: feedView.tableView.bounds.size.height))
+			let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: feedView.postTableView.bounds.size.width, height: feedView.postTableView.bounds.size.height))
 			noDataLabel.text = "No Posts Yet"
 			noDataLabel.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
 			noDataLabel.textAlignment = .center
-			feedView.tableView.backgroundView = noDataLabel
-			feedView.tableView.separatorStyle = .none
+			feedView.postTableView.backgroundView = noDataLabel
+			feedView.postTableView.separatorStyle = .none
 		}
 		return numOfSections
 	}
@@ -133,16 +165,14 @@ extension FeedViewController: UITableViewDataSource {
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = feedView.tableView.dequeueReusableCell(withIdentifier: "PostListCell", for: indexPath) as! PostTableViewCell
+		let cell = feedView.postTableView.dequeueReusableCell(withIdentifier: "PostListCell", for: indexPath) as! PostTableViewCell
 		let post = posts.reversed()[indexPath.row]
 		cell.delegate = self
 		cell.currentIndexPath = indexPath
 		cell.tag = indexPath.row
 		cell.configurePostCell(post: post)
 		cell.backgroundColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 1.0)
-
 		cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-		//			 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
 		return cell
 	}
 
@@ -187,17 +217,29 @@ extension FeedViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return UIScreen.main.bounds.height * 0.55
+		return  UITableViewAutomaticDimension
 	}
 
 }
 
 // MARK: Delegate for PostTableViewCell
-extension FeedViewController: PostTableViewCellDelegate {
+extension FeedViewController: PostTableViewCellDelegate {	
+	func didPressShareButton() {
+		let activityVC = UIActivityViewController(activityItems: ["www.google.com"], applicationActivities: nil)
+		present(activityVC, animated: true, completion: nil)
+	}
+
+	func addPostToBookmarks(tableViewCell: PostTableViewCell) {
+		if let currentIndexPath = tableViewCell.currentIndexPath {
+			let post = posts.reversed()[currentIndexPath.row]
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
+		}
+	}
+
 	internal func didPressBookmark(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let post = posts.reversed()[currentIndexPath.row]
-			DBService.manager.addBookmark(postID: post.postID, userID: currentDBUser.userID)
+			DBService.manager.addBookmark(postID: post.postID!, userID: currentDBUser.userID!)
 		}
 	}
 
@@ -208,7 +250,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 	internal func updateUpvote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
-			print(postToUpdate.postID)
 			DBService.manager.updateUpvote(postToUpdate: postToUpdate)
 		}
 	}
@@ -216,9 +257,95 @@ extension FeedViewController: PostTableViewCellDelegate {
 	internal func updateDownVote(tableViewCell: PostTableViewCell) {
 		if let currentIndexPath = tableViewCell.currentIndexPath {
 			let postToUpdate = posts.reversed()[currentIndexPath.row]
-			print(postToUpdate.postID)
 			DBService.manager.updateDownvote(postToUpdate: postToUpdate)
 		}
 	}
 }
+
+
+
+
+//MARK: CollectionView - Datasource
+extension FeedViewController: UICollectionViewDataSource {
+	//Number of items in Section
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		if collectionView == feedView.postCollectionView {
+			print("CV Post count: "); print(posts.count)
+			return posts.count
+		}
+		if collectionView == feedView.favesCollectionView {
+			print("CV Faves count: "); print(faves.count)
+			return faves.count
+		}
+		print("CV Else Count:")
+		return posts.count
+	}
+	//setup for each cell
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		switch collectionView {
+		case feedView.favesCollectionView:
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavesCollectionCell", for: indexPath) as! FavesCollectionViewCell
+			cell.backgroundColor = .orange
+			let fave = faves[indexPath.row]
+			cell.imgView.image = fave
+			return cell
+		case feedView.postCollectionView:
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionCell", for: indexPath) as! PostCollectionViewCell
+			let post = posts.reversed()[indexPath.row]
+			cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+			cell.imgView.kf.setImage(with: URL(string: post.postImageStr!))
+			return cell
+		default:
+			return UICollectionViewCell()
+		}
+	}
+}
+
+
+//MARK: CollectionView - Delegate
+extension FeedViewController: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let selectedPost = posts.reversed()[indexPath.row]
+		let postDetailViewController = PostDetailViewController(post: selectedPost)
+		self.navigationController?.pushViewController(postDetailViewController, animated: true)
+	}
+}
+
+//MARK: CollectionView - Delegate Flow Layout
+extension FeedViewController: UICollectionViewDelegateFlowLayout {
+	//Layout - Size for item
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		switch collectionView {
+		case feedView.favesCollectionView :
+			let numCells: CGFloat = 5
+			let numSpaces: CGFloat = numCells + 1
+			let screenWidth = UIScreen.main.bounds.width
+			let screenHeight = UIScreen.main.bounds.height
+			return CGSize(width: (screenWidth - (5.0 * numSpaces)) / numCells, height: screenHeight * 0.25)
+		case feedView.postCollectionView:
+			let numCells: CGFloat = 3
+			let numSpaces: CGFloat = numCells + 1
+			let screenWidth = UIScreen.main.bounds.width
+			let screenHeight = UIScreen.main.bounds.height
+			return CGSize(width: (screenWidth - (5.0 * numSpaces)) / numCells, height: screenHeight * 0.25)
+		default:
+			return CGSize(width: (UIScreen.main.bounds.width - (5.0 * 4.0)) / 3.0, height: UIScreen.main.bounds.height * 0.25)
+		}
+	}
+	//Layout - Inset for section
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+			return UIEdgeInsets(top: 5.0, left: 5.0, bottom: 0, right: 5.0)
+	}
+	//Layout - line spacing
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+		return 5.0
+	}
+	//Layout - inter item spacing
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+			return 5.0
+	}
+}
+
+
+
 

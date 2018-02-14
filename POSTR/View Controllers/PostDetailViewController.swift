@@ -1,20 +1,18 @@
-//
 //  PostDetailViewController.swift
 //  POSTR
-//
 //  Created by Luis Calle on 1/30/18.
 //  Copyright © 2018 On-The-Line. All rights reserved.
-//
+
 
 import UIKit
 import Alamofire
+
 
 class PostDetailViewController: UIViewController {
     
     private let postDetailView = PostDetailView()
     
     private var post: Post!
-    
     private var comments = [Comment]() {
         didSet {
             DispatchQueue.main.async {
@@ -42,7 +40,7 @@ class PostDetailViewController: UIViewController {
         postDetailView.commentsTableView.dataSource = self
 //      postDetailView.commentTextView.delegate = self
         addObservers()
-        DBService.manager.loadAllComments(postID: post.postID.description) { (comments) in
+			DBService.manager.loadAllComments(postID: (post.postID?.description)!) { (comments) in
             if let comments = comments {
                 self.comments = comments
             } else {
@@ -50,8 +48,6 @@ class PostDetailViewController: UIViewController {
             }
         }
         postDetailView.addCommentButton.addTarget(self, action: #selector(addComment), for: .touchUpInside)
-        //testing segue back from left
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goBack))
     }
     
     private func addObservers() {
@@ -63,7 +59,6 @@ class PostDetailViewController: UIViewController {
             if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y == 0 {
                     self.view.frame.origin.y -= keyboardSize.height
-                    //print("keyboard shown: \(self.view.frame.origin.y) ,keyboard height: \(keyboardSize.height)")
                 }
             }
         }
@@ -72,7 +67,6 @@ class PostDetailViewController: UIViewController {
             if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y != 0 {
                     self.view.frame.origin.y += keyboardSize.height - 45
-                    //print("keyboard hidden: \(self.view.frame.origin.y), keyboard height: \(keyboardSize.height)")
                 }
             }
         }

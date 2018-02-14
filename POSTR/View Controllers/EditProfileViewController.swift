@@ -1,7 +1,7 @@
 //  EditProfileViewController.swift
-//  POSTR
+//  POSTR2.0
 //  Created by Winston Maragh on 2/9/18.
-//  Copyright © 2018 On-The-Line. All rights reserved.
+//  Copyright © 2018 Winston Maragh. All rights reserved.
 
 import Foundation
 import UIKit
@@ -46,14 +46,26 @@ class EditProfileViewController: UIViewController {
 		super.viewDidLoad()
 		view.addSubview(editProfileView)
 		imagePicker.delegate = self
-		//		authService.delegate = self
 		loadCurrentUser()
 		addButtonTargets()
 		loadAllPosts()
+		view.backgroundColor = .clear
 	}
-
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
+	}
+
+
+	//MARK: Helper Functions
+	private func loadCurrentUser() {
+		DBService.manager.loadAllUsers { (users) in
+			if let users = users {
+				for user in users {
+					if self.authUser?.uid == user.userID { self.dbUser = user; print("<<<<Current User: \(String(describing: user.userID))") }
+
+				}
+			} else {print("error loading from Firebase Database")}
+		}
 	}
 
 	private func loadAllPosts() {
@@ -66,6 +78,13 @@ class EditProfileViewController: UIViewController {
 		}
 	}
 
+	private func loadCurrentUserPosts() {
+		DBService.manager.loadUserPosts(userID: (authUser?.uid)!) { (userPosts) in
+			if let userPosts = userPosts {self.currentUserPosts = userPosts}
+			else {print("Error loading user posts")}
+		}
+	}
+
 	private func addButtonTargets(){
 		editProfileView.dismissViewButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 		editProfileView.dismissButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
@@ -74,40 +93,21 @@ class EditProfileViewController: UIViewController {
 		editProfileView.editProfilePhotoButton.addTarget(self, action: #selector(changeProfileImage), for: .touchUpInside)
 	}
 
-	private func loadCurrentUser() {
-		DBService.manager.loadAllUsers { (users) in
-			if let users = users {
-				for user in users {
-					if self.authUser?.uid == user.userID { self.dbUser = user; print("<<<<Current User: \(user.userID)") }
-
-				}
-			} else {print("error loading from Firebase Database")}
-		}
-	}
-
-	private func loadCurrentUserPosts() {
-		DBService.manager.loadUserPosts(userID: (authUser?.uid)!) { (userPosts) in
-			if let userPosts = userPosts {self.currentUserPosts = userPosts}
-			else {print("Error loading user posts")}
-		}
-	}
-
-
 	@objc func dismissView() {
 		dismiss(animated: true, completion: nil)
 	}
 
 	@objc func saveProfileChanges() {
 		if let username = editProfileView.usernameTF.text {
-			DBService.manager.updateUserName(userID: dbUser.userID, username: username)
+			DBService.manager.updateUserName(userID: dbUser.userID!, username: username)
 			for eachPost in posts {
 				if eachPost.userID == dbUser.userID {
-					DBService.manager.updatePostUserName(postID: eachPost.postID, username: username)
+					DBService.manager.updatePostUserName(postID: eachPost.postID!, username: username)
 				}
 			}
 		}
 		if let tagline = editProfileView.taglineTF.text {
-			DBService.manager.updateUserHeadline(userID: dbUser.userID, userTagline: tagline)
+			DBService.manager.updateUserHeadline(userID: dbUser.userID!, userTagline: tagline)
 		}
 		dismissView()
 	}
@@ -159,19 +159,17 @@ class EditProfileViewController: UIViewController {
 // MARK: TextField Delegate
 extension EditProfileViewController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//		let currentTFUserID =
-
 		if textField == editProfileView.usernameTF {
 			guard let text = textField.text else {return false}
-			DBService.manager.updateUserName(userID: dbUser.userID, username: text)
+			DBService.manager.updateUserName(userID: dbUser.userID!, username: text)
 			for eachPost in currentUserPosts {
-				DBService.manager.updateUserName(userID: eachPost.postID, username: text)
+				DBService.manager.updateUserName(userID: eachPost.postID!, username: text)
 			}
 		}
 
 		if textField == editProfileView.taglineTF {
 			guard let text = textField.text else {return false}
-			DBService.manager.updateUserHeadline(userID: dbUser.userID, userTagline: text)
+			DBService.manager.updateUserHeadline(userID: dbUser.userID!, userTagline: text)
 		}
 		return true
 	}
@@ -188,20 +186,18 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
 			let sizeOfImage: CGSize = CGSize(width: 100, height: 100)
 			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
 			self.profileImage = toucanImage
-			self.editProfileView.profileImage.image = profileImage
-			StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userID, posts: posts)
+			StorageService.manager.storeUserImage(image: profileImage, userId: dbUser.userID!, posts: posts)
 		} else 	if selectedImageToChange == "bgImage" {
 			// resize the profile image
 			let sizeOfImage: CGSize = CGSize(width: 400, height: 150)
 			let toucanImage = Toucan.Resize.resizeImage(editedImage, size: sizeOfImage)
 			self.bgImage = toucanImage
-			self.editProfileView.bgImage.image = profileImage
-			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID)
+			StorageService.manager.storeUserBgImage(image: bgImage, userId: dbUser.userID!)
 		}
-		self.dismiss(animated: true, completion: nil)
+		imagePicker.dismiss(animated: true, completion: nil)
 	}
 	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-		self.dismiss(animated: true, completion: nil)
+		imagePicker.dismiss(animated: true, completion: nil)
 	}
 }
 
