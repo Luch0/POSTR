@@ -29,22 +29,12 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(feedView)
-		//Datasource & delegate
-		feedView.postTableView.delegate = self
-		feedView.postTableView.dataSource = self
-		feedView.favesCollectionView.delegate = self
-		feedView.favesCollectionView.dataSource = self
-		feedView.postCollectionView.delegate = self
-		feedView.postCollectionView.dataSource = self
-		//Load
+		setupDelegatesAndDatasources()
 		loadCurrentUser()
-		//Setup
 		configureNavBar()
 		setupButtonTargets()
 		switchToList()
-		//Self-Sizing Tableview Height
-		feedView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.1
-//		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
+		setupSelfSizingCells()
 	}
 
 
@@ -64,6 +54,21 @@ class FeedViewController: UIViewController {
 
 
 	//MARK: Helper Functions
+	fileprivate func setupDelegatesAndDatasources() {
+		//Datasource & delegate
+		feedView.postTableView.delegate = self
+		feedView.postTableView.dataSource = self
+		feedView.favesCollectionView.delegate = self
+		feedView.favesCollectionView.dataSource = self
+		feedView.postCollectionView.delegate = self
+		feedView.postCollectionView.dataSource = self
+	}
+
+	fileprivate func setupSelfSizingCells() {
+		feedView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.1
+		//		feedView.postTableView.rowHeight = UITableViewAutomaticDimension
+	}
+
 	private func loadAllUsers() {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
@@ -74,6 +79,7 @@ class FeedViewController: UIViewController {
 			} else {print("error loading users")}
 		}
 	}
+
 	private func loadCurrentUser() {
 		DBService.manager.loadAllUsers { (users) in
 			if let users = users {
@@ -83,6 +89,7 @@ class FeedViewController: UIViewController {
 			} else {print("error loading from Firebase Database")}
 		}
 	}
+	
 	private func loadAllPosts() {
 		DBService.manager.loadAllPosts { (posts) in
 			if let posts = posts { self.posts = posts}
@@ -119,7 +126,6 @@ class FeedViewController: UIViewController {
 		self.present(createPostViewController, animated: true, completion: nil)
 	}
 
-
 	private func setupButtonTargets(){
 		feedView.optionListButton.addTarget(self, action: #selector(switchToList), for: .touchUpInside)
 		feedView.optionCollectionButton.addTarget(self, action: #selector(switchToCollection), for: .touchUpInside)
@@ -139,6 +145,9 @@ class FeedViewController: UIViewController {
 	}
 }
 
+
+
+// MARK: TableView Datasource
 extension FeedViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
@@ -206,9 +215,11 @@ extension FeedViewController: UITableViewDataSource {
 		self.present(alertView, animated: true, completion: nil)
 	}
 
-
 }
 
+
+
+// MARK: TableView Delegate
 extension FeedViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let selectedPost = posts.reversed()[indexPath.row]
@@ -219,8 +230,9 @@ extension FeedViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return  UITableViewAutomaticDimension
 	}
-
 }
+
+
 
 // MARK: Delegate for PostTableViewCell
 extension FeedViewController: PostTableViewCellDelegate {	
@@ -264,7 +276,6 @@ extension FeedViewController: PostTableViewCellDelegate {
 
 
 
-
 //MARK: CollectionView - Datasource
 extension FeedViewController: UICollectionViewDataSource {
 	//Number of items in Section
@@ -302,6 +313,7 @@ extension FeedViewController: UICollectionViewDataSource {
 }
 
 
+
 //MARK: CollectionView - Delegate
 extension FeedViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -310,6 +322,8 @@ extension FeedViewController: UICollectionViewDelegate {
 		self.navigationController?.pushViewController(postDetailViewController, animated: true)
 	}
 }
+
+
 
 //MARK: CollectionView - Delegate Flow Layout
 extension FeedViewController: UICollectionViewDelegateFlowLayout {
@@ -345,7 +359,3 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
 			return 5.0
 	}
 }
-
-
-
-

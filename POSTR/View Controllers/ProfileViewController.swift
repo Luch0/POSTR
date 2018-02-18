@@ -19,13 +19,16 @@ class ProfileViewController: UIViewController {
 	private var authService = AuthUserService()
 
 	// MARK: Properties
+	private var allUsers: [POSTRUser] = []
 	private var currentAuthUser = AuthUserService.getCurrentUser()
 	private var currentUser: POSTRUser! {
-		didSet { profileView.configureProfileView(user: currentUser) }
+		didSet {
+			profileView.configureProfileView(user: currentUser)
+			loadCurrentUserPosts()
+			loadCurrentUserComments()
+			loadCurrentUserBookmarkPosts()
+		}
 	}
-
-	private var allUsers: [POSTRUser] = []
-//	private var postUser: POSTRUser!
 	private var currentUserPosts = [Post](){
 		didSet {
 			DispatchQueue.main.async {
@@ -34,11 +37,19 @@ class ProfileViewController: UIViewController {
 			}
 		}
 	}
-	private var currentUserComments = [Comment]() {
-		didSet { DispatchQueue.main.async { self.profileView.commentView.reloadData() } }
+	private var currentUserComments = [Comment](){
+		didSet {
+			DispatchQueue.main.async {
+				self.profileView.commentView.reloadData()
+			}
+		}
 	}
 	private var currentUserBookmarks = [Post]() {
-		didSet { DispatchQueue.main.async { self.profileView.bookmarkView.reloadData() } }
+		didSet {
+			DispatchQueue.main.async {
+				self.profileView.bookmarkView.reloadData()
+			}
+		}
 	}
 	private var profileImage: UIImage!
 	private var bgImage: UIImage!
@@ -49,15 +60,24 @@ class ProfileViewController: UIViewController {
 		super.viewWillAppear(animated)
 		currentAuthUser = AuthUserService.getCurrentUser()
 		loadCurrentUser()
-		loadCurrentUserPosts()
-		loadCurrentUserComments()
-		loadCurrentUserBookmarkPosts()
 	}
+
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.addSubview(profileView)
 		self.view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
+		view.addSubview(profileView)
+		setupDelegatesAndDatasources()
+		loadCurrentUser()
+		configureNavBar()
+		setupButtonTargets()
+		switchToList()
+		profileView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.4
+	}
+
+
+	//MARK: Helper Functions
+	fileprivate func setupDelegatesAndDatasources() {
 		//Datasource & delegate
 		profileView.postTableView.delegate = self
 		profileView.postTableView.dataSource = self
@@ -68,22 +88,8 @@ class ProfileViewController: UIViewController {
 		profileView.bookmarkView.delegate = self
 		profileView.bookmarkView.dataSource = self
 		authService.delegate = self
-		//Load
-		loadCurrentUser()
-		loadCurrentUserPosts()
-		loadCurrentUserComments()
-		loadCurrentUserBookmarkPosts()
-		//Setup
-		configureNavBar()
-		setupButtonTargets()
-		switchToList()
-		//Self-Sizing Tableview Height
-		profileView.postTableView.estimatedRowHeight = UIScreen.main.bounds.height * 0.4
-//		profileView.tableView.rowHeight = UITableViewAutomaticDimension
 	}
 
-
-	//MARK: Helper Functions
 	private func configureNavBar() {
 		self.navigationItem.title = "Profile"
 		//TitleView (Center)
@@ -268,8 +274,11 @@ extension ProfileViewController: UITableViewDataSource {
 			cell.tag = indexPath.row
 			let post = currentUserPosts.reversed()[indexPath.row]
 			cell.configurePostCell(post: post)
+			cell.bookmarkButton.isHidden = true
+			cell.upvoteButton.isHidden = true
+			cell.downvoteButton.isHidden = true
 			cell.postActionsButton.addTarget(self, action: #selector(showOptions), for: .touchUpInside)
-			cell.bookmarkButton.addTarget(self, action: #selector(toggleBookmark), for: .touchUpInside)
+//			cell.bookmarkButton.addTarget(self, action: #selector(toggleBookmark), for: .touchUpInside)
 			return cell
 		case profileView.commentView:
 			let cell = tableView.dequeueReusableCell(withIdentifier: "PostCommentCell", for: indexPath) as! PostCommentCell
